@@ -17,11 +17,19 @@ export async function getCurrentUser() {
     });
   }
 
+  if (process.env.ALLOW_DEMO_AUTH !== "true" && process.env.NODE_ENV === "production") {
+    throw new Error("Authentication required.");
+  }
+
   return prisma.user.upsert({
     where: { email: demoUserEmail },
     update: {},
     create: { email: demoUserEmail, name: "Demo User" }
   });
+}
+
+export async function requireCurrentUser() {
+  return getCurrentUser();
 }
 
 export async function requireAdmin() {
