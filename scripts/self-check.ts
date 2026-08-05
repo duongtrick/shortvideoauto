@@ -25,8 +25,8 @@ import { getSystemSetting, setSystemSetting } from "../src/services/system-setti
 import { createResetToken, hashPassword, verifyPassword } from "../src/services/passwords";
 import { seriesInput } from "../src/lib/series-validation";
 import { videoLibraryQuery } from "../src/lib/video-library-validation";
-import { scheduledPostInput, scheduleSuggestionInput } from "../src/lib/scheduler-validation";
-import { createManualPublishChecklist, suggestScheduleCopy } from "../src/services/scheduler";
+import { bestTimeInput, scheduledPostInput, scheduleSuggestionInput } from "../src/lib/scheduler-validation";
+import { createManualPublishChecklist, recommendBestScheduleTimes, suggestScheduleCopy } from "../src/services/scheduler";
 import { appendAffiliateDisclosure, checkAffiliateContentPolicy } from "../src/services/content-policy";
 import { tiktokCalculatorInput } from "../src/lib/tiktok-calculator-validation";
 import { estimateTikTokAccount } from "../src/services/tiktok-calculator";
@@ -144,6 +144,16 @@ assert.equal(
 );
 assert.equal(createManualPublishChecklist("tiktok").steps.length > 3, true);
 assert.equal(scheduleSuggestionInput.safeParse({ videoId: "video_1", platform: "tiktok", tone: "deal" }).success, true);
+assert.equal(bestTimeInput.safeParse({ platform: "tiktok", daysAhead: 3 }).success, true);
+assert.equal(
+  recommendBestScheduleTimes({
+    platform: "tiktok",
+    timezoneOffsetMinutes: 420,
+    daysAhead: 2,
+    now: new Date("2026-01-01T00:00:00.000Z")
+  }).length > 0,
+  true
+);
 assert.match(
   suggestScheduleCopy({
     platform: "tiktok",

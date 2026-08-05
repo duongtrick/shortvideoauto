@@ -22,3 +22,9 @@ export const scheduleSuggestionInput = z.object({
   platform: scheduledPostInput.shape.platform,
   tone: z.enum(["deal", "review", "problem_solution"]).default("deal")
 });
+
+export const bestTimeInput = z.object({
+  platform: scheduledPostInput.shape.platform,
+  timezoneOffsetMinutes: z.number().int().min(-720).max(840).default(420),
+  daysAhead: z.coerce.number().int().min(1).max(14).default(7)
+});

@@ -234,7 +234,7 @@ Audit scope ngày 2026-08-06:
 - Bulk scheduling from video library.
 - Per-platform caption/title/hashtag fields.
 - AI/rule-based caption and hashtag suggestions per platform. ✅ Foundation API suggests title, caption, hashtags, CTA, and affiliate disclosure from video metadata.
-- Best-time recommendation based on historical performance.
+- Best-time recommendation based on historical performance. ✅ Foundation API returns platform-specific local time recommendations.
 - Manual publish checklist for platforms without API approval.
 
 #### Email And Notification System

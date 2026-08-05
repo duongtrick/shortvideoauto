@@ -48,3 +48,42 @@ export function suggestScheduleCopy(input: {
     hashtags
   };
 }
+
+const bestLocalHours: Record<string, number[]> = {
+  tiktok: [11, 19, 21],
+  youtube_shorts: [12, 18, 20],
+  instagram_reels: [11, 18, 21],
+  facebook_reels: [8, 12, 20],
+  x: [8, 12, 17],
+  linkedin: [8, 10, 14],
+  pinterest: [20, 21, 22]
+};
+
+export function recommendBestScheduleTimes(input: {
+  platform: string;
+  timezoneOffsetMinutes: number;
+  daysAhead: number;
+  now?: Date;
+}) {
+  const now = input.now ?? new Date();
+  const hours = bestLocalHours[input.platform] ?? [11, 19, 21];
+  const recommendations: { scheduledAt: string; localHour: number; reason: string }[] = [];
+
+  for (let day = 0; day < input.daysAhead && recommendations.length < 10; day += 1) {
+    for (const localHour of hours) {
+      const utcTime = new Date(
+        Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + day, localHour, 0, 0) -
+          input.timezoneOffsetMinutes * 60_000
+      );
+      if (utcTime <= now) continue;
+
+      recommendations.push({
+        scheduledAt: utcTime.toISOString(),
+        localHour,
+        reason: `${input.platform} thuong tot luc ${localHour}:00 gio dia phuong.`
+      });
+    }
+  }
+
+  return recommendations;
+}
