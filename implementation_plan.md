@@ -14,7 +14,7 @@ Hệ thống SaaS full-stack TypeScript tạo video affiliate 9:16 tự động 
 | Domain | Multi-domain support |
 | FE Quality | **TasteSkill v2** — anti-slop design rules |
 | Admin | **Full CRUD** — 11 module quản trị |
-| Testing | 100% coverage — ~220 test cases |
+| Testing | 100% coverage — ~245 test cases |
 
 ---
 
@@ -196,6 +196,139 @@ npx taste-skill@latest --skill output-skill  # Anti-placeholder rules
 3. Phase 5 admin panel phải dùng được đầy đủ trên mobile/tablet/desktop.
 4. Test plan thêm khoảng 15 responsive tests.
 5. Cross-device testing checklist bắt buộc trước deploy.
+
+---
+
+## Competitive Feature Audit — Missing Ideas Only
+
+Audit scope ngày 2026-08-06:
+
+- `autoshorts.ai`: landing, login, pricing/FAQ sections rendered by browser, public footer pages listed.
+- `autoshort.io/vi`: homepage, feature/pricing anchors, blog, affiliate, footer resources. Help/tutorial public routes returned 404 at audit time.
+- `short.ai/vi`: homepage, faceless video, social scheduler, TikTok money calculator, TikTok transcript/script generator, pricing, caption generator, Reddit to video, dialogue video, short story generator, fake text message video, animated video maker, Minecraft parkour video, long-video-to-short-video, YouTube-to-TikTok converter.
+- Account-gated pages checked: `short.ai/vi/explore`, `short.ai/vi/create/*`. They redirect/render login, so internal dashboard workflow requires test account/email verification in a later audit.
+
+### Features Already Covered — Keep Current Plan
+
+- Auth, Google login, forgot password.
+- AI script generation.
+- Vietnamese TTS provider chain.
+- Remotion/FFmpeg 9:16 render.
+- Caption overlay and music ducking in video pipeline.
+- Queue, credit ledger, billing, dashboard, admin foundation.
+- Phase 2 social auto-post after OAuth/API approval.
+
+### New Feature Ideas To Add
+
+#### Series Automation
+
+- `ContentSeries` model: topic, niche, platform targets, cadence, language, style, template, voice, music, default CTA.
+- Series wizard: create once, generate many videos over time.
+- Daily/weekly posting cadence: 3 times/week, once/day, twice/day.
+- Series-level queue: generate next video automatically while respecting credit/subscription limits.
+- Series replacement flow: archive old series and start a new one without losing analytics.
+
+#### Creator Scheduler
+
+- Calendar view for scheduled videos across TikTok, YouTube Shorts, Instagram Reels, Facebook, X/Twitter, LinkedIn, Pinterest.
+- Bulk scheduling from video library.
+- Per-platform caption/title/hashtag fields.
+- AI caption/hashtag suggestions per platform.
+- Best-time recommendation based on historical performance.
+- Manual publish checklist for platforms without API approval.
+
+#### Video Library Enhancements
+
+- Project library with filters: platform, status, template, product source, series, date, language.
+- Preview before posting.
+- Edit script, title, images, music, voice, CTA before render/post.
+- Download all assets: MP4, thumbnail, voiceover, captions, metadata JSON.
+- Ownership/export guarantee: user can download and keep generated videos.
+
+#### Template And Style Marketplace
+
+- Preset styles inspired by observed market categories: UGC hook, vlog, fitness, stories, anime, comic, cartoon, cinematic, Pixar-like 3D, manga, Minecraft/parkour, GTA-style, children-book style.
+- Template preview gallery with sample output.
+- Style-level defaults: caption preset, image model, transition pack, music pack, voice.
+- Template A/B testing by series.
+
+#### Caption Studio
+
+- More than basic captions: multiple animated caption presets, emoji/GIF highlights, word emphasis, brand colors, font controls.
+- Import transcript from uploaded video or pasted TikTok/YouTube URL.
+- Export SRT/VTT alongside burned-in captions.
+- Multi-language transcription and translation.
+- Caption accuracy QA step before render.
+
+#### Long Video Repurposing
+
+- Upload long video or paste YouTube URL.
+- AI detects hooks, insights, reactions, product mentions, and affiliate-friendly moments.
+- Create 10+ short clips from one source.
+- Keyword-guided clipping: include moments matching user keywords.
+- Auto-reframe to 9:16 and add captions/title.
+
+#### Social Proof And Trend Tools
+
+- TikTok account estimator/calculator: followers, likes, engagement, estimated revenue.
+- Competitor/ad inspiration board: save public examples and annotate hook/CTA/template.
+- Public explore gallery for examples and templates, with moderation.
+- Niche trend tracker for affiliate categories.
+
+#### Faceless Content Modes
+
+- Reddit/story-to-video mode for non-product content funnels.
+- Fake text message/chat video generator.
+- Dialogue video generator with selectable characters and voices.
+- Short story generator for narrative affiliate hooks.
+- Animated video maker for text-to-animation prompts.
+- Background libraries: Minecraft parkour, satisfying videos, unboxing loops, gameplay loops, abstract motion.
+
+#### Voice And Audio Advanced
+
+- Voice cloning as paid/premium feature after legal consent flow.
+- Voice library by language/accent/emotion/use case.
+- Background music library with copyright-safe tags.
+- Music ducking presets: soft, normal, aggressive.
+- Audio preview before render.
+
+#### Pricing And Credit Packaging
+
+- Plan limits by monthly credits, upload size, video count, voice tier, auto-post access.
+- Motion credits separated from render credits for expensive animated/image-model scenes.
+- Free plan can create limited preview/watermarked output.
+- Upgrade/downgrade flow and plan comparison.
+
+#### Affiliate Program For This SaaS
+
+- Built-in referral program for ShortVideoAuto users.
+- Referral link, cookie window, recurring commission, payout threshold.
+- Affiliate dashboard: clicks, trials, paid conversions, commission pending/paid.
+
+#### Compliance And Platform Safety
+
+- Content policy checks before render/post: banned topics, platform-sensitive claims, affiliate disclosure.
+- Auto-insert affiliate disclosure text/voice if enabled.
+- Google/TikTok/YouTube API disclosure pages and connected-account permission center.
+- Per-platform posting readiness checklist.
+
+### Product Priority
+
+1. Series Automation + Video Library Enhancements.
+2. Caption Studio.
+3. Creator Scheduler.
+4. Template And Style Marketplace.
+5. Long Video Repurposing.
+6. TikTok account estimator and trend tools.
+7. Voice cloning and advanced audio.
+8. Affiliate program for this SaaS.
+
+### Audit Follow-Up
+
+- Create test accounts only with a dedicated project email and owner-approved credentials.
+- Re-audit account-gated dashboards after login works on each platform.
+- Record onboarding steps, internal navigation, export limits, and billing gates.
+- Do not copy UI, copy, assets, prompts, or protected workflows. Extract only product ideas and adapt to Vietnamese affiliate use case.
 
 ---
 
@@ -747,14 +880,18 @@ CTF5/
 - [ ] BullMQ pipeline (all queues)
 - [ ] FFmpeg service
 - [ ] Bank API payment poller
+- [ ] Series automation service: cadence, next-video generation, credit guard
 ```
 
 ### Phase 3 — Video Pipeline (Day 8-12)
 ```
 - [ ] Remotion setup
 - [ ] 3 templates: clean_minimal, dark_energy, shopee_orange
+- [ ] Template/style marketplace foundation: UGC hook, vlog, story, anime, comic, cartoon, cinematic
 - [ ] Caption overlay (Whisper word-level sync)
+- [ ] Caption Studio: caption presets, emoji/GIF highlights, SRT/VTT export
 - [ ] Music ducking + thumbnail generation
+- [ ] Voice/music preview before render
 - [ ] Pipeline integration test
 ```
 
@@ -764,6 +901,10 @@ CTF5/
 - [ ] Responsive/adaptive design system: 320, 375, 428, 768, 1024, 1280, 1920, 2560px
 - [ ] Auth flow (register → verify → login)
 - [ ] Dashboard + create + jobs + videos
+- [ ] Video library filters: platform, status, template, source, series, date, language
+- [ ] Preview/edit before render: script, title, images, music, voice, CTA
+- [ ] Series wizard: topic, niche, cadence, template, voice, platform targets
+- [ ] Social scheduler calendar and manual publish checklist
 - [ ] Mobile bottom nav, sticky CTA, safe-area support, pull-to-refresh job list
 - [ ] Tablet split-view dashboard and side-by-side script/video preview
 - [ ] Desktop shortcuts, hover/tooltips, multi-column layouts
@@ -771,6 +912,7 @@ CTF5/
 - [ ] Settings
 - [ ] Landing, pricing, features (SEO)
 - [ ] Multi-domain middleware
+- [ ] Affiliate referral dashboard for this SaaS
 ```
 
 ### Phase 5 — Admin Panel (Day 19-23) ⭐
@@ -784,6 +926,7 @@ CTF5/
 - [ ] Module 4: Payment management + reconciliation
 - [ ] Module 5: Subscription management
 - [ ] Module 6: Template management (CRUD + preview)
+- [ ] Module 6B: Series management (CRUD + schedule + pause/resume)
 - [ ] Module 7: TTS voice management (CRUD + test)
 - [ ] Module 8: AI provider management (CRUD + test)
 - [ ] Module 9: System settings (all configurable)
@@ -879,6 +1022,35 @@ CTF5/
 ✅ Video player: fullscreen mobile and PiP desktop controls available
 ```
 
+#### Competitive Feature Tests (+25)
+```
+✅ Series wizard creates topic, cadence, template, voice, and platform targets
+✅ Series scheduler creates next queued job only when credits allow
+✅ Series pause prevents new jobs
+✅ Video library filters by status, template, source, date, and language
+✅ Preview edit saves script, title, images, music, voice, and CTA
+✅ Scheduler calendar shows drafts, queued posts, published posts, and failed posts
+✅ Bulk scheduling respects platform-specific caption limits
+✅ Manual publish checklist appears for platforms without API approval
+✅ Caption Studio changes font, color, animation, emoji highlights
+✅ Caption Studio exports SRT and VTT
+✅ Transcript import accepts uploaded video
+✅ Transcript import accepts TikTok/YouTube URL when supported
+✅ Long-video clipper creates multiple clip candidates
+✅ Keyword-guided clipping includes requested moments
+✅ Auto-reframe keeps 9:16 output
+✅ Template gallery preview renders sample output
+✅ Template A/B assignment persists per series
+✅ Voice preview plays before render
+✅ Music ducking preset changes mix plan
+✅ TikTok calculator stores estimated account metrics
+✅ Trend board saves competitor examples without copying assets
+✅ Affiliate referral link tracks clicks
+✅ Referral conversion creates pending commission
+✅ Affiliate disclosure can be inserted into script/caption
+✅ Platform policy check blocks banned content before render/post
+```
+
 #### API Tests — Admin (+12)
 ```
 ✅ All admin endpoints return 403 for non-admin
@@ -904,11 +1076,12 @@ CTF5/
 | API (user + admin) | ~37 | Vitest + fetch |
 | E2E (user flows + admin flows) | ~42 | Playwright |
 | Responsive | ~15 | Playwright + device presets |
+| Competitive feature coverage | ~25 | Playwright + API |
 | Security | ~18 | Custom |
 | Performance | ~8 | k6 |
 | Cross-browser | 5 | Playwright |
 | Accessibility | scan | axe-core |
-| **Total** | **~220 tests** | **100% pass** |
+| **Total** | **~245 tests** | **100% pass** |
 
 ---
 
