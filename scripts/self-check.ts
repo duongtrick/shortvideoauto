@@ -41,7 +41,7 @@ import { normalizeInspirationUrl, summarizeInspiration } from "../src/services/i
 import { clipCandidatesInput } from "../src/lib/clip-candidates-validation";
 import { createClipCandidates } from "../src/services/clip-candidates";
 import { notificationPreferenceInput } from "../src/lib/notification-validation";
-import { emailDeliveryQuery } from "../src/lib/email-delivery-validation";
+import { emailDeliveryQuery, emailDigestInput } from "../src/lib/email-delivery-validation";
 import { emailTemplatePatch, emailTemplateTestInput } from "../src/lib/email-template-validation";
 import { defaultEmailTemplate, emailTemplateKeys } from "../src/services/email-templates";
 import { queuedJobAlertInput } from "../src/lib/job-alert-validation";
@@ -51,10 +51,12 @@ import {
   renderPaymentConfirmedEmail,
   renderPasswordResetEmail,
   renderQueuedTooLongEmail,
+  renderNotificationDigestEmail,
   renderWelcomeEmail,
   isSecurityEmailEvent,
   isWithinQuietHours,
-  retryEmailDelivery
+  retryEmailDelivery,
+  sendNotificationDigest
 } from "../src/services/notifications";
 
 assert.equal(parseProductUrl("https://shopee.vn/test?utm=1#frag").normalizedUrl, "https://shopee.vn/test?utm=1");
@@ -176,7 +178,8 @@ assert.equal(
   1
 );
 assert.equal(notificationPreferenceInput.safeParse({ emailRenderDone: true, quietHoursStart: 22 }).success, true);
-assert.equal(emailDeliveryQuery.safeParse({ status: "failed", take: "20" }).success, true);
+assert.equal(emailDeliveryQuery.safeParse({ status: "digest_pending", take: "20" }).success, true);
+assert.equal(emailDigestInput.safeParse({ take: "100" }).success, true);
 assert.equal(emailTemplatePatch.safeParse({ key: "auth.welcome", subject: "Hello", bodyText: "Welcome body text" }).success, true);
 assert.equal(emailTemplateTestInput.safeParse({ key: "render.completed", toEmail: "admin@example.com" }).success, true);
 assert.equal(emailTemplateKeys.includes("auth.password_reset"), true);
@@ -186,6 +189,14 @@ assert.equal(isWithinQuietHours(23, 22, 7), true);
 assert.equal(isWithinQuietHours(12, 22, 7), false);
 assert.equal(isSecurityEmailEvent("auth.password_reset"), true);
 assert.match(
+  renderNotificationDigestEmail({
+    appUrl: "https://shortvideoauto.local",
+    count: 2,
+    items: [{ event: "render.completed", subject: "Video done" }]
+  }).bodyText,
+  /thong bao moi/
+);
+assert.match(
   renderQueuedTooLongEmail({
     appUrl: "https://shortvideoauto.local",
     jobId: "job_1",
@@ -194,6 +205,7 @@ assert.match(
   /queued/
 );
 assert.equal(typeof retryEmailDelivery, "function");
+assert.equal(typeof sendNotificationDigest, "function");
 assert.match(
   renderJobCompletedEmail({
     appUrl: "https://shortvideoauto.local",

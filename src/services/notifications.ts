@@ -15,6 +15,7 @@ export type EmailEvent =
   | "auth.welcome"
   | "auth.password_reset"
   | "render.queue_stalled"
+  | "notification.digest"
   | "admin.test";
 
 export function renderJobCompletedEmail(input: {
@@ -110,6 +111,21 @@ export function renderQueuedTooLongEmail(input: { appUrl: string; jobId: string;
   };
 }
 
+export function renderNotificationDigestEmail(input: {
+  appUrl: string;
+  count: number;
+  items: { event: string; subject: string }[];
+}): EmailTemplate {
+  return {
+    subject: `Tong hop thong bao ShortVideoAuto: ${input.count} muc`,
+    bodyText: [
+      `Ban co ${input.count} thong bao moi.`,
+      ...input.items.map((item, index) => `${index + 1}. [${item.event}] ${item.subject}`),
+      `Mo dashboard: ${input.appUrl}/dashboard`
+    ].join("\n")
+  };
+}
+
 async function postEmailWebhook(input: { to: string; subject: string; bodyText: string }) {
   if (!env.EMAIL_WEBHOOK_URL) return { status: "skipped", providerId: null };
 
@@ -131,23 +147,23 @@ async function postEmailWebhook(input: { to: string; subject: string; bodyText: 
   return { status: "sent", providerId: response.headers.get("x-message-id") };
 }
 
-async function shouldSendEmail(userId: string, event: EmailEvent) {
+async function getEmailDeliveryStatus(userId: string, event: EmailEvent) {
   const prefs = await prisma.notificationPreference.findUnique({ where: { userId } });
-  if (!prefs) return true;
-  if (prefs.digestMode && !isSecurityEmailEvent(event)) return false;
+  if (!prefs) return "pending";
+  if (prefs.digestMode && !isSecurityEmailEvent(event)) return "digest_pending";
   if (isWithinQuietHours(new Date().getHours(), prefs.quietHoursStart, prefs.quietHoursEnd) && !isSecurityEmailEvent(event)) {
-    return false;
+    return "deferred";
   }
-  if (event === "render.completed") return prefs.emailRenderDone;
-  if (event === "render.failed") return prefs.emailRenderFail;
-  if (event === "billing.payment_confirmed") return prefs.emailBilling;
-  if (event === "auth.welcome" || event === "auth.password_reset") return prefs.emailSecurity;
-  if (event === "render.queue_stalled") return prefs.emailRenderFail;
-  return true;
+  if (event === "render.completed") return prefs.emailRenderDone ? "pending" : "suppressed";
+  if (event === "render.failed") return prefs.emailRenderFail ? "pending" : "suppressed";
+  if (event === "billing.payment_confirmed") return prefs.emailBilling ? "pending" : "suppressed";
+  if (event === "auth.welcome" || event === "auth.password_reset") return prefs.emailSecurity ? "pending" : "suppressed";
+  if (event === "render.queue_stalled") return prefs.emailRenderFail ? "pending" : "suppressed";
+  return "pending";
 }
 
 export function isSecurityEmailEvent(event: EmailEvent) {
-  return event === "auth.password_reset" || event === "admin.test";
+  return event === "auth.password_reset" || event === "notification.digest" || event === "admin.test";
 }
 
 export function isWithinQuietHours(hour: number, start: number | null, end: number | null) {
@@ -162,7 +178,8 @@ export async function createEmailDelivery(input: {
   toEmail: string;
   template: EmailTemplate;
 }) {
-  if (!(await shouldSendEmail(input.userId, input.event))) {
+  const status = await getEmailDeliveryStatus(input.userId, input.event);
+  if (status !== "pending") {
     return prisma.emailDelivery.create({
       data: {
         userId: input.userId,
@@ -170,7 +187,7 @@ export async function createEmailDelivery(input: {
         toEmail: input.toEmail,
         subject: input.template.subject,
         bodyText: input.template.bodyText,
-        status: "suppressed"
+        status
       }
     });
   }
@@ -455,4 +472,46 @@ export async function retryEmailDelivery(deliveryId: string) {
       }
     });
   }
+}
+
+export async function sendNotificationDigest(input: { userId?: string; take?: number }) {
+  const deliveries = await prisma.emailDelivery.findMany({
+    where: {
+      userId: input.userId,
+      status: { in: ["digest_pending", "deferred"] }
+    },
+    take: input.take ?? 100,
+    orderBy: { createdAt: "asc" },
+    include: { user: true }
+  });
+  const byUser = new Map<string, typeof deliveries>();
+
+  for (const delivery of deliveries) {
+    byUser.set(delivery.userId, [...(byUser.get(delivery.userId) ?? []), delivery]);
+  }
+
+  const sentUserIds: string[] = [];
+  for (const [userId, userDeliveries] of byUser) {
+    const user = userDeliveries[0].user;
+    const template = renderNotificationDigestEmail({
+      appUrl: env.APP_URL,
+      count: userDeliveries.length,
+      items: userDeliveries.map((delivery) => ({ event: delivery.event, subject: delivery.subject }))
+    });
+    const digest = await createEmailDelivery({
+      userId,
+      event: "notification.digest",
+      toEmail: user.email,
+      template
+    });
+    if (digest.status === "sent" || digest.status === "skipped") {
+      await prisma.emailDelivery.updateMany({
+        where: { id: { in: userDeliveries.map((delivery) => delivery.id) } },
+        data: { status: "digested", sentAt: new Date() }
+      });
+      sentUserIds.push(userId);
+    }
+  }
+
+  return sentUserIds;
 }
