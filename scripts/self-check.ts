@@ -17,6 +17,7 @@ import { createFfmpegNormalizeArgs, createRenderArtifact } from "../src/services
 import { logger } from "../src/lib/logger";
 import { buildAffiliateScriptPrompt, getAiProviderChain } from "../src/services/ai-providers";
 import { createPlaceholderVoice, getTtsProviderChain } from "../src/services/tts-providers";
+import { createPaymentCode, findPaymentCode, matchBankTransaction } from "../src/services/bank-payments";
 
 assert.equal(parseProductUrl("https://shopee.vn/test?utm=1#frag").normalizedUrl, "https://shopee.vn/test?utm=1");
 assert.equal(parseProductUrl("https://shop.tiktok.com/view/product/1").host, "shop.tiktok.com");
@@ -60,6 +61,15 @@ const signature = createHmac("sha256", secret).update(payload).digest("hex");
 assert.equal(verifyWebhookSignature({ payload, secret, signature }), true);
 assert.equal(verifyWebhookSignature({ payload, secret, signature: "bad" }), false);
 assert.equal(typeof logger.info, "function");
+assert.match(createPaymentCode(), /^CTF5\d{6}$/);
+assert.equal(findPaymentCode("Nap tien CTF5123456 cam on"), "CTF5123456");
+assert.equal(
+  matchBankTransaction(
+    { id: "txn_1", amount: 100000, description: "CTF5123456" },
+    { code: "CTF5123456", amount: 99000, status: "pending" }
+  ),
+  true
+);
 assert.throws(() => parseProductUrl("http://shopee.vn/item"));
 assert.throws(() => parseProductUrl("https://localhost/admin"));
 assert.throws(() => parseProductUrl("https://example.com/item"));
