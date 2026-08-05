@@ -1,4 +1,5 @@
 import type { ScrapedProduct } from "./scraper";
+import { writeScriptsWithAi } from "./ai-providers";
 
 export type ScriptDraft = {
   angle: "review nhanh" | "deal sốc" | "vấn đề - giải pháp";
@@ -7,6 +8,9 @@ export type ScriptDraft = {
 };
 
 export async function writeVietnameseScripts(product: ScrapedProduct): Promise<ScriptDraft[]> {
+  const aiScripts = await writeScriptsWithAi(product);
+  if (aiScripts) return aiScripts;
+
   const title = product.title;
   const price = product.price;
 

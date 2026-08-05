@@ -23,6 +23,8 @@ Jobs use BullMQ `jobId = RenderJob.id` so retries do not create duplicate queue 
 
 Render service now builds a deterministic Remotion plan and FFmpeg normalize args. Real media execution stays behind that service.
 
+AI script service tries Gemini, then DeepSeek, then OpenAI. Missing keys fall back to deterministic Vietnamese drafts.
+
 ## Deliberate MVP Limits
 
 - No auto-post.
