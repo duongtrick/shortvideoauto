@@ -21,6 +21,7 @@ import { createPaymentCode, findPaymentCode, matchBankTransaction } from "../src
 import { getAdminStats } from "../src/services/admin-stats";
 import { writeAuditLog } from "../src/services/audit";
 import { getConfiguredDomains, resolveTenantDomain } from "../src/lib/domains";
+import { getSystemSetting, setSystemSetting } from "../src/services/system-settings";
 
 assert.equal(parseProductUrl("https://shopee.vn/test?utm=1#frag").normalizedUrl, "https://shopee.vn/test?utm=1");
 assert.equal(parseProductUrl("https://shop.tiktok.com/view/product/1").host, "shop.tiktok.com");
@@ -79,6 +80,8 @@ assert.equal(typeof getAdminStats, "function");
 assert.equal(typeof writeAuditLog, "function");
 assert.deepEqual(getConfiguredDomains("a.test:Brand A")[0], { host: "a.test", brand: "Brand A" });
 assert.equal(resolveTenantDomain("a.test:3000", [{ host: "a.test", brand: "A" }]).brand, "A");
+assert.equal(typeof getSystemSetting, "function");
+assert.equal(typeof setSystemSetting, "function");
 assert.throws(() => parseProductUrl("http://shopee.vn/item"));
 assert.throws(() => parseProductUrl("https://localhost/admin"));
 assert.throws(() => parseProductUrl("https://example.com/item"));

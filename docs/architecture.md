@@ -37,6 +37,8 @@ Admin payment API lists payments and supports manual confirmation with credit le
 
 Middleware resolves tenant domain from host and exposes tenant headers for future multi-domain branding.
 
+Schema includes admin-managed VideoTemplate, TTSProvider, AIProvider, and SystemSetting models.
+
 ## Deliberate MVP Limits
 
 - No auto-post.

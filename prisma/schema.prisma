@@ -55,6 +55,16 @@ model ProductSource {
   jobs        RenderJob[]
 }
 
+model VideoTemplate {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  name      String
+  config    Json
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model RenderJob {
   id              String          @id @default(cuid())
   userId          String
@@ -97,6 +107,26 @@ model VoiceAsset {
   storageKey  String
   durationMs  Int?
   createdAt   DateTime @default(now())
+}
+
+model TTSProvider {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  name      String
+  config    Json
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AIProvider {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  name      String
+  config    Json
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Video {
@@ -161,6 +191,16 @@ model BillingEvent {
   type       String
   payload    Json
   createdAt  DateTime @default(now())
+}
+
+model SystemSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json
+  group     String   @default("general")
+  updatedAt DateTime @updatedAt
+
+  @@index([group])
 }
 
 model AuditLog {
