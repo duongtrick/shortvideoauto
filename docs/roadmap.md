@@ -2,7 +2,7 @@
 
 ## Week 1
 
-- Finish auth.
+- Replace demo auth boundary with NextAuth/Auth.js or Clerk.
 - Add real dashboard job create/poll UX.
 - Run Prisma migration.
 - Local Docker compose and `npm run local` exist.

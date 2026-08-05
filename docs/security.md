@@ -14,6 +14,7 @@
 - Store credit changes in append-only ledger.
 - Refund render credit in the same transaction that marks worker failure.
 - Protect admin routes with role check.
+- Current auth boundary is demo-only; replace `getCurrentUser` with NextAuth/Clerk before launch.
 - Add rate limit per user/IP before public launch.
 - Current MVP has in-memory API rate limit. Move it to Redis before multi-instance deploy.
 

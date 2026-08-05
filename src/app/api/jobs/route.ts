@@ -4,12 +4,12 @@ import { prisma } from "@/lib/prisma";
 import { createRenderQueue } from "@/lib/queue";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { createJobInput, parseProductUrl } from "@/lib/product-url";
-
-const demoUserEmail = "demo@shortvideoauto.local";
+import { getCurrentUser } from "@/services/auth";
 
 export async function GET() {
+  const currentUser = await getCurrentUser();
   const user = await prisma.user.findUnique({
-    where: { email: demoUserEmail },
+    where: { id: currentUser.id },
     include: {
       jobs: {
         orderBy: { createdAt: "desc" },
@@ -52,11 +52,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const user = await prisma.user.upsert({
-    where: { email: demoUserEmail },
-    update: {},
-    create: { email: demoUserEmail, name: "Demo User" }
-  });
+  const user = await getCurrentUser();
 
   const job = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
     const creditHold = await tx.creditLedger.create({
