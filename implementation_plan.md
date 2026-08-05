@@ -227,6 +227,7 @@ Audit scope ngày 2026-08-06:
 - Daily/weekly posting cadence: 3 times/week, once/day, twice/day.
 - Series-level queue: generate next video automatically while respecting credit/subscription limits.
 - Series replacement flow: archive old series and start a new one without losing analytics.
+- ✅ Foundation: dashboard wizard creates series and owner API pauses/resumes series.
 
 #### Creator Scheduler
 

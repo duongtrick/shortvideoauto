@@ -10,6 +10,7 @@ type SeriesRow = {
   platformTargets: string[];
   templateKey: string | null;
   voice: string | null;
+  isActive: boolean;
 };
 
 async function loadSeries() {
@@ -65,6 +66,20 @@ export function SeriesWizard() {
     });
   }
 
+  function toggleSeries(item: SeriesRow) {
+    startTransition(async () => {
+      const response = await fetch(`/api/series/${encodeURIComponent(item.id)}`, {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ isActive: !item.isActive })
+      });
+      const data = (await response.json()) as { series?: SeriesRow };
+      if (data.series) {
+        setSeries((current) => current.map((row) => (row.id === item.id ? (data.series as SeriesRow) : row)));
+      }
+    });
+  }
+
   return (
     <div className="panel status-list" aria-label="Series noi dung">
       <div className="status-item">
@@ -95,6 +110,9 @@ export function SeriesWizard() {
             </p>
           </div>
           <span className="badge">{item.templateKey ?? item.voice ?? "default"}</span>
+          <button className="button" type="button" onClick={() => toggleSeries(item)}>
+            {item.isActive ? "Pause" : "Resume"}
+          </button>
         </div>
       ))}
       {message ? <p className="muted">{message}</p> : null}
