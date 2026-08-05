@@ -343,3 +343,37 @@ export async function safeNotifyPasswordResetRequested(input: { userId: string; 
     logger.error("password_reset_notification_failed", { userId: input.userId, error });
   }
 }
+
+export async function retryEmailDelivery(deliveryId: string) {
+  const delivery = await prisma.emailDelivery.findUnique({ where: { id: deliveryId } });
+  if (!delivery) return null;
+  if (delivery.status === "sent") return delivery;
+
+  try {
+    const sent = await postEmailWebhook({
+      to: delivery.toEmail,
+      subject: delivery.subject,
+      bodyText: delivery.bodyText
+    });
+    return prisma.emailDelivery.update({
+      where: { id: delivery.id },
+      data: {
+        status: sent.status,
+        provider: env.EMAIL_WEBHOOK_URL ? "webhook" : delivery.provider,
+        providerId: sent.providerId,
+        retryCount: { increment: 1 },
+        lastError: null,
+        sentAt: sent.status === "sent" ? new Date() : delivery.sentAt
+      }
+    });
+  } catch (error) {
+    return prisma.emailDelivery.update({
+      where: { id: delivery.id },
+      data: {
+        status: "failed",
+        retryCount: { increment: 1 },
+        lastError: error instanceof Error ? error.message : "Unknown email error"
+      }
+    });
+  }
+}

@@ -47,7 +47,8 @@ import {
   renderJobFailedEmail,
   renderPaymentConfirmedEmail,
   renderPasswordResetEmail,
-  renderWelcomeEmail
+  renderWelcomeEmail,
+  retryEmailDelivery
 } from "../src/services/notifications";
 
 assert.equal(parseProductUrl("https://shopee.vn/test?utm=1#frag").normalizedUrl, "https://shopee.vn/test?utm=1");
@@ -170,6 +171,7 @@ assert.equal(
 );
 assert.equal(notificationPreferenceInput.safeParse({ emailRenderDone: true, quietHoursStart: 22 }).success, true);
 assert.equal(emailDeliveryQuery.safeParse({ status: "failed", take: "20" }).success, true);
+assert.equal(typeof retryEmailDelivery, "function");
 assert.match(
   renderJobCompletedEmail({
     appUrl: "https://shortvideoauto.local",

@@ -891,7 +891,7 @@ CTF5/
 - [ ] AI provider chain (Gemini FREE → DeepSeek → GPT-4o-mini)
 - [ ] FPT.AI TTS + fallback chain
 - [ ] R2/MinIO upload service
-- [x] Email provider foundation: webhook primary via `EMAIL_WEBHOOK_URL`, transactional template renderer, admin delivery audit
+- [x] Email provider foundation: webhook primary via `EMAIL_WEBHOOK_URL`, transactional template renderer, admin delivery audit, retry endpoint
 - [x] Notification service foundation: render completed, render failed, payment confirmed, welcome, password reset email + in-app events
 - [ ] BullMQ pipeline (all queues)
 - [ ] FFmpeg service
