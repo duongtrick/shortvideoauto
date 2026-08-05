@@ -27,24 +27,26 @@ enum CreditReason {
 }
 
 model User {
-  id            String         @id @default(cuid())
-  email         String         @unique
-  name          String?
-  passwordHash  String?
-  emailVerified DateTime?
-  resetTokenHash String?
-  resetTokenExpiresAt DateTime?
-  role          String         @default("user")
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  jobs          RenderJob[]
-  videos        Video[]
-  scheduledPosts ScheduledPost[]
-  creditLedger  CreditLedger[]
-  subscriptions Subscription[]
-  payments      Payment[]
-  auditLogs     AuditLog[]
-  series        ContentSeries[]
+  id                   String                @id @default(cuid())
+  email                String                @unique
+  name                 String?
+  passwordHash         String?
+  emailVerified        DateTime?
+  resetTokenHash       String?
+  resetTokenExpiresAt  DateTime?
+  role                 String                @default("user")
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  jobs                 RenderJob[]
+  videos               Video[]
+  scheduledPosts       ScheduledPost[]
+  creditLedger         CreditLedger[]
+  subscriptions        Subscription[]
+  payments             Payment[]
+  auditLogs            AuditLog[]
+  series               ContentSeries[]
+  referrals            Referral[]
+  affiliateCommissions AffiliateCommission[]
 }
 
 model ProductSource {
@@ -72,47 +74,47 @@ model VideoTemplate {
 }
 
 model ContentSeries {
-  id          String      @id @default(cuid())
-  userId      String
-  name        String
-  niche       String
-  cadence     String
-  language    String      @default("vi-VN")
+  id              String      @id @default(cuid())
+  userId          String
+  name            String
+  niche           String
+  cadence         String
+  language        String      @default("vi-VN")
   platformTargets String[]
-  templateKey String?
-  voice       String?
-  defaultCta  String?
-  isActive    Boolean     @default(true)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  user        User        @relation(fields: [userId], references: [id])
-  jobs        RenderJob[]
+  templateKey     String?
+  voice           String?
+  defaultCta      String?
+  isActive        Boolean     @default(true)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  user            User        @relation(fields: [userId], references: [id])
+  jobs            RenderJob[]
 
   @@index([userId, createdAt])
   @@index([isActive, updatedAt])
 }
 
 model RenderJob {
-  id              String          @id @default(cuid())
-  userId          String
-  seriesId        String?
-  productSourceId String?
-  status          JobStatus       @default(queued)
-  sourceUrl       String
+  id               String          @id @default(cuid())
+  userId           String
+  seriesId         String?
+  productSourceId  String?
+  status           JobStatus       @default(queued)
+  sourceUrl        String
   selectedScriptId String?
-  errorCode       String?
-  errorMessage    String?
-  attempts        Int             @default(0)
-  creditHoldId    String?         @unique
-  outputVideoId   String?         @unique
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  user            User            @relation(fields: [userId], references: [id])
-  series          ContentSeries?  @relation(fields: [seriesId], references: [id])
-  productSource   ProductSource?  @relation(fields: [productSourceId], references: [id])
-  scriptVariants  ScriptVariant[]
-  creditHold      CreditLedger?   @relation("CreditHold", fields: [creditHoldId], references: [id])
-  outputVideo     Video?          @relation(fields: [outputVideoId], references: [id])
+  errorCode        String?
+  errorMessage     String?
+  attempts         Int             @default(0)
+  creditHoldId     String?         @unique
+  outputVideoId    String?         @unique
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  user             User            @relation(fields: [userId], references: [id])
+  series           ContentSeries?  @relation(fields: [seriesId], references: [id])
+  productSource    ProductSource?  @relation(fields: [productSourceId], references: [id])
+  scriptVariants   ScriptVariant[]
+  creditHold       CreditLedger?   @relation("CreditHold", fields: [creditHoldId], references: [id])
+  outputVideo      Video?          @relation(fields: [outputVideoId], references: [id])
 
   @@index([userId, createdAt])
   @@index([seriesId, createdAt])
@@ -130,13 +132,13 @@ model ScriptVariant {
 }
 
 model VoiceAsset {
-  id          String   @id @default(cuid())
-  provider    String
-  voice       String
-  language    String   @default("vi-VN")
-  storageKey  String
-  durationMs  Int?
-  createdAt   DateTime @default(now())
+  id         String   @id @default(cuid())
+  provider   String
+  voice      String
+  language   String   @default("vi-VN")
+  storageKey String
+  durationMs Int?
+  createdAt  DateTime @default(now())
 }
 
 model TTSProvider {
@@ -160,37 +162,73 @@ model AIProvider {
 }
 
 model Video {
-  id         String      @id @default(cuid())
-  userId     String
-  storageKey String      @unique
-  publicSlug String      @unique
-  durationMs Int?
-  width      Int         @default(1080)
-  height     Int         @default(1920)
-  createdAt  DateTime    @default(now())
-  user       User        @relation(fields: [userId], references: [id])
-  job        RenderJob?
+  id             String                @id @default(cuid())
+  userId         String
+  storageKey     String                @unique
+  publicSlug     String                @unique
+  durationMs     Int?
+  width          Int                   @default(1080)
+  height         Int                   @default(1920)
+  createdAt      DateTime              @default(now())
+  user           User                  @relation(fields: [userId], references: [id])
+  job            RenderJob?
   scheduledPosts ScheduledPost[]
+  referrals      Referral[]
+  commissions    AffiliateCommission[]
 }
 
 model ScheduledPost {
-  id          String   @id @default(cuid())
-  userId      String
-  videoId     String
-  platform    String
-  title       String?
-  caption     String?
-  hashtags    String[]
-  scheduledAt DateTime
-  status      String   @default("draft")
+  id              String   @id @default(cuid())
+  userId          String
+  videoId         String
+  platform        String
+  title           String?
+  caption         String?
+  hashtags        String[]
+  scheduledAt     DateTime
+  status          String   @default("draft")
   manualChecklist Json?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  user        User     @relation(fields: [userId], references: [id])
-  video       Video    @relation(fields: [videoId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [userId], references: [id])
+  video           Video    @relation(fields: [videoId], references: [id])
 
   @@index([userId, scheduledAt])
   @@index([platform, status])
+}
+
+model Referral {
+  id             String                @id @default(cuid())
+  referrerUserId String
+  code           String                @unique
+  referredEmail  String?
+  status         String                @default("clicked")
+  createdAt      DateTime              @default(now())
+  convertedAt    DateTime?
+  referrer       User                  @relation(fields: [referrerUserId], references: [id])
+  commissions    AffiliateCommission[]
+  video          Video?                @relation(fields: [videoId], references: [id])
+  videoId        String?
+
+  @@index([referrerUserId, createdAt])
+  @@index([status, createdAt])
+}
+
+model AffiliateCommission {
+  id         String    @id @default(cuid())
+  userId     String
+  referralId String
+  amount     Int
+  status     String    @default("pending")
+  createdAt  DateTime  @default(now())
+  paidAt     DateTime?
+  user       User      @relation(fields: [userId], references: [id])
+  referral   Referral  @relation(fields: [referralId], references: [id])
+  video      Video?    @relation(fields: [videoId], references: [id])
+  videoId    String?
+
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
 }
 
 model CreditLedger {
@@ -207,29 +245,29 @@ model CreditLedger {
 }
 
 model Subscription {
-  id               String   @id @default(cuid())
+  id               String    @id @default(cuid())
   userId           String
   provider         String
-  providerId       String   @unique
+  providerId       String    @unique
   status           String
   currentPeriodEnd DateTime?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  user             User     @relation(fields: [userId], references: [id])
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  user             User      @relation(fields: [userId], references: [id])
 }
 
 model Payment {
-  id          String    @id @default(cuid())
-  userId      String
-  code        String    @unique
-  amount      Int
-  credits     Int
-  status      String    @default("pending")
-  bankTxnId   String?   @unique
-  matchedAt   DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  user        User      @relation(fields: [userId], references: [id])
+  id        String    @id @default(cuid())
+  userId    String
+  code      String    @unique
+  amount    Int
+  credits   Int
+  status    String    @default("pending")
+  bankTxnId String?   @unique
+  matchedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id])
 
   @@index([userId, createdAt])
   @@index([status, createdAt])

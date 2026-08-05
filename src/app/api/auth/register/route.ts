@@ -20,6 +20,18 @@ export async function POST(request: Request) {
     }
   });
 
+  const ref = new URL(request.url).searchParams.get("ref");
+  if (ref) {
+    await prisma.referral.updateMany({
+      where: { code: ref, status: "clicked" },
+      data: {
+        status: "converted",
+        referredEmail: user.email,
+        convertedAt: new Date()
+      }
+    });
+  }
+
   await writeAuditLog(prisma, {
     userId: user.id,
     action: "user.register",
