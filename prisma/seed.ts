@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { hashPassword } from "../src/services/passwords";
 
 const prisma = new PrismaClient();
 
@@ -9,6 +10,7 @@ async function main() {
     create: {
       email: "demo@shortvideoauto.local",
       name: "Demo User",
+      passwordHash: hashPassword("password123"),
       role: "user"
     }
   });
@@ -59,6 +61,7 @@ async function main() {
     create: {
       email: "admin@shortvideoauto.local",
       name: "Demo Admin",
+      passwordHash: hashPassword("password123"),
       role: "admin"
     }
   });

@@ -33,8 +33,10 @@ $env:RESPONSIVE_CHECK_URL="http://localhost:3001"; npm.cmd run responsive-check
 
 Demo auth:
 
-- Credentials provider accepts any valid email in local dev.
+- Credentials provider uses email + password.
+- Seeded password: `password123`.
 - Seeded admin email: `admin@shortvideoauto.local`.
+- Google login requires `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET`.
 
 One command on Windows:
 

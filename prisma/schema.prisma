@@ -30,6 +30,10 @@ model User {
   id            String         @id @default(cuid())
   email         String         @unique
   name          String?
+  passwordHash  String?
+  emailVerified DateTime?
+  resetTokenHash String?
+  resetTokenExpiresAt DateTime?
   role          String         @default("user")
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
