@@ -960,6 +960,7 @@ CTF5/
 - [ ] Module 10: Audit logs viewer
   - [x] UI foundation: action/entity filters, actor/entity metadata, JSON meta viewer
 - [ ] Module 11: Analytics dashboard + charts
+  - [x] UI foundation: KPI cards, revenue/credits summary, render and email health meters
 ```
 
 ### Phase 6 — Testing (Day 24-28) 🧪

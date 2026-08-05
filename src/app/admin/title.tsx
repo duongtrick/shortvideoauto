@@ -8,7 +8,8 @@ const titles: Record<string, string> = {
   "/admin/payments": "Payment management",
   "/admin/templates": "Template management",
   "/admin/settings": "System settings",
-  "/admin/audit-logs": "Audit logs"
+  "/admin/audit-logs": "Audit logs",
+  "/admin/analytics": "Analytics"
 };
 
 export function AdminTitle() {
