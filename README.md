@@ -48,3 +48,9 @@ npm.cmd run worker
 ## Phase 2
 
 Auto-post TikTok/Shopee sau khi có OAuth, scope, app review và Open Platform authorization.
+
+## Planning
+
+- `implementation_plan.md` is the full product plan.
+- `PROMPT.md` is the working prompt for future agent sessions.
+- `AGENTS.md` is the repo execution rule set.

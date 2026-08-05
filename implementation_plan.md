@@ -1,0 +1,804 @@
+# Shopee/TikTok Affiliate Video Generator — SaaS Platform (v4)
+
+Hệ thống SaaS full-stack TypeScript tạo video affiliate 9:16 tự động cho thị trường Việt Nam. User dán link sản phẩm Shopee/TikTok Shop → hệ thống scrape → AI viết kịch bản tiếng Việt → TTS → Remotion render video MP4 1080×1920.
+
+## Decisions Confirmed
+
+| Câu hỏi | Quyết định |
+|----------|------------|
+| AI Model | **Gemini Flash FREE** (primary) + **DeepSeek V3** (rẻ) + GPT-4o-mini (fallback) |
+| Hosting | Local dev → VPS production |
+| Storage | Cloudflare R2 (egress free) |
+| Billing | **API Bank trực tiếp** (thueapibank.vn) |
+| Auth | NextAuth.js v5 self-host |
+| Domain | Multi-domain support |
+| FE Quality | **TasteSkill v2** — anti-slop design rules |
+| Admin | **Full CRUD** — 11 module quản trị |
+| Testing | 100% coverage — ~180 test cases |
+
+---
+
+## TasteSkill Integration — FE Design Quality
+
+### Setup
+
+```bash
+# Install taste-skill v2 (default) + output-skill vào project
+npx taste-skill@latest            # Tạo .agents/skills/design-taste-frontend/SKILL.md
+npx taste-skill@latest --skill output-skill  # Anti-placeholder rules
+```
+
+### Skills sử dụng
+
+| Skill | Mục đích |
+|-------|----------|
+| `design-taste-frontend` (v2) | Core — brief inference, design system map, anti-slop bans, pre-flight check |
+| `output-skill` | Anti-laziness — block placeholder comments, skipped sections, half-finished output |
+| `soft-skill` | Cho marketing pages — calm, polished, whitespace, smooth motion |
+
+### SKILL.md customization cho dự án
+
+```markdown
+# Project-specific overrides (đặt đầu SKILL.md)
+
+## Brand Direction
+- Vietnamese SaaS for affiliate content creators
+- Primary accent: #FF6B35 (Shopee-inspired warm orange)
+- Secondary: #00B4D8 (teal for TikTok feel)
+- Mood: energetic but professional, creator-friendly
+- Audience: Vietnamese affiliate marketers, 20-35 tuổi
+- Typography: Inter (UI) + Lexend (headings) — Google Fonts
+- Motion: subtle, purposeful — no flashy for the sake of flashy
+- Dark mode: ON by default (creators work at night)
+
+## Design Rules
+- Dashboard: data-dense, Linear/Notion-inspired
+- Marketing pages: bold typography, asymmetric grids
+- No AI-purple gradients (banned by taste-skill)
+- No three-equal-card rows (banned by taste-skill)
+- Vietnamese text first — all UI copy in Vietnamese
+- QR code payment flow must feel native, not foreign
+```
+
+### TasteSkill enforces (tự động):
+
+```
+✅ Brief inference — đọc context trước khi generate
+✅ Color consistency lock — 1 accent xuyên suốt
+✅ Shape consistency lock — 1 border-radius system
+✅ Dark mode protocol — dual-mode, WCAG AA contrast
+✅ Anti-slop bans:
+   - No em-dashes/en-dashes
+   - No section-numbering eyebrows (00 / INDEX)
+   - No hero version labels (BETA, V0.6)
+   - No three-equal-card feature rows
+   - No AI-purple mesh gradients
+   - No fake div-based product UI
+   - No scroll cues / down arrows
+   - No window.addEventListener('scroll')
+✅ Pre-flight check — every checkbox pass before ship
+✅ Output-skill — no placeholder comments, no //TODO, complete output
+```
+
+---
+
+## Admin Panel — Full CRUD (11 Modules)
+
+> [!IMPORTANT]
+> Admin panel quản trị **mọi thứ** trong hệ thống. Mục tiêu: admin không bao giờ phải sửa code hay vào database trực tiếp. Mọi thao tác đều qua UI.
+
+### Routes
+
+```
+apps/web/src/app/(admin)/admin/
+├── layout.tsx                    # Admin sidebar + topbar
+├── page.tsx                      # Analytics dashboard (home)
+├── users/
+│   ├── page.tsx                  # User list + search + filter
+│   ├── create/page.tsx           # Create user form
+│   └── [id]/
+│       ├── page.tsx              # User detail + edit
+│       └── jobs/page.tsx         # User's jobs
+├── jobs/
+│   ├── page.tsx                  # All jobs + filter + search
+│   └── [id]/page.tsx             # Job detail + actions
+├── videos/
+│   └── page.tsx                  # Video library + storage stats
+├── payments/
+│   ├── page.tsx                  # Payment list + reconciliation
+│   └── [id]/page.tsx             # Payment detail
+├── subscriptions/
+│   └── page.tsx                  # Subscription management
+├── templates/
+│   ├── page.tsx                  # Video template list
+│   ├── create/page.tsx           # Create template
+│   └── [id]/page.tsx             # Edit template
+├── tts/
+│   └── page.tsx                  # TTS provider/voice management
+├── ai-providers/
+│   └── page.tsx                  # AI provider management
+├── settings/
+│   └── page.tsx                  # System settings
+└── audit-logs/
+    └── page.tsx                  # Audit log viewer
+```
+
+### API Routes
+
+```
+apps/web/src/app/api/admin/
+├── users/
+│   ├── route.ts                  # GET list, POST create
+│   └── [id]/
+│       ├── route.ts              # GET, PATCH update, DELETE
+│       ├── credits/route.ts      # PATCH adjust credits
+│       ├── ban/route.ts          # POST ban/unban
+│       ├── reset-password/route.ts # POST reset
+│       └── role/route.ts         # PATCH change role
+├── jobs/
+│   ├── route.ts                  # GET list (all users)
+│   └── [id]/
+│       ├── route.ts              # GET, DELETE
+│       ├── retry/route.ts        # POST retry failed
+│       ├── cancel/route.ts       # POST cancel
+│       └── priority/route.ts     # PATCH set priority
+├── videos/
+│   ├── route.ts                  # GET list
+│   └── [id]/route.ts             # DELETE
+├── payments/
+│   ├── route.ts                  # GET list
+│   ├── export/route.ts           # GET CSV export
+│   └── [id]/
+│       ├── confirm/route.ts      # POST manual confirm
+│       └── refund/route.ts       # POST refund
+├── subscriptions/
+│   ├── route.ts                  # GET list
+│   └── [id]/route.ts             # PATCH update, DELETE cancel
+├── templates/
+│   ├── route.ts                  # GET list, POST create
+│   └── [id]/route.ts             # GET, PATCH update, DELETE
+├── tts/
+│   ├── route.ts                  # GET list, POST add
+│   ├── [id]/route.ts             # PATCH, DELETE
+│   └── test/route.ts             # POST test voice
+├── ai-providers/
+│   ├── route.ts                  # GET list, POST add
+│   ├── [id]/route.ts             # PATCH, DELETE
+│   └── test/route.ts             # POST test provider
+├── settings/
+│   └── route.ts                  # GET, PATCH
+├── audit-logs/
+│   ├── route.ts                  # GET list + search
+│   └── export/route.ts           # GET CSV export
+└── stats/
+    ├── route.ts                  # GET dashboard stats
+    ├── revenue/route.ts          # GET revenue chart data
+    └── usage/route.ts            # GET usage chart data
+```
+
+---
+
+### Module 1: User Management
+
+```
+Chức năng:
+┌────────────────────────┬──────────────────────────────────────────┐
+│ Feature                │ Detail                                   │
+├────────────────────────┼──────────────────────────────────────────┤
+│ List users             │ Table: avatar, name, email, plan, credits│
+│                        │ credits, status, joined date             │
+│ Search                 │ By email, name (debounced)               │
+│ Filter                 │ By plan, status (active/banned), role    │
+│ Sort                   │ By date, credits, name                   │
+│ Pagination             │ 20/page, cursor-based                    │
+│ Create user            │ Form: email, name, password, role, plan  │
+│ Edit user              │ Inline edit: name, email, role           │
+│ Delete user            │ Soft delete, confirm dialog, cascade jobs│
+│ Reset password         │ Generate temp password, force change     │
+│ Ban / Unban            │ Toggle, reason field, audit logged       │
+│ Change role            │ USER ↔ ADMIN, confirm dialog             │
+│ Adjust credits         │ Add/subtract, reason field, audit logged │
+│ View user jobs         │ Link to filtered job list                │
+│ View user payments     │ Link to filtered payment list            │
+│ Export                 │ CSV: all users or filtered               │
+└────────────────────────┴──────────────────────────────────────────┘
+```
+
+### Module 2: Job Management
+
+```
+┌────────────────────────┬──────────────────────────────────────────┐
+│ Feature                │ Detail                                   │
+├────────────────────────┼──────────────────────────────────────────┤
+│ List all jobs          │ Table: ID, user, URL, status, progress,  │
+│                        │ template, created, duration              │
+│ Search                 │ By job ID, product URL, user email       │
+│ Filter                 │ By status, platform, template, date range│
+│ Sort                   │ By date, status, user                    │
+│ View detail            │ Product data, scripts, TTS, video preview│
+│ Retry failed           │ Re-queue from failed stage               │
+│ Cancel running         │ Kill active queue job, set FAILED        │
+│ Delete job             │ Soft delete, remove from queue           │
+│ Bulk delete            │ Checkbox select, confirm, batch delete   │
+│ Set priority           │ 1-10, higher = process first             │
+│ View queue status      │ BullMQ dashboard: waiting/active/failed  │
+│ Export                 │ CSV: filtered jobs                       │
+└────────────────────────┴──────────────────────────────────────────┘
+```
+
+### Module 3: Video Management
+
+```
+┌────────────────────────┬──────────────────────────────────────────┐
+│ Feature                │ Detail                                   │
+├────────────────────────┼──────────────────────────────────────────┤
+│ List all videos        │ Grid/table: thumbnail, title, user,      │
+│                        │ duration, size, date                     │
+│ Preview                │ In-browser video player                  │
+│ Delete video           │ Remove from DB + R2 storage              │
+│ Bulk delete            │ Checkbox select, batch delete            │
+│ Storage stats          │ Total size, count, by user, by month     │
+│ Download               │ Admin can download any video             │
+│ Regenerate thumbnail   │ Re-extract thumbnail from video          │
+└────────────────────────┴──────────────────────────────────────────┘
+```
+
+### Module 4: Payment Management
+
+```
+┌────────────────────────┬──────────────────────────────────────────┐
+│ Feature                │ Detail                                   │
+├────────────────────────┼──────────────────────────────────────────┤
+│ List payments          │ Table: code, user, amount, status, bank, │
+│                        │ txn ID, date                             │
+│ Search                 │ By payment code, txn ID, user email      │
+│ Filter                 │ By status, date range, amount range      │
+│ Manual confirm         │ For stuck payments — enter bank txn ID   │
+│ Refund                 │ Mark refunded, reverse credits/plan      │
+│ Bank reconciliation    │ Side-by-side: bank txns vs pending       │
+│                        │ payments, manual match                   │
+│ Export CSV             │ Filtered payments for accounting         │
+│ Revenue stats          │ Daily/weekly/monthly, by plan            │
+│ Pending alerts         │ Count of pending > 30min (highlight)     │
+└────────────────────────┴──────────────────────────────────────────┘
+```
+
+### Module 5: Subscription Management
+
+```
+┌────────────────────────┬──────────────────────────────────────────┐
+│ Feature                │ Detail                                   │
+├────────────────────────┼──────────────────────────────────────────┤
+│ List subscriptions     │ Table: user, plan, status, period end    │
+│ Filter                 │ By plan, status                          │
+│ Upgrade / Downgrade    │ Change plan, prorate credits             │
+│ Cancel                 │ Set status CANCELLED, keep until period  │
+│ Extend period          │ Add days to currentPeriodEnd             │
+│ Bulk operations        │ Bulk cancel expired, bulk extend         │
+│ Expiring soon alert    │ List subs expiring in 7 days             │
+└────────────────────────┴──────────────────────────────────────────┘
+```
+
+### Module 6: Template Management
+
+```
+┌────────────────────────┬──────────────────────────────────────────┐
+│ Feature                │ Detail                                   │
+├────────────────────────┼──────────────────────────────────────────┤
+│ List templates         │ Card grid: preview, name, plan required  │
+│ Create template        │ Form: name, description, thumbnail,      │
+│                        │ plan requirement (free/basic/pro),        │
+│                        │ composition ID, config JSON               │
+│ Edit template          │ Update all fields                        │
+│ Delete template        │ Soft delete, check no active jobs using  │
+│ Preview                │ Sample render with test data             │
+│ Enable / Disable       │ Toggle availability without deleting     │
+│ Sort order             │ Drag-and-drop reorder                    │
+│ Duplicate              │ Clone template with new name             │
+│ Config editor          │ JSON editor for template variables:      │
+│                        │ colors, fonts, animation speeds,         │
+│                        │ scene durations, music track             │
+└────────────────────────┴──────────────────────────────────────────┘
+
+Prisma model:
+model Template {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  thumbnail   String?
+  compositionId String  // Remotion composition ID
+  config      Json     // colors, fonts, timing, etc.
+  minPlan     Plan     @default(FREE)
+  enabled     Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([enabled, sortOrder])
+}
+```
+
+### Module 7: TTS Voice Management
+
+```
+┌────────────────────────┬──────────────────────────────────────────┐
+│ Feature                │ Detail                                   │
+├────────────────────────┼──────────────────────────────────────────┤
+│ List providers         │ Table: name, type, status, voice count   │
+│ Add provider           │ Form: name, API URL, API key, type       │
+│ Edit provider          │ Update URL, key, priority                │
+│ Delete provider        │ Remove (check no active jobs using)      │
+│ Enable / Disable       │ Toggle without deleting                  │
+│ Set priority           │ Drag order for fallback chain            │
+│ List voices per provider│ Table: voice ID, name, gender, region   │
+│ Add voice              │ Form: voiceId, name, gender, language    │
+│ Edit voice             │ Update name, enabled status              │
+│ Delete voice           │ Remove from available options            │
+│ Test voice             │ Input text → play audio preview          │
+│ Usage stats            │ Chars used per provider, cost estimate   │
+└────────────────────────┴──────────────────────────────────────────┘
+
+Prisma models:
+model TTSProvider {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  type      String   // fpt_ai, viettel_ai, zalo_tts, openai_tts
+  apiUrl    String
+  apiKey    String   // encrypted
+  enabled   Boolean  @default(true)
+  priority  Int      @default(0)
+  config    Json?    // extra provider-specific config
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  voices    TTSVoice[]
+  @@index([enabled, priority])
+}
+
+model TTSVoice {
+  id         String   @id @default(cuid())
+  providerId String
+  voiceId    String   // provider's voice identifier
+  name       String   // display name: "Ban Mai (nữ Bắc)"
+  gender     String   // male, female
+  language   String   @default("vi-VN")
+  region     String?  // north, central, south
+  enabled    Boolean  @default(true)
+  sampleUrl  String?  // preview audio URL
+
+  provider   TTSProvider @relation(fields: [providerId], references: [id])
+  @@unique([providerId, voiceId])
+}
+```
+
+### Module 8: AI Provider Management
+
+```
+┌────────────────────────┬──────────────────────────────────────────┐
+│ Feature                │ Detail                                   │
+├────────────────────────┼──────────────────────────────────────────┤
+│ List providers         │ Table: name, model, tier, status, usage  │
+│ Add provider           │ Form: name, API URL, API key, model,     │
+│                        │ tier (free/cheap/premium)                │
+│ Edit provider          │ Update all fields                        │
+│ Delete provider        │ Remove from chain                        │
+│ Set priority           │ Drag order for fallback chain            │
+│ Enable / Disable       │ Toggle availability                      │
+│ Test provider          │ Send test prompt → verify response       │
+│ Usage stats            │ Tokens used, cost estimate, error rate   │
+│ Rate limit config      │ RPM, TPD limits per provider             │
+│ Cost tracking          │ Daily/monthly cost per provider          │
+│ Prompt templates       │ Edit system prompts for each script style│
+│ Model parameters       │ Temperature, max_tokens, top_p per model │
+└────────────────────────┴──────────────────────────────────────────┘
+
+Prisma model:
+model AIProvider {
+  id           String   @id @default(cuid())
+  name         String   @unique
+  type         String   // gemini, deepseek, openai
+  model        String   // gemini-2.0-flash, deepseek-chat, gpt-4o-mini
+  apiUrl       String
+  apiKey       String   // encrypted
+  tier         String   @default("free") // free, cheap, premium
+  enabled      Boolean  @default(true)
+  priority     Int      @default(0)
+  rpmLimit     Int?     // requests per minute
+  tpdLimit     Int?     // tokens per day
+  temperature  Float    @default(0.7)
+  maxTokens    Int      @default(2000)
+  config       Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([enabled, priority])
+}
+```
+
+### Module 9: System Settings
+
+```
+┌────────────────────────┬──────────────────────────────────────────┐
+│ Feature                │ Detail                                   │
+├────────────────────────┼──────────────────────────────────────────┤
+│ Site info              │ Site name, tagline, logo, favicon        │
+│ Contact info           │ Email, phone, address                    │
+│ Email templates        │ Welcome, verify, reset password,         │
+│                        │ payment confirm, job done                │
+│ Bank account info      │ Bank name, account number, holder name   │
+│                        │ (shown on payment page)                  │
+│ API keys display       │ Masked view of all external API keys     │
+│ Rate limits            │ Global + per-plan rate limits config     │
+│ Credit config          │ Free credits, monthly reset, pricing     │
+│ Plan config            │ Plan names, prices, features, credits    │
+│ Maintenance mode       │ Toggle on/off, custom message            │
+│ Domain management      │ Add/edit/delete domains, brand per domain│
+│ Storage config         │ R2 bucket, region, limits                │
+│ Queue config           │ Concurrency, timeout, retry per queue    │
+│ Scraper config         │ Proxy settings, user-agent rotation,     │
+│                        │ selector versions for Shopee/TikTok      │
+│ Feature flags          │ Toggle features without deploy           │
+│ Watermark settings     │ Enable/disable, image, position, opacity │
+│ Music library          │ Upload/manage background music tracks    │
+│ Social links           │ Footer social media links                │
+│ SEO defaults           │ Default meta title, description, OG image│
+└────────────────────────┴──────────────────────────────────────────┘
+
+Prisma model:
+model SystemSetting {
+  id    String @id @default(cuid())
+  key   String @unique    // "site_name", "maintenance_mode", etc.
+  value Json              // flexible value storage
+  group String @default("general") // general, billing, email, queue, etc.
+  
+  @@index([group])
+}
+```
+
+### Module 10: Audit Logs
+
+```
+┌────────────────────────┬──────────────────────────────────────────┐
+│ Feature                │ Detail                                   │
+├────────────────────────┼──────────────────────────────────────────┤
+│ List logs              │ Table: time, user, action, entity, IP    │
+│ Search                 │ By user, action, entity ID               │
+│ Filter                 │ By action type, date range, user         │
+│ Detail view            │ Full metadata JSON, before/after diff    │
+│ Export CSV             │ Filtered logs for compliance             │
+│ Retention config       │ Auto-delete logs older than X days       │
+│ Real-time stream       │ SSE feed of live admin actions           │
+└────────────────────────┴──────────────────────────────────────────┘
+
+Logged actions:
+- user.create, user.update, user.delete, user.ban, user.unban
+- user.role_change, user.credit_adjust, user.reset_password
+- job.create, job.delete, job.retry, job.cancel
+- video.delete
+- payment.manual_confirm, payment.refund
+- subscription.update, subscription.cancel
+- template.create, template.update, template.delete
+- tts_provider.create, tts_provider.update, tts_provider.delete
+- ai_provider.create, ai_provider.update, ai_provider.delete
+- settings.update
+- admin.login, admin.logout
+```
+
+### Module 11: Analytics Dashboard
+
+```
+┌────────────────────────┬──────────────────────────────────────────┐
+│ Feature                │ Detail                                   │
+├────────────────────────┼──────────────────────────────────────────┤
+│ KPI Cards              │ Total users, active today, total revenue │
+│                        │ this month, videos today, queue depth    │
+│ User growth chart      │ Line chart: daily signups (30/90 days)   │
+│ Revenue chart          │ Bar chart: daily/monthly revenue         │
+│ Job volume chart       │ Line: jobs created vs completed per day  │
+│ Pipeline performance   │ Avg time per stage (scrape/AI/TTS/render)│
+│ Error rate chart       │ Failed jobs % over time                  │
+│ Provider usage         │ Pie: AI/TTS provider distribution       │
+│ Template popularity    │ Bar: videos per template                 │
+│ Plan distribution      │ Pie: users per plan                     │
+│ Top users              │ Table: most active users by video count  │
+│ Storage usage          │ Gauge: used vs available                 │
+│ System health          │ CPU, RAM, disk, Redis, PostgreSQL status │
+│ Date range picker      │ Filter all charts by custom date range  │
+│ Export                 │ Download charts as PNG, data as CSV      │
+└────────────────────────┴──────────────────────────────────────────┘
+```
+
+---
+
+## AI Model Strategy — Tối Ưu Chi Phí
+
+### Provider chain (ưu tiên free/rẻ)
+
+```
+Tier 1 — FREE:
+├── Gemini 2.0 Flash     ← PRIMARY — 15 RPM, 1M TPD FREE
+└── Gemini 1.5 Flash     ← BACKUP FREE
+
+Tier 2 — CHEAP:
+├── DeepSeek V3           ← $0.27/1M input
+└── GPT-4o-mini           ← $0.15/1M input
+
+Tier 3 — PREMIUM (enterprise users):
+├── DeepSeek R1           ← $0.55/1M
+└── GPT-4o                ← $2.50/1M
+
+Chi phí/video: 0đ (free tier) → ~23 VND (DeepSeek) → max ~250 VND (GPT-4o)
+Tất cả provider quản lý qua Admin UI — thêm/sửa/xóa/test không cần sửa code.
+```
+
+---
+
+## Billing — API Bank
+
+```
+Flow: User chuyển khoản → ghi nội dung mã CTF5XXXXXX → 
+      Cron poll thueapibank.vn mỗi 15s → auto match → credit user
+
+Bank info quản lý qua Admin Settings — đổi số tài khoản không cần deploy.
+QR code VietQR auto-generate.
+Manual confirm trong Admin nếu auto-match fail.
+```
+
+---
+
+## Updated Prisma Schema (new models)
+
+```prisma
+// Thêm vào schema.prisma ngoài User/Job/Video/Payment/Subscription/AuditLog:
+
+model Template { ... }         // Module 6
+model TTSProvider { ... }      // Module 7
+model TTSVoice { ... }         // Module 7
+model AIProvider { ... }       // Module 8
+model SystemSetting { ... }    // Module 9
+```
+
+---
+
+## Project Structure (updated)
+
+```
+CTF5/
+├── .agents/
+│   └── skills/
+│       ├── design-taste-frontend/    # TasteSkill v2 — auto-installed
+│       │   └── SKILL.md
+│       └── output-skill/             # Anti-placeholder — auto-installed
+│           └── SKILL.md
+├── apps/
+│   ├── web/
+│   │   └── src/app/
+│   │       ├── (auth)/               # Login, register, forgot-password
+│   │       ├── (dashboard)/          # User dashboard, create, jobs, videos, billing
+│   │       ├── (admin)/admin/        # ⭐ 11 admin modules
+│   │       │   ├── users/
+│   │       │   ├── jobs/
+│   │       │   ├── videos/
+│   │       │   ├── payments/
+│   │       │   ├── subscriptions/
+│   │       │   ├── templates/
+│   │       │   ├── tts/
+│   │       │   ├── ai-providers/
+│   │       │   ├── settings/
+│   │       │   ├── audit-logs/
+│   │       │   └── page.tsx          # Analytics dashboard
+│   │       ├── (marketing)/          # Landing, pricing, features
+│   │       └── api/
+│   │           ├── admin/            # ⭐ All admin CRUD endpoints
+│   │           ├── jobs/
+│   │           ├── billing/
+│   │           └── auth/
+│   └── worker/
+├── packages/
+│   ├── db/                           # Prisma (updated schema)
+│   ├── shared/
+│   └── video/                        # Remotion compositions
+├── tests/
+├── docker/
+└── scripts/
+```
+
+---
+
+## Implementation Phases (updated)
+
+### Phase 1 — Setup (Day 1-2)
+```
+- [ ] Turborepo + pnpm + TypeScript strict
+- [ ] TasteSkill install: npx taste-skill@latest
+- [ ] TasteSkill output-skill install
+- [ ] SKILL.md customize cho Vietnamese SaaS brand
+- [ ] Docker Compose (PostgreSQL + Redis + MinIO)
+- [ ] Prisma schema (ALL models including admin) + migration
+- [ ] Seed: test user, admin user, default templates, default providers
+- [ ] packages/shared: types, Zod validators
+```
+
+### Phase 2 — Core Services (Day 3-7)
+```
+- [ ] Shopee scraper (Playwright + stealth)
+- [ ] TikTok Shop scraper
+- [ ] AI provider chain (Gemini FREE → DeepSeek → GPT-4o-mini)
+- [ ] FPT.AI TTS + fallback chain
+- [ ] R2/MinIO upload service
+- [ ] BullMQ pipeline (all queues)
+- [ ] FFmpeg service
+- [ ] Bank API payment poller
+```
+
+### Phase 3 — Video Pipeline (Day 8-12)
+```
+- [ ] Remotion setup
+- [ ] 3 templates: clean_minimal, dark_energy, shopee_orange
+- [ ] Caption overlay (Whisper word-level sync)
+- [ ] Music ducking + thumbnail generation
+- [ ] Pipeline integration test
+```
+
+### Phase 4 — Frontend User Side (Day 13-18)
+```
+- [ ] Design system (TasteSkill enforced)
+- [ ] Auth flow (register → verify → login)
+- [ ] Dashboard + create + jobs + videos
+- [ ] Billing: bank transfer + QR + auto confirm
+- [ ] Settings
+- [ ] Landing, pricing, features (SEO)
+- [ ] Multi-domain middleware
+```
+
+### Phase 5 — Admin Panel (Day 19-23) ⭐
+```
+- [ ] Admin layout: sidebar, breadcrumbs, role guard
+- [ ] Module 1: User management (full CRUD)
+- [ ] Module 2: Job management (full CRUD + queue)
+- [ ] Module 3: Video management
+- [ ] Module 4: Payment management + reconciliation
+- [ ] Module 5: Subscription management
+- [ ] Module 6: Template management (CRUD + preview)
+- [ ] Module 7: TTS voice management (CRUD + test)
+- [ ] Module 8: AI provider management (CRUD + test)
+- [ ] Module 9: System settings (all configurable)
+- [ ] Module 10: Audit logs viewer
+- [ ] Module 11: Analytics dashboard + charts
+```
+
+### Phase 6 — Testing (Day 24-28) 🧪
+```
+100% coverage — see testing plan below
+```
+
+### Phase 7 — Staging + Production (Day 29-32)
+```
+- [ ] Local Docker production simulation
+- [ ] Full regression + security audit
+- [ ] VPS provisioning + deploy + SSL
+- [ ] Monitoring + backup
+- [ ] Go live ✅
+```
+
+---
+
+## 🧪 Testing Plan — 100% Coverage (~180 tests)
+
+### New: Admin Tests
+
+#### Unit Tests — Admin (+15)
+```
+✅ Admin middleware: role check, reject non-admin
+✅ User CRUD validators: create, update, credit adjust
+✅ Payment code matcher: description matching logic
+✅ Template config validator: JSON schema
+✅ Settings validator: key-value pairs
+✅ Audit log formatter
+✅ CSV export formatter: users, payments, logs
+✅ Revenue calculator: daily, monthly, by plan
+✅ Credit adjustment: add/subtract/refund logic
+✅ Ban/unban toggle logic
+✅ Template sort order updater
+✅ Provider chain builder from DB config
+✅ Rate limit config parser
+✅ Feature flag evaluator
+✅ Encryption/decryption for API keys
+```
+
+#### Integration Tests — Admin (+10)
+```
+✅ Admin create user → user exists in DB + password hashed
+✅ Admin adjust credits → user credits updated + audit logged
+✅ Admin ban user → user cannot login
+✅ Admin manual confirm payment → credits/plan updated
+✅ Admin refund payment → credits reversed + audit logged
+✅ Admin CRUD template → template available/unavailable for jobs
+✅ Admin CRUD TTS provider → provider chain updated
+✅ Admin CRUD AI provider → provider chain updated
+✅ Admin update settings → settings applied system-wide
+✅ Admin toggle maintenance mode → user routes return 503
+```
+
+#### E2E Tests — Admin (+12)
+```
+✅ Admin login → see admin dashboard
+✅ Non-admin → redirect from /admin
+✅ User list: search, filter, pagination works
+✅ Create user → appears in list
+✅ Edit user → changes saved
+✅ Ban user → status changes, audit logged
+✅ Payment list → manual confirm → status updates
+✅ Template CRUD → create, edit, disable, delete
+✅ TTS provider → add, test voice plays audio, delete
+✅ System settings → change site name → reflected on landing
+✅ Audit logs → filter by action, see details
+✅ Analytics → charts render, date picker works
+```
+
+#### API Tests — Admin (+12)
+```
+✅ All admin endpoints return 403 for non-admin
+✅ GET /api/admin/users — paginated list
+✅ POST /api/admin/users — create with validation
+✅ PATCH /api/admin/users/[id] — update fields
+✅ DELETE /api/admin/users/[id] — soft delete
+✅ PATCH /api/admin/users/[id]/credits — adjust
+✅ POST /api/admin/users/[id]/ban — toggle
+✅ POST /api/admin/payments/[id]/confirm — manual confirm
+✅ POST /api/admin/payments/[id]/refund — refund
+✅ CRUD /api/admin/templates — all operations
+✅ CRUD /api/admin/tts — all operations
+✅ GET /api/admin/stats — dashboard data
+```
+
+### Full Test Summary
+
+| Category | Count | Tool |
+|----------|-------|------|
+| Unit (shared + worker + admin) | ~65 | Vitest |
+| Integration (pipeline + auth + billing + admin) | ~30 | Vitest + DB |
+| API (user + admin) | ~37 | Vitest + fetch |
+| E2E (user flows + admin flows) | ~42 | Playwright |
+| Security | ~18 | Custom |
+| Performance | ~8 | k6 |
+| Cross-browser | 5 | Playwright |
+| Accessibility | scan | axe-core |
+| **Total** | **~205 tests** | **100% pass** |
+
+---
+
+## VPS Recommendation
+
+| Tier | vCPU | RAM | Disk | Giá ~ | Khi nào |
+|------|------|-----|------|-------|---------|
+| Starter | 4 | 8 GB | 100 GB | ~$30/tháng | MVP |
+| **Growth ⭐** | **8** | **16 GB** | **200 GB** | **~$60/tháng** | **100-1000 user** |
+| Scale | 16 | 32 GB | 400 GB | ~$120/tháng | 1000+ user |
+
+---
+
+## Security — 5 Layers
+
+```
+Layer 1 — Network: Nginx + SSL + rate limit + CORS + Helmet + Fail2ban
+Layer 2 — Auth: bcrypt(12) + JWT(15min/7d) + CSRF + lockout + admin role guard
+Layer 3 — Input: Zod all inputs + URL allowlist + CSP + file validation
+Layer 4 — Infra: encrypted API keys in DB + R2 signed URLs + Redis AUTH
+Layer 5 — Business: credits + ownership + audit log + payment code verify + feature flags
+```
+
+---
+
+## Cost Summary
+
+| Component | Free Tier | Paid (per video) |
+|-----------|-----------|-------------------|
+| AI Script | 0đ (Gemini free) | ~23 VND (DeepSeek) |
+| TTS | 0đ (FPT trial) | ~200-500 VND |
+| Render | 0đ (self-host) | 0đ |
+| Storage | 0đ (R2 free 10GB) | ~5 VND |
+| **Total** | **~0đ** | **~230-530 VND** |
+| VPS | — | ~$60/tháng |
+| Bank API | — | phí thuê API (tùy gói) |
