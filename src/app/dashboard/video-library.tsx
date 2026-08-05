@@ -22,6 +22,7 @@ async function loadVideos() {
 export function VideoLibrary() {
   const [videos, setVideos] = useState<VideoRow[]>([]);
   const [message, setMessage] = useState("");
+  const [scheduledVideoId, setScheduledVideoId] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -37,6 +38,38 @@ export function VideoLibrary() {
       active = false;
     };
   }, []);
+
+  async function scheduleVideo(video: VideoRow) {
+    setMessage("");
+    const bestTimeResponse = await fetch("/api/schedule/best-times", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ platform: "tiktok", daysAhead: 2 })
+    });
+    const suggestionResponse = await fetch("/api/schedule/suggestions", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ videoId: video.id, platform: "tiktok", tone: "deal" })
+    });
+    const bestTimeData = (await bestTimeResponse.json()) as { recommendations?: { scheduledAt: string }[] };
+    const suggestionData = (await suggestionResponse.json()) as {
+      suggestion?: { title: string; caption: string; hashtags: string[] };
+    };
+    const response = await fetch("/api/schedule", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        videoId: video.id,
+        platform: "tiktok",
+        title: suggestionData.suggestion?.title ?? video.job?.productSource?.title ?? "Video affiliate",
+        caption: suggestionData.suggestion?.caption,
+        hashtags: suggestionData.suggestion?.hashtags ?? ["#dealhot"],
+        scheduledAt: bestTimeData.recommendations?.[0]?.scheduledAt ?? new Date(Date.now() + 86_400_000).toISOString()
+      })
+    });
+    setScheduledVideoId(response.ok ? video.id : "");
+    setMessage(response.ok ? "Da len lich TikTok draft." : "Khong len lich duoc.");
+  }
 
   return (
     <div className="panel status-list" aria-label="Thu vien video">
@@ -59,6 +92,9 @@ export function VideoLibrary() {
             <a className="button" href={video.downloadUrl}>
               Tai MP4
             </a>
+            <button className="button" type="button" onClick={() => scheduleVideo(video)}>
+              {scheduledVideoId === video.id ? "Da len lich" : "Len lich"}
+            </button>
           </div>
         ))
       )}

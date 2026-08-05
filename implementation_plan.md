@@ -231,7 +231,7 @@ Audit scope ngày 2026-08-06:
 #### Creator Scheduler
 
 - Calendar view for scheduled videos across TikTok, YouTube Shorts, Instagram Reels, Facebook, X/Twitter, LinkedIn, Pinterest.
-- Bulk scheduling from video library.
+- Bulk scheduling from video library. ✅ Foundation: one-click TikTok draft scheduling from dashboard video library.
 - Per-platform caption/title/hashtag fields.
 - AI/rule-based caption and hashtag suggestions per platform. ✅ Foundation API suggests title, caption, hashtags, CTA, and affiliate disclosure from video metadata.
 - Best-time recommendation based on historical performance. ✅ Foundation API returns platform-specific local time recommendations.
