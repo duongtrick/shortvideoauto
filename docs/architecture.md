@@ -63,6 +63,7 @@ Clip candidate API scores pasted long-video transcripts and returns short-form c
 
 Notification service creates in-app notifications and email delivery records for render-complete, render-failed, payment-confirmed, welcome, and password-reset events. If `EMAIL_WEBHOOK_URL` is configured, it posts transactional email payloads through that provider endpoint.
 Notification API lists recent in-app notifications, updates user preferences, and marks owned notifications as read.
+Admin email delivery API lists transactional email audit records by status, event, user, and date order.
 
 ## Deliberate MVP Limits
 

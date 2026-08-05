@@ -41,6 +41,7 @@ import { normalizeInspirationUrl, summarizeInspiration } from "../src/services/i
 import { clipCandidatesInput } from "../src/lib/clip-candidates-validation";
 import { createClipCandidates } from "../src/services/clip-candidates";
 import { notificationPreferenceInput } from "../src/lib/notification-validation";
+import { emailDeliveryQuery } from "../src/lib/email-delivery-validation";
 import {
   renderJobCompletedEmail,
   renderJobFailedEmail,
@@ -168,6 +169,7 @@ assert.equal(
   1
 );
 assert.equal(notificationPreferenceInput.safeParse({ emailRenderDone: true, quietHoursStart: 22 }).success, true);
+assert.equal(emailDeliveryQuery.safeParse({ status: "failed", take: "20" }).success, true);
 assert.match(
   renderJobCompletedEmail({
     appUrl: "https://shortvideoauto.local",
