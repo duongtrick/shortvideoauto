@@ -7,6 +7,7 @@ import { SignOutButton } from "./session-actions";
 import { NotificationCenter } from "./notification-center";
 import { VideoLibrary } from "./video-library";
 import { ScheduleCalendar } from "./schedule-calendar";
+import { SeriesWizard } from "./series-wizard";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -40,6 +41,7 @@ export default async function DashboardPage() {
             <NotificationCenter />
             <VideoLibrary />
             <ScheduleCalendar />
+            <SeriesWizard />
           </div>
         </div>
       </section>

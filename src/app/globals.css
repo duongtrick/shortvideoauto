@@ -265,6 +265,21 @@ input {
   font-size: 16px;
 }
 
+select {
+  min-height: 44px;
+  inline-size: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding-inline: var(--space-3);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+
+.compact-form {
+  gap: var(--space-2);
+}
+
 .status-list {
   display: grid;
   gap: var(--space-2);
@@ -397,7 +412,8 @@ input {
   }
 
   .video-frame,
-  input {
+  input,
+  select {
     background: #101418;
   }
 }
