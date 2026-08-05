@@ -11,6 +11,7 @@
 - Billing webhook stores idempotent raw events before subscription/credit handlers expand.
 - AuditLog model records security-relevant actions such as job creation and bank payment matching.
 - Admin audit logs API supports action/entity filters behind admin role guard.
+- Affiliate content policy check flags sensitive claims and can append disclosure text before render/post.
 - Do not log tokens, cookies, raw payment payload secrets, or TTS credentials.
 - Structured logs include IDs and events only.
 - Sanitize scraped product text before prompts/templates.

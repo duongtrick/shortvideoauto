@@ -27,6 +27,7 @@ import { seriesInput } from "../src/lib/series-validation";
 import { videoLibraryQuery } from "../src/lib/video-library-validation";
 import { scheduledPostInput } from "../src/lib/scheduler-validation";
 import { createManualPublishChecklist } from "../src/services/scheduler";
+import { appendAffiliateDisclosure, checkAffiliateContentPolicy } from "../src/services/content-policy";
 
 assert.equal(parseProductUrl("https://shopee.vn/test?utm=1#frag").normalizedUrl, "https://shopee.vn/test?utm=1");
 assert.equal(parseProductUrl("https://shop.tiktok.com/view/product/1").host, "shop.tiktok.com");
@@ -111,6 +112,8 @@ assert.equal(
   true
 );
 assert.equal(createManualPublishChecklist("tiktok").steps.length > 3, true);
+assert.equal(checkAffiliateContentPolicy("bao hanh loi nhuan moi ngay").allowed, false);
+assert.match(appendAffiliateDisclosure("Review san pham"), /lien ket tiep thi/);
 assert.throws(() => parseProductUrl("http://shopee.vn/item"));
 assert.throws(() => parseProductUrl("https://localhost/admin"));
 assert.throws(() => parseProductUrl("https://example.com/item"));

@@ -1,5 +1,6 @@
 import type { ScrapedProduct } from "./scraper";
 import { writeScriptsWithAi } from "./ai-providers";
+import { appendAffiliateDisclosure, checkAffiliateContentPolicy } from "./content-policy";
 
 export type ScriptDraft = {
   angle: "review nhanh" | "deal sốc" | "vấn đề - giải pháp";
@@ -9,13 +10,13 @@ export type ScriptDraft = {
 
 export async function writeVietnameseScripts(product: ScrapedProduct): Promise<ScriptDraft[]> {
   const aiScripts = await writeScriptsWithAi(product);
-  if (aiScripts) return aiScripts;
+  if (aiScripts) return withPolicy(aiScripts);
 
   const title = product.title;
   const price = product.price;
 
   // ponytail: deterministic drafts; replace with AI provider call after prompt eval set exists.
-  return [
+  return withPolicy([
     {
       angle: "review nhanh",
       content: `${title} hợp nếu bạn cần giải pháp gọn, giá ${price}, dễ dùng mỗi ngày.`,
@@ -31,5 +32,17 @@ export async function writeVietnameseScripts(product: ScrapedProduct): Promise<S
       content: `Bạn đang mất thời gian chọn đồ? ${title} giải quyết nhanh với chi phí thấp.`,
       score: 78
     }
-  ];
+  ]);
+}
+
+function withPolicy(scripts: ScriptDraft[]) {
+  return scripts.map((script) => {
+    const content = appendAffiliateDisclosure(script.content);
+    const policy = checkAffiliateContentPolicy(content);
+    return {
+      ...script,
+      content,
+      score: policy.allowed ? script.score : Math.min(script.score, 20)
+    };
+  });
 }
