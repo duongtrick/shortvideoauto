@@ -66,6 +66,7 @@ Notification API lists recent in-app notifications, updates user preferences, an
 Notification preferences suppress non-security email during quiet hours or digest mode while still allowing password reset and admin test messages.
 Digest service stores deferred/digest-pending email records and can send one summary email per user, then marks included records as digested.
 Admin email delivery API lists transactional email audit records by status, event, user, and date order. Failed or skipped deliveries can be retried by an admin endpoint.
+Email provider webhook updates delivery audit status by provider ID or delivery ID using `EMAIL_EVENT_WEBHOOK_SECRET`.
 Admin email template API lists default/custom transactional templates, saves overrides in `SystemSetting`, and sends test emails through the same delivery log.
 Admin stale-job alert API scans queued render jobs older than a threshold and sends one queued-too-long notification per job.
 

@@ -42,6 +42,7 @@ import { clipCandidatesInput } from "../src/lib/clip-candidates-validation";
 import { createClipCandidates } from "../src/services/clip-candidates";
 import { notificationPreferenceInput } from "../src/lib/notification-validation";
 import { emailDeliveryQuery, emailDigestInput } from "../src/lib/email-delivery-validation";
+import { emailWebhookInput } from "../src/lib/email-webhook-validation";
 import { emailTemplatePatch, emailTemplateTestInput } from "../src/lib/email-template-validation";
 import { defaultEmailTemplate, emailTemplateKeys } from "../src/services/email-templates";
 import { queuedJobAlertInput } from "../src/lib/job-alert-validation";
@@ -180,6 +181,8 @@ assert.equal(
 assert.equal(notificationPreferenceInput.safeParse({ emailRenderDone: true, quietHoursStart: 22 }).success, true);
 assert.equal(emailDeliveryQuery.safeParse({ status: "digest_pending", take: "20" }).success, true);
 assert.equal(emailDigestInput.safeParse({ take: "100" }).success, true);
+assert.equal(emailWebhookInput.safeParse({ providerId: "msg_1", status: "delivered" }).success, true);
+assert.equal(emailWebhookInput.safeParse({ status: "opened" }).success, false);
 assert.equal(emailTemplatePatch.safeParse({ key: "auth.welcome", subject: "Hello", bodyText: "Welcome body text" }).success, true);
 assert.equal(emailTemplateTestInput.safeParse({ key: "render.completed", toEmail: "admin@example.com" }).success, true);
 assert.equal(emailTemplateKeys.includes("auth.password_reset"), true);
