@@ -954,6 +954,7 @@ CTF5/
   - [x] UI foundation: list/create/edit JSON config/toggle active/disable templates
 - [ ] Module 6B: Series management (CRUD + schedule + pause/resume)
 - [ ] Module 7: TTS voice management (CRUD + test)
+  - [x] API + UI foundation: list/create/edit config/toggle active/disable/test TTS providers
 - [ ] Module 8: AI provider management (CRUD + test)
 - [ ] Module 9: System settings (all configurable)
   - [x] UI foundation: list/filter by group and upsert JSON/string/number/boolean settings

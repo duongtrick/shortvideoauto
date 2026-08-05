@@ -62,6 +62,7 @@ import {
   adminUpdateUserInput,
   adminUsersQuery
 } from "../src/lib/admin-user-validation";
+import { adminProviderInput, adminProviderPatch, adminProviderTestInput } from "../src/lib/admin-provider-validation";
 import {
   renderJobCompletedEmail,
   renderJobFailedEmail,
@@ -258,6 +259,9 @@ assert.equal(adminUpdateUserInput.safeParse({ name: null, role: "banned" }).succ
 assert.equal(adminCreditAdjustmentInput.safeParse({ delta: 50, note: "bonus" }).success, true);
 assert.equal(adminCreditAdjustmentInput.safeParse({ delta: 0 }).success, false);
 assert.equal(adminBanUserInput.safeParse({ banned: true }).success, true);
+assert.equal(adminProviderInput.safeParse({ key: "fpt", name: "FPT.AI", config: { voice: "banmai" } }).success, true);
+assert.equal(adminProviderPatch.safeParse({ isActive: false }).success, true);
+assert.equal(adminProviderTestInput.safeParse({ text: "Xin chao" }).success, true);
 assert.equal(isWithinQuietHours(23, 22, 7), true);
 assert.equal(isWithinQuietHours(12, 22, 7), false);
 assert.equal(isSecurityEmailEvent("auth.password_reset"), true);
