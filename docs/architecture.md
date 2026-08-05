@@ -47,6 +47,8 @@ TikTok calculator estimates engagement, post value range, and affiliate potentia
 
 Referral API creates stable referral links and stores pending/paid affiliate commissions for the SaaS affiliate program.
 
+Caption export API converts caption segments to SRT or VTT for Caption Studio and downloadable metadata assets.
+
 Admin settings API reads by group and upserts validated setting values with audit logging.
 
 Admin template API can list, create, update, and disable video templates with audit logging.
