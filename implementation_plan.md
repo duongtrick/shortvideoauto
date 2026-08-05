@@ -14,7 +14,7 @@ Hệ thống SaaS full-stack TypeScript tạo video affiliate 9:16 tự động 
 | Domain | Multi-domain support |
 | FE Quality | **TasteSkill v2** — anti-slop design rules |
 | Admin | **Full CRUD** — 11 module quản trị |
-| Testing | 100% coverage — ~180 test cases |
+| Testing | 100% coverage — ~220 test cases |
 
 ---
 
@@ -79,6 +79,123 @@ npx taste-skill@latest --skill output-skill  # Anti-placeholder rules
 ✅ Pre-flight check — every checkbox pass before ship
 ✅ Output-skill — no placeholder comments, no //TODO, complete output
 ```
+
+---
+
+## Responsive & Adaptive Design — All Devices
+
+### Responsive Breakpoints
+
+| Breakpoint | Width | Target |
+|------------|-------|--------|
+| Mobile Small | 320px | iPhone SE, điện thoại cũ |
+| Mobile | 375px-428px | iPhone 14/15, Samsung Galaxy |
+| Tablet Portrait | 768px | iPad Mini, iPad Air |
+| Tablet Landscape | 1024px | iPad Pro landscape |
+| Desktop | 1280px-1440px | Laptop 13-15 inch |
+| Desktop Large | 1920px | Monitor Full HD |
+| Desktop XL | 2560px | Monitor 2K/4K |
+
+### Thiết bị cần test và tối ưu
+
+- iPhone SE (320px) đến iPhone 15 Pro Max (430px)
+- Samsung Galaxy S series, A series
+- iPad Mini, iPad Air, iPad Pro 11 inch và 12.9 inch
+- Laptop 13 inch, 14 inch, 15 inch, 16 inch
+- Monitor 24 inch Full HD, 27 inch 2K, 32 inch 4K
+- Màn hình ultra-wide 21:9
+
+### Mobile-First Design
+
+- Tất cả CSS viết mobile-first bằng `min-width` breakpoints.
+- Touch targets tối thiểu 44x44px theo Apple HIG.
+- Swipe gestures cho carousel và video preview.
+- Bottom navigation cho dashboard trên mobile.
+- Sticky CTA buttons trên mobile.
+- Font size input tối thiểu 16px để tránh iOS zoom.
+- Safe area insets cho iPhone notch và Dynamic Island.
+- Pull-to-refresh cho job list.
+- Sheet hoặc bottom drawer thay modal trên mobile.
+
+### Tablet Optimization
+
+- Split-view layout cho dashboard: sidebar + content.
+- Grid layouts: 2 columns tablet, 3-4 columns desktop.
+- Admin panel có collapsible sidebar, dùng tốt trên iPad.
+- Video preview side-by-side với script trên tablet landscape.
+
+### Desktop Enhancement
+
+- Keyboard shortcuts: `Ctrl+N` tạo job, `Ctrl+K` search.
+- Hover states và tooltips.
+- Multi-column layouts tận dụng không gian.
+- Drag-and-drop cho template sort và file upload.
+- Context menus cho right-click.
+- Resizable panels trong admin dashboard.
+
+### Performance Per Device
+
+- Lazy load images bằng `next/image` và `loading="lazy"`.
+- Responsive images với `srcset` và `sizes`.
+- Video dùng poster image, lazy load player.
+- `prefers-reduced-motion` media query.
+- Dark mode tự nhận `prefers-color-scheme`.
+- Connection-aware: giảm quality trên slow network bằng `navigator.connection`.
+- Touch vs pointer detection để điều chỉnh UI.
+
+### Typography Scale
+
+- Fluid typography dùng `clamp()` cho headings.
+- Body: 14px mobile đến 16px desktop.
+- H1: 28px mobile đến 48px desktop.
+- Line height: 1.5 body, 1.2 headings.
+- Vietnamese text phải đủ line-height để dấu không bị cắt.
+
+### Navigation Patterns
+
+- Mobile: hamburger menu + bottom tab bar.
+- Tablet: collapsible sidebar.
+- Desktop: persistent sidebar + breadcrumbs.
+- Admin mobile: bottom sheet navigation, không ẩn chức năng.
+
+### Forms & Input
+
+- Stacked labels trên mobile, inline trên desktop.
+- Input type đúng: `tel`, `email`, `url`, `number`.
+- Auto-complete attributes.
+- Paste detection cho URL input trên mobile clipboard.
+- Camera/gallery picker cho mobile upload.
+
+### Dashboard Responsive
+
+- KPI cards: 1 column mobile, 2 tablet, 4 desktop.
+- Charts: full-width mobile, grid desktop.
+- Tables: horizontal scroll mobile hoặc card view.
+- Admin tables: card layout trên mobile, table desktop.
+
+### Video Player Responsive
+
+- 9:16 `aspect-ratio` container.
+- Fullscreen support mobile.
+- Picture-in-Picture desktop.
+- Download button accessible mọi size.
+
+### CSS Architecture
+
+- CSS custom properties cho responsive spacing và sizing.
+- Container queries cho component-level responsive, không chỉ viewport.
+- Logical properties: inline/block thay left/right.
+- Native CSS `aspect-ratio`.
+- Grid + flexbox, không dùng float.
+- Không horizontal overflow trên bất kỳ viewport nào.
+
+### Integration Requirements
+
+1. Phase 4 design system phải áp dụng toàn bộ responsive/adaptive rules.
+2. Mọi component UI phải có mobile, tablet, desktop states.
+3. Phase 5 admin panel phải dùng được đầy đủ trên mobile/tablet/desktop.
+4. Test plan thêm khoảng 15 responsive tests.
+5. Cross-device testing checklist bắt buộc trước deploy.
 
 ---
 
@@ -644,8 +761,12 @@ CTF5/
 ### Phase 4 — Frontend User Side (Day 13-18)
 ```
 - [ ] Design system (TasteSkill enforced)
+- [ ] Responsive/adaptive design system: 320, 375, 428, 768, 1024, 1280, 1920, 2560px
 - [ ] Auth flow (register → verify → login)
 - [ ] Dashboard + create + jobs + videos
+- [ ] Mobile bottom nav, sticky CTA, safe-area support, pull-to-refresh job list
+- [ ] Tablet split-view dashboard and side-by-side script/video preview
+- [ ] Desktop shortcuts, hover/tooltips, multi-column layouts
 - [ ] Billing: bank transfer + QR + auto confirm
 - [ ] Settings
 - [ ] Landing, pricing, features (SEO)
@@ -655,6 +776,8 @@ CTF5/
 ### Phase 5 — Admin Panel (Day 19-23) ⭐
 ```
 - [ ] Admin layout: sidebar, breadcrumbs, role guard
+- [ ] Responsive admin shell: mobile bottom sheet nav, tablet collapsible sidebar, desktop persistent sidebar
+- [ ] Admin tables: card layout mobile, horizontal scroll fallback, table desktop
 - [ ] Module 1: User management (full CRUD)
 - [ ] Module 2: Job management (full CRUD + queue)
 - [ ] Module 3: Video management
@@ -684,7 +807,7 @@ CTF5/
 
 ---
 
-## 🧪 Testing Plan — 100% Coverage (~180 tests)
+## 🧪 Testing Plan — 100% Coverage (~220 tests)
 
 ### New: Admin Tests
 
@@ -737,6 +860,25 @@ CTF5/
 ✅ Analytics → charts render, date picker works
 ```
 
+#### Responsive Tests (+15)
+```
+✅ Viewport 320px: no horizontal overflow, primary CTA reachable
+✅ Viewport 375px: dashboard create-job form usable
+✅ Viewport 428px: video preview keeps 9:16 ratio
+✅ Viewport 768px: tablet dashboard split-view renders
+✅ Viewport 1024px: script + video preview side-by-side
+✅ Viewport 1280px: desktop sidebar/breadcrumb layout renders
+✅ Viewport 1920px: max-width and multi-column layout do not stretch badly
+✅ Orientation change portrait ↔ landscape keeps state
+✅ Touch simulation: bottom nav and sticky CTA are tappable
+✅ iOS Safari viewport height: safe-area spacing works
+✅ Reduced motion: animations disabled or shortened
+✅ Dark mode: prefers-color-scheme dark passes contrast
+✅ Slow connection: media quality fallback path selected
+✅ Admin table mobile: card layout visible without hidden actions
+✅ Video player: fullscreen mobile and PiP desktop controls available
+```
+
 #### API Tests — Admin (+12)
 ```
 ✅ All admin endpoints return 403 for non-admin
@@ -761,11 +903,12 @@ CTF5/
 | Integration (pipeline + auth + billing + admin) | ~30 | Vitest + DB |
 | API (user + admin) | ~37 | Vitest + fetch |
 | E2E (user flows + admin flows) | ~42 | Playwright |
+| Responsive | ~15 | Playwright + device presets |
 | Security | ~18 | Custom |
 | Performance | ~8 | k6 |
 | Cross-browser | 5 | Playwright |
 | Accessibility | scan | axe-core |
-| **Total** | **~205 tests** | **100% pass** |
+| **Total** | **~220 tests** | **100% pass** |
 
 ---
 
