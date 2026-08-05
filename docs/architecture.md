@@ -56,6 +56,7 @@ Caption export API converts caption segments to SRT or VTT for Caption Studio an
 
 Video export bundle API returns MP4 signed URL, product metadata, source URL, series metadata, scripts, and generated SRT/VTT captions.
 Series API creates content series and lets owners pause/resume automation state.
+Series next-run API calculates cadence interval, next run time, and credit-blocked state for automation planning.
 Thumbnail API returns a 1080x1920 thumbnail render plan from video product title, price, image, and accent metadata.
 Audio ducking API returns FFmpeg sidechain compression plans for soft, normal, and aggressive background-music ducking.
 Media preview API lists default Vietnamese voice previews and copyright-safe background music presets before render.

@@ -42,6 +42,7 @@ import { createMusicDuckingPlan } from "../src/services/audio-mix";
 import { mediaPreviewQuery } from "../src/lib/media-preview-validation";
 import { listMediaPreviews } from "../src/services/media-preview";
 import { createPipelineReadinessReport } from "../src/services/pipeline-check";
+import { createNextSeriesRun, getSeriesCadenceIntervalHours } from "../src/services/series-automation";
 import { templateMarketplaceQuery } from "../src/lib/template-marketplace-validation";
 import { createTemplatePreview, filterTemplatePreviews } from "../src/services/template-marketplace";
 import { inspirationInput } from "../src/lib/inspiration-validation";
@@ -352,6 +353,17 @@ assert.equal(
     hasRenderPlan: true,
     hasStorageKey: true
   }).ready,
+  true
+);
+assert.equal(getSeriesCadenceIntervalHours("daily"), 24);
+assert.equal(
+  createNextSeriesRun({
+    seriesId: "series_1",
+    cadence: "daily",
+    lastJobCreatedAt: new Date("2026-01-01T00:00:00.000Z"),
+    now: new Date("2026-01-02T01:00:00.000Z"),
+    hasCredits: true
+  }).canQueueNow,
   true
 );
 assert.throws(() => parseProductUrl("http://shopee.vn/item"));

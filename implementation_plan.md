@@ -226,6 +226,7 @@ Audit scope ngày 2026-08-06:
 - Series wizard: create once, generate many videos over time.
 - Daily/weekly posting cadence: 3 times/week, once/day, twice/day.
 - Series-level queue: generate next video automatically while respecting credit/subscription limits.
+- ✅ Foundation: next-run planner calculates cadence and credit-blocked state.
 - Series replacement flow: archive old series and start a new one without losing analytics.
 - ✅ Foundation: dashboard wizard creates series and owner API pauses/resumes series.
 
