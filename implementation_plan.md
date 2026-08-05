@@ -951,6 +951,7 @@ CTF5/
 - [ ] Module 4: Payment management + reconciliation
   - [x] UI foundation: status filter, payment list, manual confirm with bank transaction ID, refund action
 - [ ] Module 5: Subscription management
+  - [x] API + UI foundation: list/search, create manual subscription, update status/period, cancel
 - [ ] Module 6: Template management (CRUD + preview)
   - [x] UI foundation: list/create/edit JSON config/toggle active/disable templates
 - [ ] Module 6B: Series management (CRUD + schedule + pause/resume)

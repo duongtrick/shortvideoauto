@@ -23,6 +23,7 @@ export default async function AdminLayout({ children }: Readonly<{ children: Rea
           <a href="/admin/jobs">Jobs</a>
           <a href="/admin/videos">Videos</a>
           <a href="/admin/payments">Payments</a>
+          <a href="/admin/subscriptions">Subscriptions</a>
           <a href="/admin/templates">Templates</a>
           <a href="/admin/series">Series</a>
           <a href="/admin/tts">TTS</a>

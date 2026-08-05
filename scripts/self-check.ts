@@ -63,6 +63,7 @@ import {
   adminUsersQuery
 } from "../src/lib/admin-user-validation";
 import { adminProviderInput, adminProviderPatch, adminProviderTestInput } from "../src/lib/admin-provider-validation";
+import { adminSubscriptionInput, adminSubscriptionPatch } from "../src/lib/admin-subscription-validation";
 import {
   renderJobCompletedEmail,
   renderJobFailedEmail,
@@ -273,6 +274,17 @@ assert.equal(adminBanUserInput.safeParse({ banned: true }).success, true);
 assert.equal(adminProviderInput.safeParse({ key: "fpt", name: "FPT.AI", config: { voice: "banmai" } }).success, true);
 assert.equal(adminProviderPatch.safeParse({ isActive: false }).success, true);
 assert.equal(adminProviderTestInput.safeParse({ text: "Xin chao" }).success, true);
+assert.equal(
+  adminSubscriptionInput.safeParse({
+    userEmail: "admin@example.com",
+    provider: "manual",
+    providerId: "sub_1",
+    status: "active",
+    currentPeriodEnd: new Date("2026-12-31T00:00:00.000Z").toISOString()
+  }).success,
+  true
+);
+assert.equal(adminSubscriptionPatch.safeParse({ status: "canceled", currentPeriodEnd: null }).success, true);
 assert.equal(isWithinQuietHours(23, 22, 7), true);
 assert.equal(isWithinQuietHours(12, 22, 7), false);
 assert.equal(isSecurityEmailEvent("auth.password_reset"), true);
