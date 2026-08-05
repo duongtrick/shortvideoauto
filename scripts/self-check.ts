@@ -38,6 +38,8 @@ import { templateMarketplaceQuery } from "../src/lib/template-marketplace-valida
 import { createTemplatePreview, filterTemplatePreviews } from "../src/services/template-marketplace";
 import { inspirationInput } from "../src/lib/inspiration-validation";
 import { normalizeInspirationUrl, summarizeInspiration } from "../src/services/inspiration";
+import { clipCandidatesInput } from "../src/lib/clip-candidates-validation";
+import { createClipCandidates } from "../src/services/clip-candidates";
 
 assert.equal(parseProductUrl("https://shopee.vn/test?utm=1#frag").normalizedUrl, "https://shopee.vn/test?utm=1");
 assert.equal(parseProductUrl("https://shop.tiktok.com/view/product/1").host, "shop.tiktok.com");
@@ -145,6 +147,18 @@ assert.equal(
 );
 assert.equal(normalizeInspirationUrl("https://www.tiktok.com/@shop/video/1#comments"), "https://www.tiktok.com/@shop/video/1");
 assert.equal(summarizeInspiration({ hook: "Dung mua neu chua xem", cta: null, tags: [] }).hasActionablePattern, true);
+assert.equal(
+  clipCandidatesInput.safeParse({ transcript: "Dung mua san pham nay neu chua xem deal. Bi quyet la xem gia va rating truoc.", maxClips: 2 }).success,
+  true
+);
+assert.equal(
+  createClipCandidates({
+    transcript: "Dung mua san pham nay neu chua xem deal hot hom nay. Bi quyet la xem gia va rating truoc khi bam mua.",
+    targetSeconds: 30,
+    maxClips: 1
+  }).candidates.length,
+  1
+);
 assert.equal(
   createVideoExportBundle({
     id: "video_1",

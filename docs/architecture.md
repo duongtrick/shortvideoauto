@@ -59,6 +59,8 @@ Template marketplace API exposes active template previews with category, platfor
 
 Inspiration board API lets users save public competitor examples with platform, hook, CTA, template key, notes, and tags for later script/template planning.
 
+Clip candidate API scores pasted long-video transcripts and returns short-form candidate hooks, start/end hints, estimated duration, and next action.
+
 ## Deliberate MVP Limits
 
 - No auto-post.

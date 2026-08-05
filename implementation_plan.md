@@ -265,6 +265,7 @@ Audit scope ngày 2026-08-06:
 - Upload long video or paste YouTube URL.
 - AI detects hooks, insights, reactions, product mentions, and affiliate-friendly moments.
 - Create 10+ short clips from one source.
+- ✅ Foundation API scores transcript text and returns clip candidates with hook, start/end hints, duration, and reason.
 - Keyword-guided clipping: include moments matching user keywords.
 - Auto-reframe to 9:16 and add captions/title.
 
