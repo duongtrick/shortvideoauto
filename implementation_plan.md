@@ -909,7 +909,7 @@ CTF5/
 - [x] Caption Studio foundation: caption presets, word emphasis preview, SRT/VTT export
 - [x] Thumbnail generation foundation: 1080x1920 thumbnail render plan from product title, price, image, accent
 - [x] Music ducking foundation: FFmpeg sidechain compression plans for soft, normal, aggressive presets
-- [ ] Voice/music preview before render
+- [x] Voice/music preview foundation: default Vietnamese voice previews and copyright-safe music presets
 - [ ] Pipeline integration test
 ```
 

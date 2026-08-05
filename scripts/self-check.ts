@@ -38,6 +38,8 @@ import { createVideoExportBundle } from "../src/services/video-export";
 import { createThumbnailPlan } from "../src/services/thumbnails";
 import { audioMixInput } from "../src/lib/audio-mix-validation";
 import { createMusicDuckingPlan } from "../src/services/audio-mix";
+import { mediaPreviewQuery } from "../src/lib/media-preview-validation";
+import { listMediaPreviews } from "../src/services/media-preview";
 import { templateMarketplaceQuery } from "../src/lib/template-marketplace-validation";
 import { createTemplatePreview, filterTemplatePreviews } from "../src/services/template-marketplace";
 import { inspirationInput } from "../src/lib/inspiration-validation";
@@ -336,6 +338,8 @@ assert.match(
   }).filter,
   /sidechaincompress/
 );
+assert.equal(mediaPreviewQuery.safeParse({ type: "voice", language: "vi-VN" }).success, true);
+assert.equal(listMediaPreviews({ type: "voice", language: "vi-VN" }).voices.length > 0, true);
 assert.throws(() => parseProductUrl("http://shopee.vn/item"));
 assert.throws(() => parseProductUrl("https://localhost/admin"));
 assert.throws(() => parseProductUrl("https://example.com/item"));
