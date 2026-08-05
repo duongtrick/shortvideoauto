@@ -23,6 +23,11 @@ npm.cmd run self-check
 npm.cmd run dev
 ```
 
+Demo auth:
+
+- Credentials provider accepts any valid email in local dev.
+- Seeded admin email: `admin@shortvideoauto.local`.
+
 One command on Windows:
 
 ```powershell
