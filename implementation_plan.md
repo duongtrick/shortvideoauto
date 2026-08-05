@@ -919,7 +919,7 @@ CTF5/
 - [ ] Auth flow (register → verify → login)
 - [ ] Dashboard + create + jobs + videos
 - [ ] Video library filters: platform, status, template, source, series, date, language
-- [ ] Preview/edit before render: script, title, images, music, voice, CTA
+- [x] Preview/edit foundation before render/post reuse: script, title, images, price, selected script, CTA
 - [ ] Series wizard: topic, niche, cadence, template, voice, platform targets
 - [ ] Social scheduler calendar and manual publish checklist
 - [ ] Mobile bottom nav, sticky CTA, safe-area support, pull-to-refresh job list

@@ -25,6 +25,7 @@ import { getSystemSetting, setSystemSetting } from "../src/services/system-setti
 import { createResetToken, hashPassword, verifyPassword } from "../src/services/passwords";
 import { seriesInput } from "../src/lib/series-validation";
 import { videoLibraryQuery } from "../src/lib/video-library-validation";
+import { jobPreviewPatch } from "../src/lib/job-preview-validation";
 import { bestTimeInput, scheduledPostInput, scheduleSuggestionInput } from "../src/lib/scheduler-validation";
 import { createManualPublishChecklist, recommendBestScheduleTimes, suggestScheduleCopy } from "../src/services/scheduler";
 import { appendAffiliateDisclosure, checkAffiliateContentPolicy } from "../src/services/content-policy";
@@ -134,6 +135,15 @@ assert.equal(
 );
 assert.equal(videoLibraryQuery.safeParse({ take: "20", status: "completed" }).success, true);
 assert.equal(videoLibraryQuery.safeParse({ take: "999" }).success, false);
+assert.equal(
+  jobPreviewPatch.safeParse({
+    productTitle: "Noi com mini",
+    selectedScriptId: "script_1",
+    scriptContent: "Review nhanh san pham dang hot hom nay",
+    cta: "Bam xem deal"
+  }).success,
+  true
+);
 assert.equal(
   scheduledPostInput.safeParse({
     videoId: "video_1",
