@@ -927,7 +927,7 @@ CTF5/
 - [ ] Tablet split-view dashboard and side-by-side script/video preview
 - [ ] Desktop shortcuts, hover/tooltips, multi-column layouts
 - [ ] Billing: bank transfer + QR + auto confirm
-- [ ] Settings
+- [x] Settings foundation: account page notification preferences UI with email toggles, digest mode, quiet hours
 - [x] Notification center foundation: list notifications, mark read, update preferences, quiet hours, and digest sending for render done, render failed, billing, account security
 - [ ] Landing, pricing, features (SEO)
 - [ ] Multi-domain middleware
