@@ -43,6 +43,8 @@ Video library API filters user videos by render status, source host, series, tem
 
 Schedule API stores per-platform planned posts with caption, hashtags, scheduled time, and manual publish checklist for platforms without approved posting APIs.
 
+TikTok calculator estimates engagement, post value range, and affiliate potential from user-supplied metrics.
+
 Admin settings API reads by group and upserts validated setting values with audit logging.
 
 Admin template API can list, create, update, and disable video templates with audit logging.
