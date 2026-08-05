@@ -31,6 +31,8 @@ Bank billing uses unique payment codes, token-protected poll endpoint, transacti
 
 Admin stats endpoint aggregates users, jobs, videos, paid payments, revenue, and credits sold behind admin role guard.
 
+Admin job API lists jobs by status and can requeue failed jobs with audit logging.
+
 ## Deliberate MVP Limits
 
 - No auto-post.
