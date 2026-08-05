@@ -10,6 +10,7 @@ import { synthesizeVietnameseSpeech } from "@/services/tts";
 import { refundRenderCredit } from "@/services/credits";
 import { createStorageKey } from "@/services/storage";
 import { createRenderArtifact } from "@/services/renderer";
+import { safeNotifyRenderCompleted, safeNotifyRenderFailed } from "@/services/notifications";
 
 async function runRenderPipeline(payload: RenderJobPayload) {
   logger.info("render_job_started", { jobId: payload.jobId, userId: payload.userId });
@@ -65,6 +66,7 @@ async function runRenderPipeline(payload: RenderJobPayload) {
     where: { id: payload.jobId },
     data: { status: "completed", outputVideoId: video.id }
   });
+  await safeNotifyRenderCompleted({ userId: payload.userId, jobId: payload.jobId, videoId: video.id });
   logger.info("render_job_completed", { jobId: payload.jobId, videoId: video.id });
 }
 
@@ -84,6 +86,11 @@ const worker = new Worker<RenderJobPayload>(
           }
         });
         await refundRenderCredit(tx, { userId: job.data.userId, jobId: job.data.jobId });
+      });
+      await safeNotifyRenderFailed({
+        userId: job.data.userId,
+        jobId: job.data.jobId,
+        errorCode: "WORKER_PIPELINE_FAILED"
       });
       throw error;
     }

@@ -41,6 +41,9 @@ model User {
   videos               Video[]
   scheduledPosts       ScheduledPost[]
   inspirationExamples  InspirationExample[]
+  emailDeliveries      EmailDelivery[]
+  notifications        InAppNotification[]
+  notificationPrefs    NotificationPreference?
   creditLedger         CreditLedger[]
   subscriptions        Subscription[]
   payments             Payment[]
@@ -68,6 +71,56 @@ model InspirationExample {
   @@index([userId, createdAt])
   @@index([platform, createdAt])
   @@index([templateKey, createdAt])
+}
+
+model EmailDelivery {
+  id         String    @id @default(cuid())
+  userId     String
+  event      String
+  toEmail    String
+  subject    String
+  bodyText   String
+  status     String    @default("pending")
+  provider   String?
+  providerId String?
+  retryCount Int       @default(0)
+  lastError  String?
+  sentAt     DateTime?
+  createdAt  DateTime  @default(now())
+  user       User      @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([event, createdAt])
+  @@index([status, createdAt])
+}
+
+model InAppNotification {
+  id        String    @id @default(cuid())
+  userId    String
+  event     String
+  title     String
+  body      String
+  actionUrl String?
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([userId, readAt])
+}
+
+model NotificationPreference {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  emailRenderDone Boolean  @default(true)
+  emailRenderFail Boolean  @default(true)
+  emailBilling    Boolean  @default(true)
+  emailSecurity   Boolean  @default(true)
+  digestMode      Boolean  @default(false)
+  quietHoursStart Int?
+  quietHoursEnd   Int?
+  updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [userId], references: [id])
 }
 
 model ProductSource {

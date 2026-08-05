@@ -40,6 +40,8 @@ import { inspirationInput } from "../src/lib/inspiration-validation";
 import { normalizeInspirationUrl, summarizeInspiration } from "../src/services/inspiration";
 import { clipCandidatesInput } from "../src/lib/clip-candidates-validation";
 import { createClipCandidates } from "../src/services/clip-candidates";
+import { notificationPreferenceInput } from "../src/lib/notification-validation";
+import { renderJobCompletedEmail, renderJobFailedEmail } from "../src/services/notifications";
 
 assert.equal(parseProductUrl("https://shopee.vn/test?utm=1#frag").normalizedUrl, "https://shopee.vn/test?utm=1");
 assert.equal(parseProductUrl("https://shop.tiktok.com/view/product/1").host, "shop.tiktok.com");
@@ -158,6 +160,27 @@ assert.equal(
     maxClips: 1
   }).candidates.length,
   1
+);
+assert.equal(notificationPreferenceInput.safeParse({ emailRenderDone: true, quietHoursStart: 22 }).success, true);
+assert.match(
+  renderJobCompletedEmail({
+    appUrl: "https://shortvideoauto.local",
+    videoTitle: "Deal hot",
+    downloadUrl: "https://shortvideoauto.local/d.mp4",
+    exportUrl: "https://shortvideoauto.local/export",
+    scheduleUrl: "https://shortvideoauto.local/schedule",
+    durationMs: 30000
+  }).bodyText,
+  /Tai MP4/
+);
+assert.match(
+  renderJobFailedEmail({
+    appUrl: "https://shortvideoauto.local",
+    jobId: "job_1",
+    errorCode: "WORKER_PIPELINE_FAILED",
+    refundStatus: "refunded"
+  }).bodyText,
+  /Trang thai hoan credit/
 );
 assert.equal(
   createVideoExportBundle({

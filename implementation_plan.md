@@ -891,8 +891,8 @@ CTF5/
 - [ ] AI provider chain (Gemini FREE → DeepSeek → GPT-4o-mini)
 - [ ] FPT.AI TTS + fallback chain
 - [ ] R2/MinIO upload service
-- [ ] Email provider chain: Resend/SMTP primary, SMTP fallback, transactional template renderer
-- [ ] Notification service: job completed, job failed, billing, auth/account events
+- [x] Email provider foundation: webhook primary via `EMAIL_WEBHOOK_URL`, transactional template renderer, delivery audit
+- [x] Notification service foundation: render completed/render failed email + in-app events
 - [ ] BullMQ pipeline (all queues)
 - [ ] FFmpeg service
 - [ ] Bank API payment poller
@@ -926,7 +926,7 @@ CTF5/
 - [ ] Desktop shortcuts, hover/tooltips, multi-column layouts
 - [ ] Billing: bank transfer + QR + auto confirm
 - [ ] Settings
-- [ ] Notification preferences: render done, render failed, billing, account security, digest mode
+- [x] Notification preferences foundation: render done, render failed, billing, account security, digest mode
 - [ ] Landing, pricing, features (SEO)
 - [ ] Multi-domain middleware
 - [ ] Affiliate referral dashboard for this SaaS
