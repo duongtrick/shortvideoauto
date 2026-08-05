@@ -7,6 +7,24 @@ import { createJobInput, parseProductUrl } from "@/lib/product-url";
 
 const demoUserEmail = "demo@shortvideoauto.local";
 
+export async function GET() {
+  const user = await prisma.user.findUnique({
+    where: { email: demoUserEmail },
+    include: {
+      jobs: {
+        orderBy: { createdAt: "desc" },
+        take: 10,
+        include: {
+          outputVideo: true,
+          productSource: true
+        }
+      }
+    }
+  });
+
+  return NextResponse.json({ jobs: user?.jobs ?? [] });
+}
+
 export async function POST(request: Request) {
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
   const rateLimit = checkRateLimit(`create-job:${ip}`, 10, 60_000);
