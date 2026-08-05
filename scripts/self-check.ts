@@ -42,6 +42,8 @@ import { clipCandidatesInput } from "../src/lib/clip-candidates-validation";
 import { createClipCandidates } from "../src/services/clip-candidates";
 import { notificationPreferenceInput } from "../src/lib/notification-validation";
 import { emailDeliveryQuery } from "../src/lib/email-delivery-validation";
+import { emailTemplatePatch, emailTemplateTestInput } from "../src/lib/email-template-validation";
+import { defaultEmailTemplate, emailTemplateKeys } from "../src/services/email-templates";
 import {
   renderJobCompletedEmail,
   renderJobFailedEmail,
@@ -171,6 +173,10 @@ assert.equal(
 );
 assert.equal(notificationPreferenceInput.safeParse({ emailRenderDone: true, quietHoursStart: 22 }).success, true);
 assert.equal(emailDeliveryQuery.safeParse({ status: "failed", take: "20" }).success, true);
+assert.equal(emailTemplatePatch.safeParse({ key: "auth.welcome", subject: "Hello", bodyText: "Welcome body text" }).success, true);
+assert.equal(emailTemplateTestInput.safeParse({ key: "render.completed", toEmail: "admin@example.com" }).success, true);
+assert.equal(emailTemplateKeys.includes("auth.password_reset"), true);
+assert.match(defaultEmailTemplate("billing.payment_confirmed").bodyText, /Credit da cong/);
 assert.equal(typeof retryEmailDelivery, "function");
 assert.match(
   renderJobCompletedEmail({

@@ -3,17 +3,18 @@ import { prisma } from "@/lib/prisma";
 import { logger } from "@/lib/logger";
 import { createSignedDownloadUrl } from "@/services/storage";
 
-type EmailTemplate = {
+export type EmailTemplate = {
   subject: string;
   bodyText: string;
 };
 
-type EmailEvent =
+export type EmailEvent =
   | "render.completed"
   | "render.failed"
   | "billing.payment_confirmed"
   | "auth.welcome"
-  | "auth.password_reset";
+  | "auth.password_reset"
+  | "admin.test";
 
 export function renderJobCompletedEmail(input: {
   appUrl: string;
@@ -128,7 +129,7 @@ async function shouldSendEmail(userId: string, event: EmailEvent) {
   return true;
 }
 
-async function createEmailDelivery(input: {
+export async function createEmailDelivery(input: {
   userId: string;
   event: EmailEvent;
   toEmail: string;
