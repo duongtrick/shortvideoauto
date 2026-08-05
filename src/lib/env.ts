@@ -1,7 +1,10 @@
 import { z } from "zod";
 
 const envSchema = z.object({
-  DATABASE_URL: z.string().min(1),
+  DATABASE_URL: z
+    .string()
+    .min(1)
+    .default("postgresql://postgres:postgres@localhost:5432/shortvideoauto"),
   REDIS_URL: z.string().default("redis://localhost:6379"),
   APP_URL: z.string().url().default("http://localhost:3000")
 });

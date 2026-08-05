@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
+  serverExternalPackages: ["bullmq", "ioredis"],
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "**.shopee.vn" },

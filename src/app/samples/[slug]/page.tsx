@@ -5,7 +5,9 @@ export const metadata: Metadata = {
   description: "Trang mẫu public có canonical URL cho video affiliate tạo bằng AI."
 };
 
-export default function SampleVideoPage({ params }: { params: { slug: string } }) {
+export default async function SampleVideoPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+
   return (
     <main className="shell">
       <header className="topbar">
@@ -17,7 +19,7 @@ export default function SampleVideoPage({ params }: { params: { slug: string } }
       <section className="page hero">
         <div>
           <p className="eyebrow">Mẫu public</p>
-          <h1>Video {params.slug}</h1>
+          <h1>Video {slug}</h1>
           <p className="lead">
             Trang mẫu phục vụ SEO, chia sẻ video, canonical URL và Open Graph preview sau khi có file
             render thật.
