@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/services/auth";
+import { getAdminStats } from "@/services/admin-stats";
 
 export async function GET() {
   try {
@@ -8,5 +10,5 @@ export async function GET() {
     return NextResponse.json({ error: "Admin access required." }, { status: 403 });
   }
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json(await getAdminStats(prisma));
 }
