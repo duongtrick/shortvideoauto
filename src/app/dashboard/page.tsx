@@ -4,6 +4,7 @@ import { auth } from "../../../auth";
 import { getCurrentUser } from "@/services/auth";
 import { CreateJobForm } from "./create-job-form";
 import { SignOutButton } from "./session-actions";
+import { NotificationCenter } from "./notification-center";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -31,7 +32,10 @@ export default async function DashboardPage() {
       <section className="page">
         <h1>Tao video affiliate</h1>
         <p className="lead">Dan link Shopee hoac TikTok Shop. API tao job va dua vao BullMQ.</p>
-        <CreateJobForm />
+        <div className="dashboard-grid">
+          <CreateJobForm />
+          <NotificationCenter />
+        </div>
       </section>
       <nav className="bottom-nav" aria-label="Dashboard mobile">
         <a href="/dashboard">Tao job</a>

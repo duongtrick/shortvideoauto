@@ -928,7 +928,7 @@ CTF5/
 - [ ] Desktop shortcuts, hover/tooltips, multi-column layouts
 - [ ] Billing: bank transfer + QR + auto confirm
 - [x] Settings foundation: account page notification preferences UI with email toggles, digest mode, quiet hours
-- [x] Notification center foundation: list notifications, mark read, update preferences, quiet hours, and digest sending for render done, render failed, billing, account security
+- [x] Notification center foundation: dashboard list/mark-read UI, preferences UI, quiet hours, and digest sending for render done, render failed, billing, account security
 - [ ] Landing, pricing, features (SEO)
 - [ ] Multi-domain middleware
 - [ ] Affiliate referral dashboard for this SaaS
