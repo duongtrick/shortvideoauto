@@ -41,6 +41,8 @@ Schema includes admin-managed VideoTemplate, TTSProvider, AIProvider, and System
 
 Admin settings API reads by group and upserts validated setting values with audit logging.
 
+Admin template API can list, create, update, and disable video templates with audit logging.
+
 ## Deliberate MVP Limits
 
 - No auto-post.
