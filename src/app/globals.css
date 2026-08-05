@@ -349,6 +349,26 @@ input {
   min-height: 20px;
 }
 
+.billing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.payment-box {
+  display: grid;
+  gap: var(--space-2);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+  overflow-wrap: anywhere;
+}
+
+.payment-box code {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 @container (min-width: 280px) {
   .preview .video-frame {
     min-height: 220px;
@@ -423,7 +443,7 @@ input {
   }
 
   .account-stack {
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: start;
   }
 
