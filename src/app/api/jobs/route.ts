@@ -7,7 +7,10 @@ import { createJobInput, parseProductUrl } from "@/lib/product-url";
 const demoUserEmail = "demo@shortvideoauto.local";
 
 export async function POST(request: Request) {
-  const body = await request.json().catch(() => null);
+  const contentType = request.headers.get("content-type") ?? "";
+  const body = contentType.includes("application/json")
+    ? await request.json().catch(() => null)
+    : Object.fromEntries(await request.formData());
   const parsed = createJobInput.safeParse(body);
 
   if (!parsed.success) {
