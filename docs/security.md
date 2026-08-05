@@ -7,6 +7,7 @@
 - Keep secrets in `.env`, never client bundle.
 - Use signed URLs for private video downloads.
 - Verify billing webhook signatures before credit changes.
+- Billing webhook stores idempotent raw events before subscription/credit handlers expand.
 - Do not log tokens, cookies, raw payment payload secrets, or TTS credentials.
 - Sanitize scraped product text before prompts/templates.
 - Store credit changes in append-only ledger.
