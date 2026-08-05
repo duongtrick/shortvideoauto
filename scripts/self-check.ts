@@ -3,7 +3,7 @@ import { isPrivateIp, parseProductUrl } from "../src/lib/product-url";
 import { isTerminalJobStep } from "../src/lib/job-state";
 import { createRenderPlan } from "../src/lib/render-plan";
 import { checkRateLimit } from "../src/lib/rate-limit";
-import { scrapeProduct } from "../src/services/scraper";
+import { sanitizeScrapedText, scrapeProduct } from "../src/services/scraper";
 import { writeVietnameseScripts } from "../src/services/script-writer";
 import { synthesizeVietnameseSpeech } from "../src/services/tts";
 import {
@@ -29,6 +29,8 @@ assert.equal(checkRateLimit("test", 1, 1000).allowed, true);
 assert.equal(checkRateLimit("test", 1, 1000).allowed, false);
 
 const product = await scrapeProduct("https://shopee.vn/test");
+assert.equal(product.platform, "shopee");
+assert.equal(sanitizeScrapedText("<b>A</b>   B"), "A B");
 const scripts = await writeVietnameseScripts(product);
 const voice = await synthesizeVietnameseSpeech(scripts[0].content);
 assert.equal(scripts.length, 3);

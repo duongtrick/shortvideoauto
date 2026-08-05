@@ -12,6 +12,7 @@
 - Do not log tokens, cookies, raw payment payload secrets, or TTS credentials.
 - Structured logs include IDs and events only.
 - Sanitize scraped product text before prompts/templates.
+- Scraper adapters store platform in raw metadata and sanitize text before AI prompts.
 - Store credit changes in append-only ledger.
 - Refund render credit in the same transaction that marks worker failure.
 - Protect admin routes with role check.

@@ -29,7 +29,8 @@ async function runRenderPipeline(payload: RenderJobPayload) {
       price: scraped.price,
       imageUrls: scraped.imageUrls,
       description: scraped.description,
-      rating: scraped.rating
+      rating: scraped.rating,
+      raw: { platform: scraped.platform }
     }
   });
 
