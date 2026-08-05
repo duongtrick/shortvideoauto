@@ -4,6 +4,7 @@
 - Allow HTTPS only.
 - Allow Shopee/TikTok Shop hostnames only.
 - Block localhost and private network hostnames before scraper.
+- Resolve product host DNS and block private/internal IPs before network scrape.
 - Keep secrets in `.env`, never client bundle.
 - Use signed URLs for private video downloads.
 - Verify billing webhook signatures before credit changes.

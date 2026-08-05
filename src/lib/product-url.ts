@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { lookup } from "node:dns/promises";
+import net from "node:net";
 
 const allowedHosts = [
   "shopee.vn",
@@ -45,4 +47,19 @@ export function parseProductUrl(input: string) {
     normalizedUrl: url.toString(),
     host
   };
+}
+
+export function isPrivateIp(address: string) {
+  if (net.isIP(address) === 6) {
+    return address === "::1" || address.toLowerCase().startsWith("fc") || address.toLowerCase().startsWith("fd");
+  }
+
+  return privateHostPatterns.some((pattern) => pattern.test(address));
+}
+
+export async function assertPublicDns(host: string) {
+  const records = await lookup(host, { all: true, verbatim: true });
+  if (records.some((record) => isPrivateIp(record.address))) {
+    throw new Error("Product link resolves to a private network.");
+  }
 }

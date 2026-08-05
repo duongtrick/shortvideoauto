@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { parseProductUrl } from "../src/lib/product-url";
+import { isPrivateIp, parseProductUrl } from "../src/lib/product-url";
 import { isTerminalJobStep } from "../src/lib/job-state";
 import { createRenderPlan } from "../src/lib/render-plan";
 import { checkRateLimit } from "../src/lib/rate-limit";
@@ -49,5 +49,7 @@ assert.equal(verifyWebhookSignature({ payload, secret, signature: "bad" }), fals
 assert.throws(() => parseProductUrl("http://shopee.vn/item"));
 assert.throws(() => parseProductUrl("https://localhost/admin"));
 assert.throws(() => parseProductUrl("https://example.com/item"));
+assert.equal(isPrivateIp("127.0.0.1"), true);
+assert.equal(isPrivateIp("8.8.8.8"), false);
 
 console.log("self-check passed");

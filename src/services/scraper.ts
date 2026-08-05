@@ -1,4 +1,4 @@
-import { parseProductUrl } from "@/lib/product-url";
+import { assertPublicDns, parseProductUrl } from "@/lib/product-url";
 
 export type ScrapedProduct = {
   url: string;
@@ -12,6 +12,7 @@ export type ScrapedProduct = {
 
 export async function scrapeProduct(sourceUrl: string): Promise<ScrapedProduct> {
   const { normalizedUrl, host } = parseProductUrl(sourceUrl);
+  await assertPublicDns(host);
 
   // ponytail: demo scraper only; replace with API/HTML/Playwright adapters once selectors are verified.
   return {
