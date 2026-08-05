@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { env } from "@/lib/env";
 import { renderQueueName, type RenderJobPayload } from "@/lib/queue";
 import { parseProductUrl } from "@/lib/product-url";
+import { logger } from "@/lib/logger";
 import { scrapeProduct } from "@/services/scraper";
 import { writeVietnameseScripts } from "@/services/script-writer";
 import { synthesizeVietnameseSpeech } from "@/services/tts";
@@ -11,6 +12,7 @@ import { createStorageKey } from "@/services/storage";
 import { createRenderArtifact } from "@/services/renderer";
 
 async function runRenderPipeline(payload: RenderJobPayload) {
+  logger.info("render_job_started", { jobId: payload.jobId, userId: payload.userId });
   const { normalizedUrl, host } = parseProductUrl(payload.sourceUrl);
 
   await prisma.renderJob.update({
@@ -62,6 +64,7 @@ async function runRenderPipeline(payload: RenderJobPayload) {
     where: { id: payload.jobId },
     data: { status: "completed", outputVideoId: video.id }
   });
+  logger.info("render_job_completed", { jobId: payload.jobId, videoId: video.id });
 }
 
 const worker = new Worker<RenderJobPayload>(
@@ -88,7 +91,7 @@ const worker = new Worker<RenderJobPayload>(
 );
 
 worker.on("failed", (job, error) => {
-  console.error("render job failed", { jobId: job?.data.jobId, error: error.message });
+  logger.error("render_job_failed", { jobId: job?.data.jobId, error: error.message });
 });
 
 console.log(`worker listening on ${renderQueueName}`);

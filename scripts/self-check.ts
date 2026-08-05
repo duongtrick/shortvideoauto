@@ -14,6 +14,7 @@ import {
 import { verifyWebhookSignature } from "../src/services/billing";
 import { createHmac } from "node:crypto";
 import { createFfmpegNormalizeArgs, createRenderArtifact } from "../src/services/renderer";
+import { logger } from "../src/lib/logger";
 
 assert.equal(parseProductUrl("https://shopee.vn/test?utm=1#frag").normalizedUrl, "https://shopee.vn/test?utm=1");
 assert.equal(parseProductUrl("https://shop.tiktok.com/view/product/1").host, "shop.tiktok.com");
@@ -52,6 +53,7 @@ const secret = "webhook-secret";
 const signature = createHmac("sha256", secret).update(payload).digest("hex");
 assert.equal(verifyWebhookSignature({ payload, secret, signature }), true);
 assert.equal(verifyWebhookSignature({ payload, secret, signature: "bad" }), false);
+assert.equal(typeof logger.info, "function");
 assert.throws(() => parseProductUrl("http://shopee.vn/item"));
 assert.throws(() => parseProductUrl("https://localhost/admin"));
 assert.throws(() => parseProductUrl("https://example.com/item"));

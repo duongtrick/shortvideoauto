@@ -10,6 +10,7 @@
 - Verify billing webhook signatures before credit changes.
 - Billing webhook stores idempotent raw events before subscription/credit handlers expand.
 - Do not log tokens, cookies, raw payment payload secrets, or TTS credentials.
+- Structured logs include IDs and events only.
 - Sanitize scraped product text before prompts/templates.
 - Store credit changes in append-only ledger.
 - Refund render credit in the same transaction that marks worker failure.

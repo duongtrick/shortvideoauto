@@ -5,6 +5,7 @@ import { createRenderQueue } from "@/lib/queue";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { createJobInput, parseProductUrl } from "@/lib/product-url";
 import { getCurrentUser } from "@/services/auth";
+import { logger } from "@/lib/logger";
 
 export async function GET() {
   const currentUser = await getCurrentUser();
@@ -81,5 +82,6 @@ export async function POST(request: Request) {
   );
   await queue.close();
 
+  logger.info("render_job_created", { jobId: job.id, userId: user.id });
   return NextResponse.json({ jobId: job.id, status: job.status }, { status: 202 });
 }
