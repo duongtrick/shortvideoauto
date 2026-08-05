@@ -12,6 +12,11 @@ type JobRow = {
   productSource?: { title: string | null; price: string | null } | null;
 };
 
+function downloadPath(job: JobRow) {
+  if (!job.outputVideo) return null;
+  return `/samples/${job.outputVideo.publicSlug}`;
+}
+
 async function loadJobs(): Promise<JobRow[]> {
   const response = await fetch("/api/jobs", { cache: "no-store" });
   if (!response.ok) {
@@ -102,7 +107,13 @@ export function CreateJobForm() {
           jobs.map((job) => (
             <div className="status-item" key={job.id}>
               <div>
-                <strong>{job.productSource?.title ?? job.sourceUrl}</strong>
+                <strong>
+                  {downloadPath(job) ? (
+                    <a href={downloadPath(job) ?? "#"}>{job.productSource?.title ?? job.sourceUrl}</a>
+                  ) : (
+                    (job.productSource?.title ?? job.sourceUrl)
+                  )}
+                </strong>
                 <p className="muted">{job.errorMessage ?? job.productSource?.price ?? job.id}</p>
               </div>
               <span className="badge">{job.status}</span>

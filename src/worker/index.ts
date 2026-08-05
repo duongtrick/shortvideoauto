@@ -7,6 +7,7 @@ import { scrapeProduct } from "@/services/scraper";
 import { writeVietnameseScripts } from "@/services/script-writer";
 import { synthesizeVietnameseSpeech } from "@/services/tts";
 import { refundRenderCredit } from "@/services/credits";
+import { createStorageKey } from "@/services/storage";
 
 async function runRenderPipeline(payload: RenderJobPayload) {
   const { normalizedUrl, host } = parseProductUrl(payload.sourceUrl);
@@ -48,7 +49,7 @@ async function runRenderPipeline(payload: RenderJobPayload) {
   const video = await prisma.video.create({
     data: {
       userId: payload.userId,
-      storageKey: `videos/${payload.userId}/${payload.jobId}.mp4`,
+      storageKey: createStorageKey({ userId: payload.userId, jobId: payload.jobId, ext: "mp4" }),
       publicSlug: payload.jobId
     }
   });
