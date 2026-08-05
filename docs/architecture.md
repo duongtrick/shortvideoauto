@@ -35,6 +35,8 @@ Admin job API lists jobs by status and can requeue failed jobs with audit loggin
 
 Admin payment API lists payments and supports manual confirmation with credit ledger grant plus audit log.
 
+Middleware resolves tenant domain from host and exposes tenant headers for future multi-domain branding.
+
 ## Deliberate MVP Limits
 
 - No auto-post.
