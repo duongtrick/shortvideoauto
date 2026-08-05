@@ -49,6 +49,8 @@ Referral API creates stable referral links and stores pending/paid affiliate com
 
 Caption export API converts caption segments to SRT or VTT for Caption Studio and downloadable metadata assets.
 
+Video export bundle API returns MP4 signed URL, product metadata, source URL, series metadata, scripts, and generated SRT/VTT captions.
+
 Admin settings API reads by group and upserts validated setting values with audit logging.
 
 Admin template API can list, create, update, and disable video templates with audit logging.

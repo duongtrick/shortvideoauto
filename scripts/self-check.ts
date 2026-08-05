@@ -33,6 +33,7 @@ import { estimateTikTokAccount } from "../src/services/tiktok-calculator";
 import { calculateCommission, createReferralCode } from "../src/services/referrals";
 import { captionExportInput } from "../src/lib/caption-validation";
 import { exportSrt, exportVtt } from "../src/services/captions";
+import { createVideoExportBundle } from "../src/services/video-export";
 
 assert.equal(parseProductUrl("https://shopee.vn/test?utm=1#frag").normalizedUrl, "https://shopee.vn/test?utm=1");
 assert.equal(parseProductUrl("https://shop.tiktok.com/view/product/1").host, "shop.tiktok.com");
@@ -127,6 +128,23 @@ const captionSegments = [{ startMs: 0, endMs: 1500, text: "Deal hom nay" }];
 assert.equal(captionExportInput.safeParse({ format: "srt", segments: captionSegments }).success, true);
 assert.match(exportSrt(captionSegments), /00:00:00,000/);
 assert.match(exportVtt(captionSegments), /^WEBVTT/);
+assert.equal(
+  createVideoExportBundle({
+    id: "video_1",
+    storageKey: "videos/user_1/job_1.mp4",
+    publicSlug: "video_1",
+    width: 1080,
+    height: 1920,
+    durationMs: 30000,
+    job: {
+      sourceUrl: "https://shopee.vn/item",
+      productSource: null,
+      series: null,
+      scriptVariants: [{ angle: "review", content: "Review san pham tot", score: 80 }]
+    }
+  }).captions.srt.length > 0,
+  true
+);
 assert.throws(() => parseProductUrl("http://shopee.vn/item"));
 assert.throws(() => parseProductUrl("https://localhost/admin"));
 assert.throws(() => parseProductUrl("https://example.com/item"));
