@@ -23,6 +23,14 @@ npm.cmd run self-check
 npm.cmd run dev
 ```
 
+Responsive check needs a running app:
+
+```powershell
+npm.cmd run build
+npm.cmd run start -- --port 3001
+$env:RESPONSIVE_CHECK_URL="http://localhost:3001"; npm.cmd run responsive-check
+```
+
 Demo auth:
 
 - Credentials provider accepts any valid email in local dev.

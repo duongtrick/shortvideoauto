@@ -9,6 +9,7 @@
     "start": "next start",
     "worker": "tsx src/worker/index.ts",
     "self-check": "tsx scripts/self-check.ts",
+    "responsive-check": "tsx scripts/responsive-check.ts",
     "local": "powershell -ExecutionPolicy Bypass -File scripts/run-local.ps1",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
