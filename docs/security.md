@@ -1,0 +1,25 @@
+# Security Checklist
+
+- Validate product links with Zod.
+- Allow HTTPS only.
+- Allow Shopee/TikTok Shop hostnames only.
+- Block localhost and private network hostnames before scraper.
+- Keep secrets in `.env`, never client bundle.
+- Use signed URLs for private video downloads.
+- Verify billing webhook signatures before credit changes.
+- Do not log tokens, cookies, raw payment payload secrets, or TTS credentials.
+- Sanitize scraped product text before prompts/templates.
+- Store credit changes in append-only ledger.
+- Protect admin routes with role check.
+- Add rate limit per user/IP before public launch.
+
+## Threat Model
+
+Main MVP risks:
+
+- SSRF through submitted product URL.
+- Credit double-charge or refund mismatch.
+- Queue duplicate render.
+- Scraper leaking cookies or internal HTML.
+- Public video URL guessing.
+- Billing webhook spoofing.
