@@ -7,4 +7,5 @@ if (!(Test-Path .env)) {
 docker compose up -d postgres redis minio
 npm.cmd run prisma:generate
 npm.cmd run prisma:migrate
+npm.cmd run prisma:seed
 npm.cmd run dev

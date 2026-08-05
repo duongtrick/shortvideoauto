@@ -6,6 +6,7 @@
 - Add real dashboard job create/poll UX.
 - Run Prisma migration.
 - Local Docker compose and `npm run local` exist.
+- Seed demo user and demo admin.
 
 ## Week 2
 

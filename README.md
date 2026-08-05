@@ -18,6 +18,7 @@ npm.cmd install
 Copy-Item .env.example .env
 docker compose up -d postgres redis minio
 npm.cmd run prisma:generate
+npm.cmd run prisma:seed
 npm.cmd run self-check
 npm.cmd run dev
 ```
