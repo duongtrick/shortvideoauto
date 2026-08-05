@@ -220,6 +220,11 @@ p {
   margin-block-start: var(--space-6);
 }
 
+.dashboard-side {
+  display: grid;
+  gap: var(--space-4);
+}
+
 .card {
   padding: 18px;
 }

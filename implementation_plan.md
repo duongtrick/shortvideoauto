@@ -918,7 +918,7 @@ CTF5/
 - [ ] Design system (TasteSkill enforced)
 - [ ] Responsive/adaptive design system: 320, 375, 428, 768, 1024, 1280, 1920, 2560px
 - [ ] Auth flow (register → verify → login)
-- [ ] Dashboard + create + jobs + videos
+- [x] Dashboard + create + jobs + video library foundation
 - [ ] Video library filters: platform, status, template, source, series, date, language
 - [x] Preview/edit foundation before render/post reuse: script, title, images, price, selected script, CTA, voice, music, caption preset
 - [ ] Series wizard: topic, niche, cadence, template, voice, platform targets
