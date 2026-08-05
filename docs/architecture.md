@@ -69,6 +69,7 @@ Admin email delivery API lists transactional email audit records by status, even
 Email provider webhook updates delivery audit status by provider ID or delivery ID using `EMAIL_EVENT_WEBHOOK_SECRET`.
 Admin email template API lists default/custom transactional templates, saves overrides in `SystemSetting`, and sends test emails through the same delivery log.
 Admin stale-job alert API scans queued render jobs older than a threshold and sends one queued-too-long notification per job.
+Admin stats includes email delivery totals, failed deliveries, and pending/deferred/digest-pending counts for notification health.
 
 ## Deliberate MVP Limits
 
