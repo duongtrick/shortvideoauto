@@ -33,6 +33,8 @@ Admin stats endpoint aggregates users, jobs, videos, paid payments, revenue, and
 
 Admin job API lists jobs by status and can requeue failed jobs with audit logging.
 
+Admin payment API lists payments and supports manual confirmation with credit ledger grant plus audit log.
+
 ## Deliberate MVP Limits
 
 - No auto-post.
