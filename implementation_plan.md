@@ -910,7 +910,7 @@ CTF5/
 - [x] Thumbnail generation foundation: 1080x1920 thumbnail render plan from product title, price, image, accent
 - [x] Music ducking foundation: FFmpeg sidechain compression plans for soft, normal, aggressive presets
 - [x] Voice/music preview foundation: default Vietnamese voice previews and copyright-safe music presets
-- [ ] Pipeline integration test
+- [x] Pipeline integration self-check foundation: scraper, 3 scripts, voice, render plan, storage key readiness
 ```
 
 ### Phase 4 — Frontend User Side (Day 13-18)

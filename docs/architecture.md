@@ -55,6 +55,7 @@ Video export bundle API returns MP4 signed URL, product metadata, source URL, se
 Thumbnail API returns a 1080x1920 thumbnail render plan from video product title, price, image, and accent metadata.
 Audio ducking API returns FFmpeg sidechain compression plans for soft, normal, and aggressive background-music ducking.
 Media preview API lists default Vietnamese voice previews and copyright-safe background music presets before render.
+Pipeline readiness check verifies scraper, three scripts, voice, render plan, and storage key before integration tests.
 
 Admin settings API reads by group and upserts validated setting values with audit logging.
 
