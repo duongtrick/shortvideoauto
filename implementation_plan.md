@@ -907,7 +907,8 @@ CTF5/
 - [x] Template/style marketplace foundation: active template preview API with category, platform, tag, plan, thumbnail, sample output filters
 - [ ] Caption overlay (Whisper word-level sync)
 - [x] Caption Studio foundation: caption presets, word emphasis preview, SRT/VTT export
-- [ ] Music ducking + thumbnail generation
+- [x] Thumbnail generation foundation: 1080x1920 thumbnail render plan from product title, price, image, accent
+- [ ] Music ducking
 - [ ] Voice/music preview before render
 - [ ] Pipeline integration test
 ```

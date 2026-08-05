@@ -35,6 +35,7 @@ import { calculateCommission, createReferralCode } from "../src/services/referra
 import { captionExportInput, captionPreviewInput } from "../src/lib/caption-validation";
 import { createCaptionPreview, createCaptionStyle, exportSrt, exportVtt } from "../src/services/captions";
 import { createVideoExportBundle } from "../src/services/video-export";
+import { createThumbnailPlan } from "../src/services/thumbnails";
 import { templateMarketplaceQuery } from "../src/lib/template-marketplace-validation";
 import { createTemplatePreview, filterTemplatePreviews } from "../src/services/template-marketplace";
 import { inspirationInput } from "../src/lib/inspiration-validation";
@@ -318,6 +319,7 @@ assert.equal(
   }).captions.srt.length > 0,
   true
 );
+assert.equal(createThumbnailPlan({ title: "Noi com mini", price: "199k", imageUrl: "https://example.com/a.jpg" }).width, 1080);
 assert.throws(() => parseProductUrl("http://shopee.vn/item"));
 assert.throws(() => parseProductUrl("https://localhost/admin"));
 assert.throws(() => parseProductUrl("https://example.com/item"));
