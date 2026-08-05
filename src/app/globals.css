@@ -43,7 +43,8 @@ a {
 }
 
 button,
-input {
+input,
+textarea {
   min-height: 44px;
   font: inherit;
 }
@@ -281,6 +282,18 @@ select {
   font: inherit;
 }
 
+textarea {
+  inline-size: 100%;
+  min-height: 112px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 16px;
+  resize: vertical;
+}
+
 .compact-form {
   gap: var(--space-2);
 }
@@ -462,6 +475,17 @@ select {
   overflow-wrap: anywhere;
 }
 
+.admin-template-row {
+  display: grid;
+  gap: var(--space-3);
+  overflow-wrap: anywhere;
+}
+
+.admin-wide,
+.admin-template-config {
+  min-width: 0;
+}
+
 .admin-job-url {
   display: grid;
   gap: var(--space-2);
@@ -615,6 +639,10 @@ select {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .admin-wide {
+    grid-column: 1 / -1;
+  }
+
   .admin-toolbar {
     grid-template-columns: minmax(220px, 1fr) 180px auto;
     align-items: end;
@@ -633,6 +661,15 @@ select {
   .admin-payment-row {
     grid-template-columns: minmax(220px, 1fr) minmax(220px, 1fr);
     align-items: center;
+  }
+
+  .admin-template-row {
+    grid-template-columns: minmax(180px, 0.7fr) minmax(220px, 0.8fr);
+    align-items: start;
+  }
+
+  .admin-template-config {
+    grid-column: 1 / -1;
   }
 
   .admin-user-actions {
@@ -670,6 +707,14 @@ select {
 
   .admin-payment-row {
     grid-template-columns: minmax(220px, 1fr) minmax(260px, 1fr) minmax(360px, 1fr);
+  }
+
+  .admin-template-row {
+    grid-template-columns: minmax(180px, 0.6fr) minmax(220px, 0.7fr) minmax(360px, 1.2fr) minmax(300px, 0.8fr);
+  }
+
+  .admin-template-config {
+    grid-column: auto;
   }
 
   .admin-user-actions {

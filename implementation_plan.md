@@ -951,6 +951,7 @@ CTF5/
   - [x] UI foundation: status filter, payment list, manual confirm with bank transaction ID, refund action
 - [ ] Module 5: Subscription management
 - [ ] Module 6: Template management (CRUD + preview)
+  - [x] UI foundation: list/create/edit JSON config/toggle active/disable templates
 - [ ] Module 6B: Series management (CRUD + schedule + pause/resume)
 - [ ] Module 7: TTS voice management (CRUD + test)
 - [ ] Module 8: AI provider management (CRUD + test)
