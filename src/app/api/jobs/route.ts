@@ -6,6 +6,7 @@ import { checkRateLimit } from "@/lib/rate-limit";
 import { createJobInput, parseProductUrl } from "@/lib/product-url";
 import { getCurrentUser } from "@/services/auth";
 import { logger } from "@/lib/logger";
+import { writeAuditLog } from "@/services/audit";
 
 export async function GET() {
   const currentUser = await getCurrentUser();
@@ -72,6 +73,13 @@ export async function POST(request: Request) {
         creditHoldId: creditHold.id
       }
     });
+  });
+
+  await writeAuditLog(prisma, {
+    userId: user.id,
+    action: "job.create",
+    entity: "RenderJob",
+    entityId: job.id
   });
 
   const queue = createRenderQueue();

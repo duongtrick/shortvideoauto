@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { matchBankTransaction, type BankTransaction } from "@/services/bank-payments";
+import { writeAuditLog } from "@/services/audit";
 
 export async function POST(request: Request) {
   const token = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
@@ -37,6 +38,13 @@ export async function POST(request: Request) {
           reason: "bank_payment",
           meta: { paymentId: payment.id, bankTxnId: transaction.id }
         }
+      });
+      await writeAuditLog(tx, {
+        userId: payment.userId,
+        action: "payment.match",
+        entity: "Payment",
+        entityId: payment.id,
+        meta: { bankTxnId: transaction.id }
       });
     });
     matched.push(payment.code);

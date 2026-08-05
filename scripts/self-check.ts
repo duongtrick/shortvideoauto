@@ -19,6 +19,7 @@ import { buildAffiliateScriptPrompt, getAiProviderChain } from "../src/services/
 import { createPlaceholderVoice, getTtsProviderChain } from "../src/services/tts-providers";
 import { createPaymentCode, findPaymentCode, matchBankTransaction } from "../src/services/bank-payments";
 import { getAdminStats } from "../src/services/admin-stats";
+import { writeAuditLog } from "../src/services/audit";
 
 assert.equal(parseProductUrl("https://shopee.vn/test?utm=1#frag").normalizedUrl, "https://shopee.vn/test?utm=1");
 assert.equal(parseProductUrl("https://shop.tiktok.com/view/product/1").host, "shop.tiktok.com");
@@ -74,6 +75,7 @@ assert.equal(
   true
 );
 assert.equal(typeof getAdminStats, "function");
+assert.equal(typeof writeAuditLog, "function");
 assert.throws(() => parseProductUrl("http://shopee.vn/item"));
 assert.throws(() => parseProductUrl("https://localhost/admin"));
 assert.throws(() => parseProductUrl("https://example.com/item"));

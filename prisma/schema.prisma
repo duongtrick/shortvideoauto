@@ -38,6 +38,7 @@ model User {
   creditLedger  CreditLedger[]
   subscriptions Subscription[]
   payments      Payment[]
+  auditLogs     AuditLog[]
 }
 
 model ProductSource {
@@ -160,4 +161,19 @@ model BillingEvent {
   type       String
   payload    Json
   createdAt  DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  entity    String
+  entityId  String?
+  meta      Json?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([action, createdAt])
+  @@index([entity, entityId])
 }
