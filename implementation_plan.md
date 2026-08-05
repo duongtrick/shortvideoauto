@@ -947,6 +947,7 @@ CTF5/
 - [ ] Module 2: Job management (full CRUD + queue)
   - [x] UI foundation: status filter, queue list, retry failed job, stale queued alert action
 - [ ] Module 3: Video management
+  - [x] API + UI foundation: global video list, status/source filters, owner/job metadata, preview/download links
 - [ ] Module 4: Payment management + reconciliation
   - [x] UI foundation: status filter, payment list, manual confirm with bank transaction ID, refund action
 - [ ] Module 5: Subscription management

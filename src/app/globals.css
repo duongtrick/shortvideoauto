@@ -475,6 +475,12 @@ textarea {
   overflow-wrap: anywhere;
 }
 
+.admin-video-row {
+  display: grid;
+  gap: var(--space-3);
+  overflow-wrap: anywhere;
+}
+
 .admin-template-row {
   display: grid;
   gap: var(--space-3);
@@ -710,6 +716,11 @@ textarea {
     align-items: center;
   }
 
+  .admin-video-row {
+    grid-template-columns: minmax(220px, 1fr) minmax(220px, 1fr);
+    align-items: center;
+  }
+
   .admin-template-row {
     grid-template-columns: minmax(180px, 0.7fr) minmax(220px, 0.8fr);
     align-items: start;
@@ -763,6 +774,10 @@ textarea {
 
   .admin-payment-row {
     grid-template-columns: minmax(220px, 1fr) minmax(260px, 1fr) minmax(360px, 1fr);
+  }
+
+  .admin-video-row {
+    grid-template-columns: minmax(260px, 1fr) minmax(220px, 0.7fr) minmax(360px, 1.2fr) minmax(220px, 0.8fr);
   }
 
   .admin-template-row {

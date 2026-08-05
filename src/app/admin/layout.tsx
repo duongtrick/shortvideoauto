@@ -21,6 +21,7 @@ export default async function AdminLayout({ children }: Readonly<{ children: Rea
         <nav className="admin-nav">
           <a href="/admin/users">Users</a>
           <a href="/admin/jobs">Jobs</a>
+          <a href="/admin/videos">Videos</a>
           <a href="/admin/payments">Payments</a>
           <a href="/admin/templates">Templates</a>
           <a href="/admin/tts">TTS</a>
@@ -47,7 +48,7 @@ export default async function AdminLayout({ children }: Readonly<{ children: Rea
       <nav className="bottom-nav" aria-label="Admin mobile">
         <a href="/admin/users">Users</a>
         <a href="/admin/jobs">Jobs</a>
-        <a href="/admin/settings">Set</a>
+        <a href="/admin/videos">Videos</a>
       </nav>
     </main>
   );
