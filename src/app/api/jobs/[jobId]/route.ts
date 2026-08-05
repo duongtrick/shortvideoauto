@@ -40,13 +40,35 @@ export async function PATCH(request: Request, context: { params: Promise<{ jobId
   }
 
   await prisma.$transaction(async (tx) => {
-    if (job.productSource && (parsed.data.productTitle || parsed.data.price || parsed.data.imageUrls)) {
+    const previewConfig = {
+      voice: parsed.data.voice,
+      musicTrack: parsed.data.musicTrack,
+      musicVolume: parsed.data.musicVolume,
+      captionPreset: parsed.data.captionPreset,
+      cta: parsed.data.cta
+    };
+    const hasPreviewConfig = Object.values(previewConfig).some((value) => value !== undefined);
+    if (job.productSource && (parsed.data.productTitle || parsed.data.price || parsed.data.imageUrls || hasPreviewConfig)) {
+      const raw = job.productSource.raw && typeof job.productSource.raw === "object" && !Array.isArray(job.productSource.raw)
+        ? job.productSource.raw
+        : {};
       await tx.productSource.update({
         where: { id: job.productSource.id },
         data: {
           title: parsed.data.productTitle,
           price: parsed.data.price,
-          imageUrls: parsed.data.imageUrls
+          imageUrls: parsed.data.imageUrls,
+          raw: hasPreviewConfig
+            ? {
+                ...raw,
+                previewConfig: {
+                  ...(typeof raw.previewConfig === "object" && raw.previewConfig !== null && !Array.isArray(raw.previewConfig)
+                    ? raw.previewConfig
+                    : {}),
+                  ...Object.fromEntries(Object.entries(previewConfig).filter(([, value]) => value !== undefined))
+                }
+              }
+            : undefined
         }
       });
     }

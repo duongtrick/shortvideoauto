@@ -140,7 +140,11 @@ assert.equal(
     productTitle: "Noi com mini",
     selectedScriptId: "script_1",
     scriptContent: "Review nhanh san pham dang hot hom nay",
-    cta: "Bam xem deal"
+    cta: "Bam xem deal",
+    voice: "banmai",
+    musicTrack: "summer_deal",
+    musicVolume: 0.4,
+    captionPreset: "deal_pop"
   }).success,
   true
 );

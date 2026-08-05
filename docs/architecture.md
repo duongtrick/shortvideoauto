@@ -40,7 +40,7 @@ Middleware resolves tenant domain from host and exposes tenant headers for futur
 Schema includes admin-managed VideoTemplate, TTSProvider, AIProvider, and SystemSetting models.
 
 Video library API filters user videos by render status, source host, series, template, language, and date range. It returns signed download URLs.
-Job preview API lets the owner view and edit product title, price, images, selected script, script body, and CTA before render/post reuse.
+Job preview API lets the owner view and edit product title, price, images, selected script, script body, CTA, voice, music track, music volume, and caption preset before render/post reuse.
 
 Schedule API stores per-platform planned posts with caption, hashtags, scheduled time, and manual publish checklist for platforms without approved posting APIs. Schedule suggestion API creates platform-specific title, caption, hashtags, CTA, and affiliate disclosure from video product/script metadata.
 Best-time API returns platform-specific posting time recommendations using local timezone offsets and rule-based defaults.
