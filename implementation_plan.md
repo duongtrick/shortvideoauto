@@ -14,7 +14,7 @@ Hệ thống SaaS full-stack TypeScript tạo video affiliate 9:16 tự động 
 | Domain | Multi-domain support |
 | FE Quality | **TasteSkill v2** — anti-slop design rules |
 | Admin | **Full CRUD** — 11 module quản trị |
-| Testing | 100% coverage — ~245 test cases |
+| Testing | 100% coverage — ~255 test cases |
 
 ---
 
@@ -236,6 +236,19 @@ Audit scope ngày 2026-08-06:
 - AI caption/hashtag suggestions per platform.
 - Best-time recommendation based on historical performance.
 - Manual publish checklist for platforms without API approval.
+
+#### Email And Notification System
+
+- Send email when video render is completed with download link, video title, duration, and next actions: download, export bundle, schedule post.
+- Send email when render fails with safe error summary, credit refund status, and retry link.
+- Send email when job is queued too long or needs manual action.
+- Send billing emails: payment pending, payment confirmed, credits added, subscription expiring, subscription renewed/cancelled.
+- Send auth/account emails: welcome, email verification, password reset, password changed, Google account linked.
+- In-app notification center mirrors email events for dashboard users.
+- User notification preferences: email on/off per event, quiet hours, digest mode.
+- Admin email template editor for all transactional templates with preview and test-send.
+- Provider chain: Resend/SMTP primary, SMTP fallback; signed unsubscribe/preferences link for non-security emails.
+- Delivery audit: store provider message ID, status, retry count, last error, opened/clicked if provider supports webhooks.
 
 #### Video Library Enhancements
 
@@ -878,6 +891,8 @@ CTF5/
 - [ ] AI provider chain (Gemini FREE → DeepSeek → GPT-4o-mini)
 - [ ] FPT.AI TTS + fallback chain
 - [ ] R2/MinIO upload service
+- [ ] Email provider chain: Resend/SMTP primary, SMTP fallback, transactional template renderer
+- [ ] Notification service: job completed, job failed, billing, auth/account events
 - [ ] BullMQ pipeline (all queues)
 - [ ] FFmpeg service
 - [ ] Bank API payment poller
@@ -911,6 +926,7 @@ CTF5/
 - [ ] Desktop shortcuts, hover/tooltips, multi-column layouts
 - [ ] Billing: bank transfer + QR + auto confirm
 - [ ] Settings
+- [ ] Notification preferences: render done, render failed, billing, account security, digest mode
 - [ ] Landing, pricing, features (SEO)
 - [ ] Multi-domain middleware
 - [ ] Affiliate referral dashboard for this SaaS
@@ -951,7 +967,7 @@ CTF5/
 
 ---
 
-## 🧪 Testing Plan — 100% Coverage (~220 tests)
+## 🧪 Testing Plan — 100% Coverage (~230 tests)
 
 ### New: Admin Tests
 
@@ -1050,6 +1066,20 @@ CTF5/
 ✅ Referral conversion creates pending commission
 ✅ Affiliate disclosure can be inserted into script/caption
 ✅ Platform policy check blocks banned content before render/post
+```
+
+#### Email And Notification Tests (+10)
+```
+✅ Render completed sends email with signed download link and next actions
+✅ Render failed sends email with safe error summary and retry link
+✅ Credit refund email is sent only after refund ledger entry exists
+✅ Billing confirmed email includes credits added and payment code
+✅ Password reset email never exposes raw token in logs
+✅ Notification preferences suppress non-security emails
+✅ Quiet hours defer marketing/digest notifications
+✅ In-app notification is created for the same render-complete event
+✅ Admin test-send validates template variables before sending
+✅ Email provider fallback retries with SMTP when primary fails
 ```
 
 #### API Tests — Admin (+12)
