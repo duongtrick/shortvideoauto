@@ -12,12 +12,13 @@ import {
   verifySignedDownloadUrl
 } from "../src/services/storage";
 import { verifyWebhookSignature } from "../src/services/billing";
+import { createBankPaymentInput } from "../src/lib/billing-validation";
 import { createHmac } from "node:crypto";
 import { createFfmpegNormalizeArgs, createRenderArtifact } from "../src/services/renderer";
 import { logger } from "../src/lib/logger";
 import { buildAffiliateScriptPrompt, getAiProviderChain } from "../src/services/ai-providers";
 import { createPlaceholderVoice, getTtsProviderChain } from "../src/services/tts-providers";
-import { createPaymentCode, findPaymentCode, matchBankTransaction } from "../src/services/bank-payments";
+import { createBankTransferInstruction, createPaymentCode, findPaymentCode, matchBankTransaction } from "../src/services/bank-payments";
 import { getAdminStats } from "../src/services/admin-stats";
 import { writeAuditLog } from "../src/services/audit";
 import { getConfiguredDomains, resolveTenantDomain } from "../src/lib/domains";
@@ -112,6 +113,8 @@ assert.equal(verifyWebhookSignature({ payload, secret, signature }), true);
 assert.equal(verifyWebhookSignature({ payload, secret, signature: "bad" }), false);
 assert.equal(typeof logger.info, "function");
 assert.match(createPaymentCode(), /^CTF5\d{6}$/);
+assert.equal(createBankPaymentInput.safeParse({ amount: 100000, credits: 100 }).success, true);
+assert.match(createBankTransferInstruction({ code: "CTF5123456", amount: 100000, credits: 100 }).content, /CTF5123456/);
 assert.equal(findPaymentCode("Nap tien CTF5123456 cam on"), "CTF5123456");
 assert.equal(
   matchBankTransaction(

@@ -28,6 +28,7 @@ AI script service tries Gemini, then DeepSeek, then OpenAI. Missing keys fall ba
 TTS service tries FPT.AI, then Viettel, then Zalo, then OpenAI-compatible fallback. Missing keys fall back to placeholder voice assets.
 
 Bank billing uses unique payment codes, token-protected poll endpoint, transaction matching, and credit ledger grant in one DB transaction.
+User billing payment API creates pending bank-transfer payments with amount, credits, unique code, bank instruction, and QR payload text.
 
 Admin stats endpoint aggregates users, jobs, videos, paid payments, revenue, and credits sold behind admin role guard.
 
