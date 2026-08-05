@@ -45,6 +45,7 @@ Video library API filters user videos by render status, source host, series, tem
 Job preview API lets the owner view and edit product title, price, images, selected script, script body, CTA, voice, music track, music volume, and caption preset before render/post reuse.
 
 Schedule API stores per-platform planned posts with caption, hashtags, scheduled time, and manual publish checklist for platforms without approved posting APIs. Schedule suggestion API creates platform-specific title, caption, hashtags, CTA, and affiliate disclosure from video product/script metadata.
+Dashboard schedule calendar shows manual publish checklist steps for API-limited platforms.
 Best-time API returns platform-specific posting time recommendations using local timezone offsets and rule-based defaults.
 
 TikTok calculator estimates engagement, post value range, and affiliate potential from user-supplied metrics.

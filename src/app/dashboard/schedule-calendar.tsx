@@ -9,6 +9,7 @@ type ScheduledPostRow = {
   scheduledAt: string;
   status: string;
   hashtags: string[];
+  manualChecklist?: { steps?: string[] } | null;
 };
 
 async function loadScheduledPosts() {
@@ -64,11 +65,14 @@ export function ScheduleCalendar() {
               <div className="status-item" key={post.id}>
                 <div>
                   <strong>{post.title ?? post.platform}</strong>
-                  <p className="muted">
-                    {new Date(post.scheduledAt).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })} -{" "}
-                    {post.hashtags.slice(0, 3).join(" ")}
-                  </p>
-                </div>
+                <p className="muted">
+                  {new Date(post.scheduledAt).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })} -{" "}
+                  {post.hashtags.slice(0, 3).join(" ")}
+                </p>
+                {post.manualChecklist?.steps?.length ? (
+                  <p className="muted">{post.manualChecklist.steps.slice(0, 2).join(" / ")}</p>
+                ) : null}
+              </div>
                 <span className="badge">{post.status}</span>
               </div>
             ))}
