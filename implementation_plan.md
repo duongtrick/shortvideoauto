@@ -943,6 +943,7 @@ CTF5/
 - [ ] Admin tables: card layout mobile, horizontal scroll fallback, table desktop
 - [ ] Module 1: User management (full CRUD)
   - [x] API foundation: list/create/update/soft-delete/credit-adjust/ban endpoints, audit logs, validation
+  - [x] UI foundation: responsive admin shell, search/filter list, create user, role, ban, soft delete, credit adjust
 - [ ] Module 2: Job management (full CRUD + queue)
 - [ ] Module 3: Video management
 - [ ] Module 4: Payment management + reconciliation

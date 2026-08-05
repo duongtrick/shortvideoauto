@@ -26,7 +26,7 @@ export async function GET(request: Request) {
       : undefined
   };
 
-  const [users, total] = await prisma.$transaction([
+  const [rows, total] = await prisma.$transaction([
     prisma.user.findMany({
       where,
       skip: parsed.data.skip,
@@ -40,11 +40,17 @@ export async function GET(request: Request) {
         emailVerified: true,
         createdAt: true,
         updatedAt: true,
+        creditLedger: { select: { delta: true } },
         _count: { select: { jobs: true, videos: true, payments: true } }
       }
     }),
     prisma.user.count({ where })
   ]);
+  const users = rows.map((user) => ({
+    ...user,
+    credits: user.creditLedger.reduce((totalCredits, entry) => totalCredits + entry.delta, 0),
+    creditLedger: undefined
+  }));
 
   return NextResponse.json({ users, total, skip: parsed.data.skip, take: parsed.data.take });
 }
