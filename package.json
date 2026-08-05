@@ -1,0 +1,36 @@
+{
+  "name": "shortvideoauto",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "worker": "tsx src/worker/index.ts",
+    "self-check": "tsx scripts/self-check.ts",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.13.0",
+    "@remotion/cli": "^4.0.320",
+    "@remotion/player": "^4.0.320",
+    "bullmq": "^5.58.0",
+    "ioredis": "^5.6.1",
+    "next": "^15.4.5",
+    "playwright": "^1.54.2",
+    "prisma": "^6.13.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "remotion": "^4.0.320",
+    "tsx": "^4.20.3",
+    "zod": "^4.0.14"
+  },
+  "devDependencies": {
+    "@types/node": "^24.2.0",
+    "@types/react": "^19.1.9",
+    "@types/react-dom": "^19.1.7",
+    "typescript": "^5.9.2"
+  }
+}
