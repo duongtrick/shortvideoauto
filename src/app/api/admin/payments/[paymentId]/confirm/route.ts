@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/services/auth";
 import { writeAuditLog } from "@/services/audit";
+import { safeNotifyPaymentConfirmed } from "@/services/notifications";
 
 type RouteContext = {
   params: Promise<{ paymentId: string }>;
@@ -46,6 +47,7 @@ export async function POST(request: Request, context: RouteContext) {
     });
     return nextPayment;
   });
+  await safeNotifyPaymentConfirmed({ paymentId: confirmed.id });
 
   return NextResponse.json({ payment: confirmed });
 }

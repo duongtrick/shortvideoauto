@@ -8,7 +8,7 @@ type EmailTemplate = {
   bodyText: string;
 };
 
-type EmailEvent = "render.completed" | "render.failed";
+type EmailEvent = "render.completed" | "render.failed" | "billing.payment_confirmed";
 
 export function renderJobCompletedEmail(input: {
   appUrl: string;
@@ -50,6 +50,23 @@ export function renderJobFailedEmail(input: {
   };
 }
 
+export function renderPaymentConfirmedEmail(input: {
+  appUrl: string;
+  code: string;
+  amount: number;
+  credits: number;
+}): EmailTemplate {
+  return {
+    subject: `Nap credit thanh cong: ${input.code}`,
+    bodyText: [
+      `Thanh toan ${input.code} da duoc xac nhan.`,
+      `So tien: ${input.amount} VND.`,
+      `Credit da cong: ${input.credits}.`,
+      `Xem billing: ${input.appUrl}/account`
+    ].join("\n")
+  };
+}
+
 async function postEmailWebhook(input: { to: string; subject: string; bodyText: string }) {
   if (!env.EMAIL_WEBHOOK_URL) return { status: "skipped", providerId: null };
 
@@ -76,6 +93,7 @@ async function shouldSendEmail(userId: string, event: EmailEvent) {
   if (!prefs) return true;
   if (event === "render.completed") return prefs.emailRenderDone;
   if (event === "render.failed") return prefs.emailRenderFail;
+  if (event === "billing.payment_confirmed") return prefs.emailBilling;
   return true;
 }
 
@@ -189,6 +207,37 @@ export async function notifyRenderFailed(input: { userId: string; jobId: string;
   await createEmailDelivery({ userId: input.userId, event: "render.failed", toEmail: user.email, template });
 }
 
+export async function notifyPaymentConfirmed(input: { paymentId: string }) {
+  const payment = await prisma.payment.findUnique({
+    where: { id: input.paymentId },
+    include: { user: true }
+  });
+  if (!payment) return;
+
+  const template = renderPaymentConfirmedEmail({
+    appUrl: env.APP_URL,
+    code: payment.code,
+    amount: payment.amount,
+    credits: payment.credits
+  });
+
+  await prisma.inAppNotification.create({
+    data: {
+      userId: payment.userId,
+      event: "billing.payment_confirmed",
+      title: "Nap credit thanh cong",
+      body: `${payment.credits} credit da duoc cong.`,
+      actionUrl: "/account"
+    }
+  });
+  await createEmailDelivery({
+    userId: payment.userId,
+    event: "billing.payment_confirmed",
+    toEmail: payment.user.email,
+    template
+  });
+}
+
 export async function safeNotifyRenderCompleted(input: { userId: string; jobId: string; videoId: string }) {
   try {
     await notifyRenderCompleted(input);
@@ -202,5 +251,13 @@ export async function safeNotifyRenderFailed(input: { userId: string; jobId: str
     await notifyRenderFailed(input);
   } catch (error) {
     logger.error("render_failed_notification_failed", { jobId: input.jobId, error });
+  }
+}
+
+export async function safeNotifyPaymentConfirmed(input: { paymentId: string }) {
+  try {
+    await notifyPaymentConfirmed(input);
+  } catch (error) {
+    logger.error("payment_confirmed_notification_failed", { paymentId: input.paymentId, error });
   }
 }

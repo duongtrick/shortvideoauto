@@ -41,7 +41,7 @@ import { normalizeInspirationUrl, summarizeInspiration } from "../src/services/i
 import { clipCandidatesInput } from "../src/lib/clip-candidates-validation";
 import { createClipCandidates } from "../src/services/clip-candidates";
 import { notificationPreferenceInput } from "../src/lib/notification-validation";
-import { renderJobCompletedEmail, renderJobFailedEmail } from "../src/services/notifications";
+import { renderJobCompletedEmail, renderJobFailedEmail, renderPaymentConfirmedEmail } from "../src/services/notifications";
 
 assert.equal(parseProductUrl("https://shopee.vn/test?utm=1#frag").normalizedUrl, "https://shopee.vn/test?utm=1");
 assert.equal(parseProductUrl("https://shop.tiktok.com/view/product/1").host, "shop.tiktok.com");
@@ -181,6 +181,15 @@ assert.match(
     refundStatus: "refunded"
   }).bodyText,
   /Trang thai hoan credit/
+);
+assert.match(
+  renderPaymentConfirmedEmail({
+    appUrl: "https://shortvideoauto.local",
+    code: "CTF5123456",
+    amount: 100000,
+    credits: 100
+  }).bodyText,
+  /Credit da cong/
 );
 assert.equal(
   createVideoExportBundle({

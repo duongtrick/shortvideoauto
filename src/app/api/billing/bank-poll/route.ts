@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { matchBankTransaction, type BankTransaction } from "@/services/bank-payments";
 import { writeAuditLog } from "@/services/audit";
+import { safeNotifyPaymentConfirmed } from "@/services/notifications";
 
 export async function POST(request: Request) {
   const token = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
@@ -47,6 +48,7 @@ export async function POST(request: Request) {
         meta: { bankTxnId: transaction.id }
       });
     });
+    await safeNotifyPaymentConfirmed({ paymentId: payment.id });
     matched.push(payment.code);
   }
 
