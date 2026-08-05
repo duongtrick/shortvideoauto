@@ -8,7 +8,12 @@ type EmailTemplate = {
   bodyText: string;
 };
 
-type EmailEvent = "render.completed" | "render.failed" | "billing.payment_confirmed";
+type EmailEvent =
+  | "render.completed"
+  | "render.failed"
+  | "billing.payment_confirmed"
+  | "auth.welcome"
+  | "auth.password_reset";
 
 export function renderJobCompletedEmail(input: {
   appUrl: string;
@@ -67,6 +72,31 @@ export function renderPaymentConfirmedEmail(input: {
   };
 }
 
+export function renderWelcomeEmail(input: { appUrl: string; name: string | null; email: string }): EmailTemplate {
+  const displayName = input.name ?? input.email;
+
+  return {
+    subject: "Chao mung den ShortVideoAuto",
+    bodyText: [
+      `Chao ${displayName},`,
+      "Tai khoan ShortVideoAuto cua ban da san sang.",
+      `Tao video dau tien: ${input.appUrl}/dashboard`
+    ].join("\n")
+  };
+}
+
+export function renderPasswordResetEmail(input: { appUrl: string; resetUrl: string; expiresMinutes: number }): EmailTemplate {
+  return {
+    subject: "Dat lai mat khau ShortVideoAuto",
+    bodyText: [
+      "Ban vua yeu cau dat lai mat khau.",
+      `Link dat lai mat khau: ${input.resetUrl}`,
+      `Link het han sau ${input.expiresMinutes} phut.`,
+      `Neu khong phai ban, bo qua email nay: ${input.appUrl}/login`
+    ].join("\n")
+  };
+}
+
 async function postEmailWebhook(input: { to: string; subject: string; bodyText: string }) {
   if (!env.EMAIL_WEBHOOK_URL) return { status: "skipped", providerId: null };
 
@@ -94,6 +124,7 @@ async function shouldSendEmail(userId: string, event: EmailEvent) {
   if (event === "render.completed") return prefs.emailRenderDone;
   if (event === "render.failed") return prefs.emailRenderFail;
   if (event === "billing.payment_confirmed") return prefs.emailBilling;
+  if (event === "auth.welcome" || event === "auth.password_reset") return prefs.emailSecurity;
   return true;
 }
 
@@ -238,6 +269,41 @@ export async function notifyPaymentConfirmed(input: { paymentId: string }) {
   });
 }
 
+export async function notifyWelcome(input: { userId: string }) {
+  const user = await prisma.user.findUnique({ where: { id: input.userId } });
+  if (!user) return;
+
+  const template = renderWelcomeEmail({
+    appUrl: env.APP_URL,
+    name: user.name,
+    email: user.email
+  });
+
+  await prisma.inAppNotification.create({
+    data: {
+      userId: user.id,
+      event: "auth.welcome",
+      title: "Chao mung den ShortVideoAuto",
+      body: "Bat dau tao video affiliate dau tien.",
+      actionUrl: "/dashboard"
+    }
+  });
+  await createEmailDelivery({ userId: user.id, event: "auth.welcome", toEmail: user.email, template });
+}
+
+export async function notifyPasswordResetRequested(input: { userId: string; resetUrl: string; expiresMinutes: number }) {
+  const user = await prisma.user.findUnique({ where: { id: input.userId } });
+  if (!user) return;
+
+  const template = renderPasswordResetEmail({
+    appUrl: env.APP_URL,
+    resetUrl: input.resetUrl,
+    expiresMinutes: input.expiresMinutes
+  });
+
+  await createEmailDelivery({ userId: user.id, event: "auth.password_reset", toEmail: user.email, template });
+}
+
 export async function safeNotifyRenderCompleted(input: { userId: string; jobId: string; videoId: string }) {
   try {
     await notifyRenderCompleted(input);
@@ -259,5 +325,21 @@ export async function safeNotifyPaymentConfirmed(input: { paymentId: string }) {
     await notifyPaymentConfirmed(input);
   } catch (error) {
     logger.error("payment_confirmed_notification_failed", { paymentId: input.paymentId, error });
+  }
+}
+
+export async function safeNotifyWelcome(input: { userId: string }) {
+  try {
+    await notifyWelcome(input);
+  } catch (error) {
+    logger.error("welcome_notification_failed", { userId: input.userId, error });
+  }
+}
+
+export async function safeNotifyPasswordResetRequested(input: { userId: string; resetUrl: string; expiresMinutes: number }) {
+  try {
+    await notifyPasswordResetRequested(input);
+  } catch (error) {
+    logger.error("password_reset_notification_failed", { userId: input.userId, error });
   }
 }

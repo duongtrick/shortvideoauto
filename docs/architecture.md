@@ -61,7 +61,7 @@ Inspiration board API lets users save public competitor examples with platform, 
 
 Clip candidate API scores pasted long-video transcripts and returns short-form candidate hooks, start/end hints, estimated duration, and next action.
 
-Notification service creates in-app notifications and email delivery records for render-complete, render-failed, and payment-confirmed events. If `EMAIL_WEBHOOK_URL` is configured, it posts transactional email payloads through that provider endpoint.
+Notification service creates in-app notifications and email delivery records for render-complete, render-failed, payment-confirmed, welcome, and password-reset events. If `EMAIL_WEBHOOK_URL` is configured, it posts transactional email payloads through that provider endpoint.
 
 ## Deliberate MVP Limits
 

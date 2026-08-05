@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { emailInput } from "@/lib/auth-validation";
 import { createResetToken } from "@/services/passwords";
 import { writeAuditLog } from "@/services/audit";
+import { env } from "@/lib/env";
+import { safeNotifyPasswordResetRequested } from "@/services/notifications";
 
 export async function POST(request: Request) {
   const parsed = emailInput.safeParse(await request.json().catch(() => null));
@@ -24,6 +26,13 @@ export async function POST(request: Request) {
     action: "user.password_reset_request",
     entity: "User",
     entityId: user.id
+  });
+  const resetUrl = new URL("/reset-password", env.APP_URL);
+  resetUrl.searchParams.set("token", reset.token);
+  await safeNotifyPasswordResetRequested({
+    userId: user.id,
+    resetUrl: resetUrl.toString(),
+    expiresMinutes: 30
   });
 
   // ponytail: local dev returns token; replace with email provider before production.

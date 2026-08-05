@@ -41,7 +41,13 @@ import { normalizeInspirationUrl, summarizeInspiration } from "../src/services/i
 import { clipCandidatesInput } from "../src/lib/clip-candidates-validation";
 import { createClipCandidates } from "../src/services/clip-candidates";
 import { notificationPreferenceInput } from "../src/lib/notification-validation";
-import { renderJobCompletedEmail, renderJobFailedEmail, renderPaymentConfirmedEmail } from "../src/services/notifications";
+import {
+  renderJobCompletedEmail,
+  renderJobFailedEmail,
+  renderPaymentConfirmedEmail,
+  renderPasswordResetEmail,
+  renderWelcomeEmail
+} from "../src/services/notifications";
 
 assert.equal(parseProductUrl("https://shopee.vn/test?utm=1#frag").normalizedUrl, "https://shopee.vn/test?utm=1");
 assert.equal(parseProductUrl("https://shop.tiktok.com/view/product/1").host, "shop.tiktok.com");
@@ -190,6 +196,22 @@ assert.match(
     credits: 100
   }).bodyText,
   /Credit da cong/
+);
+assert.match(
+  renderWelcomeEmail({
+    appUrl: "https://shortvideoauto.local",
+    name: "Demo",
+    email: "demo@example.com"
+  }).bodyText,
+  /Tao video dau tien/
+);
+assert.match(
+  renderPasswordResetEmail({
+    appUrl: "https://shortvideoauto.local",
+    resetUrl: "https://shortvideoauto.local/reset-password?token=secret",
+    expiresMinutes: 30
+  }).bodyText,
+  /Link het han/
 );
 assert.equal(
   createVideoExportBundle({

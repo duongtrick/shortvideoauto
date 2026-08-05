@@ -892,7 +892,7 @@ CTF5/
 - [ ] FPT.AI TTS + fallback chain
 - [ ] R2/MinIO upload service
 - [x] Email provider foundation: webhook primary via `EMAIL_WEBHOOK_URL`, transactional template renderer, delivery audit
-- [x] Notification service foundation: render completed, render failed, payment confirmed email + in-app events
+- [x] Notification service foundation: render completed, render failed, payment confirmed, welcome, password reset email + in-app events
 - [ ] BullMQ pipeline (all queues)
 - [ ] FFmpeg service
 - [ ] Bank API payment poller

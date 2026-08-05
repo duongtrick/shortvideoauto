@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { registerInput } from "@/lib/auth-validation";
 import { hashPassword } from "@/services/passwords";
 import { writeAuditLog } from "@/services/audit";
+import { safeNotifyWelcome } from "@/services/notifications";
 
 export async function POST(request: Request) {
   const parsed = registerInput.safeParse(await request.json().catch(() => null));
@@ -38,6 +39,7 @@ export async function POST(request: Request) {
     entity: "User",
     entityId: user.id
   });
+  await safeNotifyWelcome({ userId: user.id });
 
   return NextResponse.json({ ok: true }, { status: 201 });
 }
