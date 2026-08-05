@@ -25,6 +25,8 @@ import { getSystemSetting, setSystemSetting } from "../src/services/system-setti
 import { createResetToken, hashPassword, verifyPassword } from "../src/services/passwords";
 import { seriesInput } from "../src/lib/series-validation";
 import { videoLibraryQuery } from "../src/lib/video-library-validation";
+import { scheduledPostInput } from "../src/lib/scheduler-validation";
+import { createManualPublishChecklist } from "../src/services/scheduler";
 
 assert.equal(parseProductUrl("https://shopee.vn/test?utm=1#frag").normalizedUrl, "https://shopee.vn/test?utm=1");
 assert.equal(parseProductUrl("https://shop.tiktok.com/view/product/1").host, "shop.tiktok.com");
@@ -100,6 +102,15 @@ assert.equal(
 );
 assert.equal(videoLibraryQuery.safeParse({ take: "20", status: "completed" }).success, true);
 assert.equal(videoLibraryQuery.safeParse({ take: "999" }).success, false);
+assert.equal(
+  scheduledPostInput.safeParse({
+    videoId: "video_1",
+    platform: "tiktok",
+    scheduledAt: new Date().toISOString()
+  }).success,
+  true
+);
+assert.equal(createManualPublishChecklist("tiktok").steps.length > 3, true);
 assert.throws(() => parseProductUrl("http://shopee.vn/item"));
 assert.throws(() => parseProductUrl("https://localhost/admin"));
 assert.throws(() => parseProductUrl("https://example.com/item"));

@@ -39,6 +39,7 @@ model User {
   updatedAt     DateTime       @updatedAt
   jobs          RenderJob[]
   videos        Video[]
+  scheduledPosts ScheduledPost[]
   creditLedger  CreditLedger[]
   subscriptions Subscription[]
   payments      Payment[]
@@ -169,6 +170,27 @@ model Video {
   createdAt  DateTime    @default(now())
   user       User        @relation(fields: [userId], references: [id])
   job        RenderJob?
+  scheduledPosts ScheduledPost[]
+}
+
+model ScheduledPost {
+  id          String   @id @default(cuid())
+  userId      String
+  videoId     String
+  platform    String
+  title       String?
+  caption     String?
+  hashtags    String[]
+  scheduledAt DateTime
+  status      String   @default("draft")
+  manualChecklist Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
+  video       Video    @relation(fields: [videoId], references: [id])
+
+  @@index([userId, scheduledAt])
+  @@index([platform, status])
 }
 
 model CreditLedger {

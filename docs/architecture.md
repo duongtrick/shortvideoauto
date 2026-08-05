@@ -41,6 +41,8 @@ Schema includes admin-managed VideoTemplate, TTSProvider, AIProvider, and System
 
 Video library API filters user videos by render status, source host, series, template, language, and date range. It returns signed download URLs.
 
+Schedule API stores per-platform planned posts with caption, hashtags, scheduled time, and manual publish checklist for platforms without approved posting APIs.
+
 Admin settings API reads by group and upserts validated setting values with audit logging.
 
 Admin template API can list, create, update, and disable video templates with audit logging.
