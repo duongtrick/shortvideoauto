@@ -56,6 +56,13 @@ import { emailTemplatePatch, emailTemplateTestInput } from "../src/lib/email-tem
 import { defaultEmailTemplate, emailTemplateKeys } from "../src/services/email-templates";
 import { queuedJobAlertInput } from "../src/lib/job-alert-validation";
 import {
+  adminBanUserInput,
+  adminCreateUserInput,
+  adminCreditAdjustmentInput,
+  adminUpdateUserInput,
+  adminUsersQuery
+} from "../src/lib/admin-user-validation";
+import {
   renderJobCompletedEmail,
   renderJobFailedEmail,
   renderPaymentConfirmedEmail,
@@ -245,6 +252,12 @@ assert.equal(emailTemplateTestInput.safeParse({ key: "render.completed", toEmail
 assert.equal(emailTemplateKeys.includes("auth.password_reset"), true);
 assert.match(defaultEmailTemplate("billing.payment_confirmed").bodyText, /Credit da cong/);
 assert.equal(queuedJobAlertInput.safeParse({ olderThanMinutes: 30, take: 10 }).success, true);
+assert.equal(adminUsersQuery.safeParse({ q: "demo", role: "user", take: "20", skip: "0" }).success, true);
+assert.equal(adminCreateUserInput.safeParse({ email: "ADMIN@EXAMPLE.COM", password: "password123", role: "admin" }).success, true);
+assert.equal(adminUpdateUserInput.safeParse({ name: null, role: "banned" }).success, true);
+assert.equal(adminCreditAdjustmentInput.safeParse({ delta: 50, note: "bonus" }).success, true);
+assert.equal(adminCreditAdjustmentInput.safeParse({ delta: 0 }).success, false);
+assert.equal(adminBanUserInput.safeParse({ banned: true }).success, true);
 assert.equal(isWithinQuietHours(23, 22, 7), true);
 assert.equal(isWithinQuietHours(12, 22, 7), false);
 assert.equal(isSecurityEmailEvent("auth.password_reset"), true);

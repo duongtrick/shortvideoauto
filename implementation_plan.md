@@ -942,6 +942,7 @@ CTF5/
 - [ ] Responsive admin shell: mobile bottom sheet nav, tablet collapsible sidebar, desktop persistent sidebar
 - [ ] Admin tables: card layout mobile, horizontal scroll fallback, table desktop
 - [ ] Module 1: User management (full CRUD)
+  - [x] API foundation: list/create/update/soft-delete/credit-adjust/ban endpoints, audit logs, validation
 - [ ] Module 2: Job management (full CRUD + queue)
 - [ ] Module 3: Video management
 - [ ] Module 4: Payment management + reconciliation
