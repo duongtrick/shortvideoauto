@@ -948,6 +948,7 @@ CTF5/
   - [x] UI foundation: status filter, queue list, retry failed job, stale queued alert action
 - [ ] Module 3: Video management
 - [ ] Module 4: Payment management + reconciliation
+  - [x] UI foundation: status filter, payment list, manual confirm with bank transaction ID, refund action
 - [ ] Module 5: Subscription management
 - [ ] Module 6: Template management (CRUD + preview)
 - [ ] Module 6B: Series management (CRUD + schedule + pause/resume)
