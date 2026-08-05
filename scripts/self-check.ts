@@ -34,6 +34,8 @@ import { calculateCommission, createReferralCode } from "../src/services/referra
 import { captionExportInput } from "../src/lib/caption-validation";
 import { exportSrt, exportVtt } from "../src/services/captions";
 import { createVideoExportBundle } from "../src/services/video-export";
+import { templateMarketplaceQuery } from "../src/lib/template-marketplace-validation";
+import { createTemplatePreview, filterTemplatePreviews } from "../src/services/template-marketplace";
 
 assert.equal(parseProductUrl("https://shopee.vn/test?utm=1#frag").normalizedUrl, "https://shopee.vn/test?utm=1");
 assert.equal(parseProductUrl("https://shop.tiktok.com/view/product/1").host, "shop.tiktok.com");
@@ -128,6 +130,13 @@ const captionSegments = [{ startMs: 0, endMs: 1500, text: "Deal hom nay" }];
 assert.equal(captionExportInput.safeParse({ format: "srt", segments: captionSegments }).success, true);
 assert.match(exportSrt(captionSegments), /00:00:00,000/);
 assert.match(exportVtt(captionSegments), /^WEBVTT/);
+assert.equal(templateMarketplaceQuery.safeParse({ platform: "tiktok", take: "12" }).success, true);
+const templatePreview = createTemplatePreview({
+  key: "ugc_hook",
+  name: "UGC Hook",
+  config: { category: "ugc", platforms: ["tiktok"], tags: ["deal"], accent: "#f97316" }
+});
+assert.equal(filterTemplatePreviews([templatePreview], { platform: "tiktok", search: "deal", take: 10 }).length, 1);
 assert.equal(
   createVideoExportBundle({
     id: "video_1",

@@ -887,7 +887,7 @@ CTF5/
 ```
 - [ ] Remotion setup
 - [ ] 3 templates: clean_minimal, dark_energy, shopee_orange
-- [ ] Template/style marketplace foundation: UGC hook, vlog, story, anime, comic, cartoon, cinematic
+- [x] Template/style marketplace foundation: active template preview API with category, platform, tag, plan, thumbnail, sample output filters
 - [ ] Caption overlay (Whisper word-level sync)
 - [ ] Caption Studio: caption presets, emoji/GIF highlights, SRT/VTT export
 - [ ] Music ducking + thumbnail generation

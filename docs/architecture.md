@@ -55,6 +55,8 @@ Admin settings API reads by group and upserts validated setting values with audi
 
 Admin template API can list, create, update, and disable video templates with audit logging.
 
+Template marketplace API exposes active template previews with category, platform, tag, plan, thumbnail, and sample output filters from admin-managed template config.
+
 ## Deliberate MVP Limits
 
 - No auto-post.
