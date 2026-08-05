@@ -36,6 +36,8 @@ import { captionExportInput, captionPreviewInput } from "../src/lib/caption-vali
 import { createCaptionPreview, createCaptionStyle, exportSrt, exportVtt } from "../src/services/captions";
 import { createVideoExportBundle } from "../src/services/video-export";
 import { createThumbnailPlan } from "../src/services/thumbnails";
+import { audioMixInput } from "../src/lib/audio-mix-validation";
+import { createMusicDuckingPlan } from "../src/services/audio-mix";
 import { templateMarketplaceQuery } from "../src/lib/template-marketplace-validation";
 import { createTemplatePreview, filterTemplatePreviews } from "../src/services/template-marketplace";
 import { inspirationInput } from "../src/lib/inspiration-validation";
@@ -320,6 +322,20 @@ assert.equal(
   true
 );
 assert.equal(createThumbnailPlan({ title: "Noi com mini", price: "199k", imageUrl: "https://example.com/a.jpg" }).width, 1080);
+assert.equal(
+  audioMixInput.safeParse({ voicePath: "voice.mp3", musicPath: "music.mp3", outputPath: "mix.m4a", preset: "normal" }).success,
+  true
+);
+assert.match(
+  createMusicDuckingPlan({
+    voicePath: "voice.mp3",
+    musicPath: "music.mp3",
+    outputPath: "mix.m4a",
+    preset: "aggressive",
+    musicVolume: 0.4
+  }).filter,
+  /sidechaincompress/
+);
 assert.throws(() => parseProductUrl("http://shopee.vn/item"));
 assert.throws(() => parseProductUrl("https://localhost/admin"));
 assert.throws(() => parseProductUrl("https://example.com/item"));

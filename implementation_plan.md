@@ -908,7 +908,7 @@ CTF5/
 - [ ] Caption overlay (Whisper word-level sync)
 - [x] Caption Studio foundation: caption presets, word emphasis preview, SRT/VTT export
 - [x] Thumbnail generation foundation: 1080x1920 thumbnail render plan from product title, price, image, accent
-- [ ] Music ducking
+- [x] Music ducking foundation: FFmpeg sidechain compression plans for soft, normal, aggressive presets
 - [ ] Voice/music preview before render
 - [ ] Pipeline integration test
 ```
