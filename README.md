@@ -16,9 +16,16 @@ SaaS TypeScript full-stack tạo short video affiliate tiếng Việt từ link 
 ```powershell
 npm.cmd install
 Copy-Item .env.example .env
+docker compose up -d postgres redis minio
 npm.cmd run prisma:generate
 npm.cmd run self-check
 npm.cmd run dev
+```
+
+One command on Windows:
+
+```powershell
+npm.cmd run local
 ```
 
 Worker:

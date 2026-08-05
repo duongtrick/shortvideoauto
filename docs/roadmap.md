@@ -5,7 +5,7 @@
 - Finish auth.
 - Add real dashboard job create/poll UX.
 - Run Prisma migration.
-- Add Redis local compose file.
+- Local Docker compose and `npm run local` exist.
 
 ## Week 2
 
