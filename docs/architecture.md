@@ -25,6 +25,8 @@ Render service now builds a deterministic Remotion plan and FFmpeg normalize arg
 
 AI script service tries Gemini, then DeepSeek, then OpenAI. Missing keys fall back to deterministic Vietnamese drafts.
 
+TTS service tries FPT.AI, then Viettel, then Zalo, then OpenAI-compatible fallback. Missing keys fall back to placeholder voice assets.
+
 ## Deliberate MVP Limits
 
 - No auto-post.

@@ -16,6 +16,7 @@ import { createHmac } from "node:crypto";
 import { createFfmpegNormalizeArgs, createRenderArtifact } from "../src/services/renderer";
 import { logger } from "../src/lib/logger";
 import { buildAffiliateScriptPrompt, getAiProviderChain } from "../src/services/ai-providers";
+import { createPlaceholderVoice, getTtsProviderChain } from "../src/services/tts-providers";
 
 assert.equal(parseProductUrl("https://shopee.vn/test?utm=1#frag").normalizedUrl, "https://shopee.vn/test?utm=1");
 assert.equal(parseProductUrl("https://shop.tiktok.com/view/product/1").host, "shop.tiktok.com");
@@ -31,6 +32,8 @@ const voice = await synthesizeVietnameseSpeech(scripts[0].content);
 assert.equal(scripts.length, 3);
 assert.equal(voice.language, "vi-VN");
 assert.equal(getAiProviderChain().length, 0);
+assert.equal(getTtsProviderChain().length, 0);
+assert.equal(createPlaceholderVoice("hello").provider, "placeholder");
 assert.match(buildAffiliateScriptPrompt(product), /JSON array/);
 const artifact = createRenderArtifact({ jobId: "job_1", product });
 assert.equal(artifact.plan.compositionId, "ProductShort");

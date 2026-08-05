@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { createPlaceholderVoice, getTtsProviderChain, synthesizeWithProvider } from "./tts-providers";
 
 export type VoiceResult = {
   provider: string;
@@ -9,13 +9,10 @@ export type VoiceResult = {
 };
 
 export async function synthesizeVietnameseSpeech(text: string): Promise<VoiceResult> {
-  const id = createHash("sha256").update(text).digest("hex").slice(0, 16);
+  for (const provider of getTtsProviderChain()) {
+    const voice = await synthesizeWithProvider(provider, text).catch(() => null);
+    if (voice) return voice;
+  }
 
-  // ponytail: placeholder asset; replace with FPT.AI/Viettel/Zalo provider once keys exist.
-  return {
-    provider: "placeholder",
-    voice: "vi-VN-demo",
-    language: "vi-VN",
-    storageKey: `voice/${id}.mp3`
-  };
+  return createPlaceholderVoice(text);
 }
