@@ -13,6 +13,7 @@ import {
 } from "../src/services/storage";
 import { verifyWebhookSignature } from "../src/services/billing";
 import { createHmac } from "node:crypto";
+import { createFfmpegNormalizeArgs, createRenderArtifact } from "../src/services/renderer";
 
 assert.equal(parseProductUrl("https://shopee.vn/test?utm=1#frag").normalizedUrl, "https://shopee.vn/test?utm=1");
 assert.equal(parseProductUrl("https://shop.tiktok.com/view/product/1").host, "shop.tiktok.com");
@@ -27,6 +28,11 @@ const scripts = await writeVietnameseScripts(product);
 const voice = await synthesizeVietnameseSpeech(scripts[0].content);
 assert.equal(scripts.length, 3);
 assert.equal(voice.language, "vi-VN");
+const artifact = createRenderArtifact({ jobId: "job_1", product });
+assert.equal(artifact.plan.compositionId, "ProductShort");
+assert.deepEqual(createFfmpegNormalizeArgs({ sourcePath: "a.mp4", outputPath: "b.mp4" }).slice(-1), [
+  "b.mp4"
+]);
 
 const refundMeta = { jobId: "job_1" };
 assert.equal(refundMeta.jobId, "job_1");

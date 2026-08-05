@@ -8,6 +8,7 @@ import { writeVietnameseScripts } from "@/services/script-writer";
 import { synthesizeVietnameseSpeech } from "@/services/tts";
 import { refundRenderCredit } from "@/services/credits";
 import { createStorageKey } from "@/services/storage";
+import { createRenderArtifact } from "@/services/renderer";
 
 async function runRenderPipeline(payload: RenderJobPayload) {
   const { normalizedUrl, host } = parseProductUrl(payload.sourceUrl);
@@ -44,13 +45,16 @@ async function runRenderPipeline(payload: RenderJobPayload) {
   const voice = await synthesizeVietnameseSpeech(scripts[0].content);
   await prisma.voiceAsset.create({ data: voice });
   await prisma.renderJob.update({ where: { id: payload.jobId }, data: { status: "rendering" } });
+  const artifact = createRenderArtifact({ jobId: payload.jobId, product: scraped });
   await prisma.renderJob.update({ where: { id: payload.jobId }, data: { status: "uploading" } });
 
   const video = await prisma.video.create({
     data: {
       userId: payload.userId,
       storageKey: createStorageKey({ userId: payload.userId, jobId: payload.jobId, ext: "mp4" }),
-      publicSlug: payload.jobId
+      publicSlug: payload.jobId,
+      width: artifact.plan.output.width,
+      height: artifact.plan.output.height
     }
   });
 
