@@ -39,6 +39,8 @@ Middleware resolves tenant domain from host and exposes tenant headers for futur
 
 Schema includes admin-managed VideoTemplate, TTSProvider, AIProvider, and SystemSetting models.
 
+Video library API filters user videos by render status, source host, series, template, language, and date range. It returns signed download URLs.
+
 Admin settings API reads by group and upserts validated setting values with audit logging.
 
 Admin template API can list, create, update, and disable video templates with audit logging.

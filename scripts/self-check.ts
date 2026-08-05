@@ -24,6 +24,7 @@ import { getConfiguredDomains, resolveTenantDomain } from "../src/lib/domains";
 import { getSystemSetting, setSystemSetting } from "../src/services/system-settings";
 import { createResetToken, hashPassword, verifyPassword } from "../src/services/passwords";
 import { seriesInput } from "../src/lib/series-validation";
+import { videoLibraryQuery } from "../src/lib/video-library-validation";
 
 assert.equal(parseProductUrl("https://shopee.vn/test?utm=1#frag").normalizedUrl, "https://shopee.vn/test?utm=1");
 assert.equal(parseProductUrl("https://shop.tiktok.com/view/product/1").host, "shop.tiktok.com");
@@ -97,6 +98,8 @@ assert.equal(
   }).success,
   true
 );
+assert.equal(videoLibraryQuery.safeParse({ take: "20", status: "completed" }).success, true);
+assert.equal(videoLibraryQuery.safeParse({ take: "999" }).success, false);
 assert.throws(() => parseProductUrl("http://shopee.vn/item"));
 assert.throws(() => parseProductUrl("https://localhost/admin"));
 assert.throws(() => parseProductUrl("https://example.com/item"));
