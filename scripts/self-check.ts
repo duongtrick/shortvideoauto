@@ -44,11 +44,13 @@ import { notificationPreferenceInput } from "../src/lib/notification-validation"
 import { emailDeliveryQuery } from "../src/lib/email-delivery-validation";
 import { emailTemplatePatch, emailTemplateTestInput } from "../src/lib/email-template-validation";
 import { defaultEmailTemplate, emailTemplateKeys } from "../src/services/email-templates";
+import { queuedJobAlertInput } from "../src/lib/job-alert-validation";
 import {
   renderJobCompletedEmail,
   renderJobFailedEmail,
   renderPaymentConfirmedEmail,
   renderPasswordResetEmail,
+  renderQueuedTooLongEmail,
   renderWelcomeEmail,
   retryEmailDelivery
 } from "../src/services/notifications";
@@ -177,6 +179,15 @@ assert.equal(emailTemplatePatch.safeParse({ key: "auth.welcome", subject: "Hello
 assert.equal(emailTemplateTestInput.safeParse({ key: "render.completed", toEmail: "admin@example.com" }).success, true);
 assert.equal(emailTemplateKeys.includes("auth.password_reset"), true);
 assert.match(defaultEmailTemplate("billing.payment_confirmed").bodyText, /Credit da cong/);
+assert.equal(queuedJobAlertInput.safeParse({ olderThanMinutes: 30, take: 10 }).success, true);
+assert.match(
+  renderQueuedTooLongEmail({
+    appUrl: "https://shortvideoauto.local",
+    jobId: "job_1",
+    queuedMinutes: 45
+  }).bodyText,
+  /queued/
+);
 assert.equal(typeof retryEmailDelivery, "function");
 assert.match(
   renderJobCompletedEmail({

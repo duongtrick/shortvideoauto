@@ -14,6 +14,7 @@ export type EmailEvent =
   | "billing.payment_confirmed"
   | "auth.welcome"
   | "auth.password_reset"
+  | "render.queue_stalled"
   | "admin.test";
 
 export function renderJobCompletedEmail(input: {
@@ -98,6 +99,17 @@ export function renderPasswordResetEmail(input: { appUrl: string; resetUrl: stri
   };
 }
 
+export function renderQueuedTooLongEmail(input: { appUrl: string; jobId: string; queuedMinutes: number }): EmailTemplate {
+  return {
+    subject: `Job dang cho qua lau: ${input.jobId}`,
+    bodyText: [
+      `Job ${input.jobId} da o trang thai queued khoang ${input.queuedMinutes} phut.`,
+      "He thong can kiem tra worker/Redis hoac thu retry neu can.",
+      `Mo dashboard: ${input.appUrl}/dashboard?jobId=${encodeURIComponent(input.jobId)}`
+    ].join("\n")
+  };
+}
+
 async function postEmailWebhook(input: { to: string; subject: string; bodyText: string }) {
   if (!env.EMAIL_WEBHOOK_URL) return { status: "skipped", providerId: null };
 
@@ -126,6 +138,7 @@ async function shouldSendEmail(userId: string, event: EmailEvent) {
   if (event === "render.failed") return prefs.emailRenderFail;
   if (event === "billing.payment_confirmed") return prefs.emailBilling;
   if (event === "auth.welcome" || event === "auth.password_reset") return prefs.emailSecurity;
+  if (event === "render.queue_stalled") return prefs.emailRenderFail;
   return true;
 }
 
@@ -303,6 +316,57 @@ export async function notifyPasswordResetRequested(input: { userId: string; rese
   });
 
   await createEmailDelivery({ userId: user.id, event: "auth.password_reset", toEmail: user.email, template });
+}
+
+export async function alertQueuedTooLongJobs(input: { olderThanMinutes: number; take?: number }) {
+  const createdBefore = new Date(Date.now() - input.olderThanMinutes * 60 * 1000);
+  const jobs = await prisma.renderJob.findMany({
+    where: {
+      status: "queued",
+      createdAt: { lte: createdBefore }
+    },
+    take: input.take ?? 50,
+    orderBy: { createdAt: "asc" },
+    include: { user: true }
+  });
+  const alerted: string[] = [];
+
+  for (const job of jobs) {
+    const actionUrl = `/dashboard?jobId=${encodeURIComponent(job.id)}`;
+    const exists = await prisma.inAppNotification.findFirst({
+      where: {
+        userId: job.userId,
+        event: "render.queue_stalled",
+        actionUrl
+      }
+    });
+    if (exists) continue;
+
+    const queuedMinutes = Math.max(1, Math.round((Date.now() - job.createdAt.getTime()) / 60000));
+    const template = renderQueuedTooLongEmail({
+      appUrl: env.APP_URL,
+      jobId: job.id,
+      queuedMinutes
+    });
+    await prisma.inAppNotification.create({
+      data: {
+        userId: job.userId,
+        event: "render.queue_stalled",
+        title: "Job dang cho qua lau",
+        body: `Job ${job.id} dang cho ${queuedMinutes} phut.`,
+        actionUrl
+      }
+    });
+    await createEmailDelivery({
+      userId: job.userId,
+      event: "render.queue_stalled",
+      toEmail: job.user.email,
+      template
+    });
+    alerted.push(job.id);
+  }
+
+  return alerted;
 }
 
 export async function safeNotifyRenderCompleted(input: { userId: string; jobId: string; videoId: string }) {

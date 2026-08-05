@@ -65,6 +65,7 @@ Notification service creates in-app notifications and email delivery records for
 Notification API lists recent in-app notifications, updates user preferences, and marks owned notifications as read.
 Admin email delivery API lists transactional email audit records by status, event, user, and date order. Failed or skipped deliveries can be retried by an admin endpoint.
 Admin email template API lists default/custom transactional templates, saves overrides in `SystemSetting`, and sends test emails through the same delivery log.
+Admin stale-job alert API scans queued render jobs older than a threshold and sends one queued-too-long notification per job.
 
 ## Deliberate MVP Limits
 
