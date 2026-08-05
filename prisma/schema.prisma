@@ -43,6 +43,7 @@ model User {
   subscriptions Subscription[]
   payments      Payment[]
   auditLogs     AuditLog[]
+  series        ContentSeries[]
 }
 
 model ProductSource {
@@ -69,9 +70,31 @@ model VideoTemplate {
   updatedAt DateTime @updatedAt
 }
 
+model ContentSeries {
+  id          String      @id @default(cuid())
+  userId      String
+  name        String
+  niche       String
+  cadence     String
+  language    String      @default("vi-VN")
+  platformTargets String[]
+  templateKey String?
+  voice       String?
+  defaultCta  String?
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  user        User        @relation(fields: [userId], references: [id])
+  jobs        RenderJob[]
+
+  @@index([userId, createdAt])
+  @@index([isActive, updatedAt])
+}
+
 model RenderJob {
   id              String          @id @default(cuid())
   userId          String
+  seriesId        String?
   productSourceId String?
   status          JobStatus       @default(queued)
   sourceUrl       String
@@ -84,12 +107,14 @@ model RenderJob {
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   user            User            @relation(fields: [userId], references: [id])
+  series          ContentSeries?  @relation(fields: [seriesId], references: [id])
   productSource   ProductSource?  @relation(fields: [productSourceId], references: [id])
   scriptVariants  ScriptVariant[]
   creditHold      CreditLedger?   @relation("CreditHold", fields: [creditHoldId], references: [id])
   outputVideo     Video?          @relation(fields: [outputVideoId], references: [id])
 
   @@index([userId, createdAt])
+  @@index([seriesId, createdAt])
   @@index([status, createdAt])
 }
 

@@ -23,6 +23,7 @@ import { writeAuditLog } from "../src/services/audit";
 import { getConfiguredDomains, resolveTenantDomain } from "../src/lib/domains";
 import { getSystemSetting, setSystemSetting } from "../src/services/system-settings";
 import { createResetToken, hashPassword, verifyPassword } from "../src/services/passwords";
+import { seriesInput } from "../src/lib/series-validation";
 
 assert.equal(parseProductUrl("https://shopee.vn/test?utm=1#frag").normalizedUrl, "https://shopee.vn/test?utm=1");
 assert.equal(parseProductUrl("https://shop.tiktok.com/view/product/1").host, "shop.tiktok.com");
@@ -87,6 +88,15 @@ const passwordHash = hashPassword("password123");
 assert.equal(verifyPassword("password123", passwordHash), true);
 assert.equal(verifyPassword("wrongpass", passwordHash), false);
 assert.equal(createResetToken().token.length > 40, true);
+assert.equal(
+  seriesInput.safeParse({
+    name: "Shopee deals",
+    niche: "Gia dung",
+    cadence: "daily",
+    platformTargets: ["tiktok"]
+  }).success,
+  true
+);
 assert.throws(() => parseProductUrl("http://shopee.vn/item"));
 assert.throws(() => parseProductUrl("https://localhost/admin"));
 assert.throws(() => parseProductUrl("https://example.com/item"));
