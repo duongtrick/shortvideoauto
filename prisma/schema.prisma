@@ -1,0 +1,144 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum JobStatus {
+  queued
+  scraping
+  scripting
+  tts
+  rendering
+  uploading
+  completed
+  failed
+}
+
+enum CreditReason {
+  render_reserved
+  render_refunded
+  subscription_grant
+  admin_adjustment
+}
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  name          String?
+  role          String         @default("user")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  jobs          RenderJob[]
+  videos        Video[]
+  creditLedger  CreditLedger[]
+  subscriptions Subscription[]
+}
+
+model ProductSource {
+  id          String      @id @default(cuid())
+  url         String
+  host        String
+  title       String?
+  price       String?
+  imageUrls   String[]
+  description String?
+  rating      String?
+  raw         Json?
+  createdAt   DateTime    @default(now())
+  jobs        RenderJob[]
+}
+
+model RenderJob {
+  id              String          @id @default(cuid())
+  userId          String
+  productSourceId String?
+  status          JobStatus       @default(queued)
+  sourceUrl       String
+  selectedScriptId String?
+  errorCode       String?
+  errorMessage    String?
+  attempts        Int             @default(0)
+  creditHoldId    String?         @unique
+  outputVideoId   String?         @unique
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  user            User            @relation(fields: [userId], references: [id])
+  productSource   ProductSource?  @relation(fields: [productSourceId], references: [id])
+  scriptVariants  ScriptVariant[]
+  creditHold      CreditLedger?   @relation("CreditHold", fields: [creditHoldId], references: [id])
+  outputVideo     Video?          @relation(fields: [outputVideoId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+}
+
+model ScriptVariant {
+  id        String    @id @default(cuid())
+  jobId     String
+  angle     String
+  content   String
+  score     Int       @default(0)
+  createdAt DateTime  @default(now())
+  job       RenderJob @relation(fields: [jobId], references: [id])
+}
+
+model VoiceAsset {
+  id          String   @id @default(cuid())
+  provider    String
+  voice       String
+  language    String   @default("vi-VN")
+  storageKey  String
+  durationMs  Int?
+  createdAt   DateTime @default(now())
+}
+
+model Video {
+  id         String      @id @default(cuid())
+  userId     String
+  storageKey String      @unique
+  publicSlug String      @unique
+  durationMs Int?
+  width      Int         @default(1080)
+  height     Int         @default(1920)
+  createdAt  DateTime    @default(now())
+  user       User        @relation(fields: [userId], references: [id])
+  job        RenderJob?
+}
+
+model CreditLedger {
+  id        String       @id @default(cuid())
+  userId    String
+  delta     Int
+  reason    CreditReason
+  meta      Json?
+  createdAt DateTime     @default(now())
+  user      User         @relation(fields: [userId], references: [id])
+  heldJob   RenderJob?   @relation("CreditHold")
+
+  @@index([userId, createdAt])
+}
+
+model Subscription {
+  id               String   @id @default(cuid())
+  userId           String
+  provider         String
+  providerId       String   @unique
+  status           String
+  currentPeriodEnd DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  user             User     @relation(fields: [userId], references: [id])
+}
+
+model BillingEvent {
+  id         String   @id @default(cuid())
+  provider   String
+  providerId String   @unique
+  type       String
+  payload    Json
+  createdAt  DateTime @default(now())
+}

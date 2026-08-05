@@ -1,0 +1,13 @@
+import assert from "node:assert/strict";
+import { parseProductUrl } from "../src/lib/product-url";
+import { isTerminalJobStep } from "../src/lib/job-state";
+
+assert.equal(parseProductUrl("https://shopee.vn/test?utm=1#frag").normalizedUrl, "https://shopee.vn/test?utm=1");
+assert.equal(parseProductUrl("https://shop.tiktok.com/view/product/1").host, "shop.tiktok.com");
+assert.equal(isTerminalJobStep("completed"), true);
+assert.equal(isTerminalJobStep("rendering"), false);
+assert.throws(() => parseProductUrl("http://shopee.vn/item"));
+assert.throws(() => parseProductUrl("https://localhost/admin"));
+assert.throws(() => parseProductUrl("https://example.com/item"));
+
+console.log("self-check passed");
