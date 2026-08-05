@@ -3,6 +3,9 @@ import { prisma } from "@/lib/prisma";
 import { env } from "@/lib/env";
 import { renderQueueName, type RenderJobPayload } from "@/lib/queue";
 import { parseProductUrl } from "@/lib/product-url";
+import { scrapeProduct } from "@/services/scraper";
+import { writeVietnameseScripts } from "@/services/script-writer";
+import { synthesizeVietnameseSpeech } from "@/services/tts";
 
 async function runRenderPipeline(payload: RenderJobPayload) {
   const { normalizedUrl, host } = parseProductUrl(payload.sourceUrl);
@@ -12,15 +15,16 @@ async function runRenderPipeline(payload: RenderJobPayload) {
     data: { status: "scraping", attempts: { increment: 1 } }
   });
 
+  const scraped = await scrapeProduct(normalizedUrl);
   const product = await prisma.productSource.create({
     data: {
-      url: normalizedUrl,
-      host,
-      title: "Sản phẩm demo",
-      price: "199.000đ",
-      imageUrls: [],
-      description: "Dữ liệu demo cho MVP trước khi bật scraper thật.",
-      rating: "4.8"
+      url: scraped.url,
+      host: scraped.host || host,
+      title: scraped.title,
+      price: scraped.price,
+      imageUrls: scraped.imageUrls,
+      description: scraped.description,
+      rating: scraped.rating
     }
   });
 
@@ -29,30 +33,14 @@ async function runRenderPipeline(payload: RenderJobPayload) {
     data: { status: "scripting", productSourceId: product.id }
   });
 
+  const scripts = await writeVietnameseScripts(scraped);
   await prisma.scriptVariant.createMany({
-    data: [
-      {
-        jobId: payload.jobId,
-        angle: "review nhanh",
-        content: "Món này hợp nếu bạn cần giải pháp gọn, giá tốt, dễ dùng mỗi ngày.",
-        score: 85
-      },
-      {
-        jobId: payload.jobId,
-        angle: "deal sốc",
-        content: "Deal hôm nay đáng chú ý: giá đang mềm, chốt sớm kẻo hết mã.",
-        score: 80
-      },
-      {
-        jobId: payload.jobId,
-        angle: "vấn đề - giải pháp",
-        content: "Bạn đang mất thời gian chọn đồ? Sản phẩm này giải quyết nhanh với chi phí thấp.",
-        score: 78
-      }
-    ]
+    data: scripts.map((script) => ({ jobId: payload.jobId, ...script }))
   });
 
   await prisma.renderJob.update({ where: { id: payload.jobId }, data: { status: "tts" } });
+  const voice = await synthesizeVietnameseSpeech(scripts[0].content);
+  await prisma.voiceAsset.create({ data: voice });
   await prisma.renderJob.update({ where: { id: payload.jobId }, data: { status: "rendering" } });
   await prisma.renderJob.update({ where: { id: payload.jobId }, data: { status: "uploading" } });
 
