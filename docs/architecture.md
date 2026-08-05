@@ -47,7 +47,7 @@ TikTok calculator estimates engagement, post value range, and affiliate potentia
 
 Referral API creates stable referral links and stores pending/paid affiliate commissions for the SaaS affiliate program.
 
-Caption export API converts caption segments to SRT or VTT for Caption Studio and downloadable metadata assets.
+Caption export API converts caption segments to SRT or VTT for Caption Studio and downloadable metadata assets. Caption preview API returns preset styles and emphasized words for clean bold, deal pop, story subtle, and karaoke highlight modes.
 
 Video export bundle API returns MP4 signed URL, product metadata, source URL, series metadata, scripts, and generated SRT/VTT captions.
 

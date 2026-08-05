@@ -31,8 +31,8 @@ import { appendAffiliateDisclosure, checkAffiliateContentPolicy } from "../src/s
 import { tiktokCalculatorInput } from "../src/lib/tiktok-calculator-validation";
 import { estimateTikTokAccount } from "../src/services/tiktok-calculator";
 import { calculateCommission, createReferralCode } from "../src/services/referrals";
-import { captionExportInput } from "../src/lib/caption-validation";
-import { exportSrt, exportVtt } from "../src/services/captions";
+import { captionExportInput, captionPreviewInput } from "../src/lib/caption-validation";
+import { createCaptionPreview, createCaptionStyle, exportSrt, exportVtt } from "../src/services/captions";
 import { createVideoExportBundle } from "../src/services/video-export";
 import { templateMarketplaceQuery } from "../src/lib/template-marketplace-validation";
 import { createTemplatePreview, filterTemplatePreviews } from "../src/services/template-marketplace";
@@ -153,6 +153,18 @@ const captionSegments = [{ startMs: 0, endMs: 1500, text: "Deal hom nay" }];
 assert.equal(captionExportInput.safeParse({ format: "srt", segments: captionSegments }).success, true);
 assert.match(exportSrt(captionSegments), /00:00:00,000/);
 assert.match(exportVtt(captionSegments), /^WEBVTT/);
+assert.equal(captionPreviewInput.safeParse({ segments: captionSegments, preset: "deal_pop" }).success, true);
+assert.equal(createCaptionStyle({ preset: "deal_pop", brandColor: "#ff6b35", fontFamily: "Inter" }).backgroundColor, "#ff6b35");
+assert.equal(
+  createCaptionPreview({
+    preset: "clean_bold",
+    brandColor: "#ff6b35",
+    fontFamily: "Inter",
+    segments: captionSegments,
+    emphasizeWords: ["deal"]
+  }).segments[0].words[0].emphasized,
+  true
+);
 assert.equal(templateMarketplaceQuery.safeParse({ platform: "tiktok", take: "12" }).success, true);
 const templatePreview = createTemplatePreview({
   key: "ugc_hook",

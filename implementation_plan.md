@@ -906,7 +906,7 @@ CTF5/
 - [ ] 3 templates: clean_minimal, dark_energy, shopee_orange
 - [x] Template/style marketplace foundation: active template preview API with category, platform, tag, plan, thumbnail, sample output filters
 - [ ] Caption overlay (Whisper word-level sync)
-- [ ] Caption Studio: caption presets, emoji/GIF highlights, SRT/VTT export
+- [x] Caption Studio foundation: caption presets, word emphasis preview, SRT/VTT export
 - [ ] Music ducking + thumbnail generation
 - [ ] Voice/music preview before render
 - [ ] Pipeline integration test
