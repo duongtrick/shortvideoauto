@@ -6,8 +6,8 @@
 - `sitemap.xml` includes home and public sample pages.
 - Public sample pages use stable slug URLs.
 - Dashboard uses `noindex`.
-- Add `SoftwareApplication` JSON-LD before launch.
-- Add Vietnamese keyword pages:
+- `SoftwareApplication` JSON-LD exists on keyword pages.
+- Vietnamese keyword pages:
   - tạo video affiliate tự động
   - tạo video Shopee affiliate
   - AI tạo video TikTok bán hàng

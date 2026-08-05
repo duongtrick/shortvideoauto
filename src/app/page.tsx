@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { keywordPages } from "./(marketing)/keywords";
 
 const features = [
   "Lấy thông tin sản phẩm từ link Shopee/TikTok Shop",
@@ -54,6 +55,17 @@ export default function HomePage() {
             <article className="card" key={feature}>
               <strong>{feature}</strong>
             </article>
+          ))}
+        </div>
+      </section>
+      <section className="page">
+        <h2>Tài nguyên</h2>
+        <div className="grid">
+          {keywordPages.map((page) => (
+            <Link className="card" href={`/${page.slug}`} key={page.slug}>
+              <strong>{page.title}</strong>
+              <p className="muted">{page.description}</p>
+            </Link>
           ))}
         </div>
       </section>
