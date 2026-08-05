@@ -16,10 +16,15 @@ export default function DashboardPage() {
         <span className="badge">Demo user</span>
       </header>
       <section className="page">
-        <h1>Tạo video affiliate</h1>
-        <p className="lead">Dán link Shopee hoặc TikTok Shop. API sẽ tạo job và đưa vào BullMQ.</p>
+        <h1>Tao video affiliate</h1>
+        <p className="lead">Dan link Shopee hoac TikTok Shop. API tao job va dua vao BullMQ.</p>
         <CreateJobForm />
       </section>
+      <nav className="bottom-nav" aria-label="Dashboard mobile">
+        <a href="/dashboard">Tao job</a>
+        <a href="/samples/demo">Mau</a>
+        <a href="/">Home</a>
+      </nav>
     </main>
   );
 }

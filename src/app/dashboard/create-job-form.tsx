@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
+import { useRef } from "react";
 
 type JobRow = {
   id: string;
@@ -31,6 +32,7 @@ export function CreateJobForm() {
   const [jobs, setJobs] = useState<JobRow[]>([]);
   const [message, setMessage] = useState("");
   const [isPending, startTransition] = useTransition();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     let active = true;
@@ -50,6 +52,18 @@ export function CreateJobForm() {
       active = false;
       window.clearInterval(timer);
     };
+  }, []);
+
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.ctrlKey && event.key.toLowerCase() === "n") {
+        event.preventDefault();
+        inputRef.current?.focus();
+      }
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
   function createJob() {
@@ -83,15 +97,19 @@ export function CreateJobForm() {
         <label htmlFor="url">Link sản phẩm</label>
         <div className="input-row">
           <input
+            ref={inputRef}
             id="url"
             name="url"
             type="url"
+            autoComplete="url"
+            inputMode="url"
             placeholder="https://shopee.vn/..."
             required
             value={url}
             onChange={(event) => setUrl(event.target.value)}
+            onPaste={() => setMessage("Da dan link. Kiem tra nhanh roi tao job.")}
           />
-          <button className="button primary" type="submit" disabled={isPending}>
+          <button className="button primary sticky-mobile-cta" type="submit" disabled={isPending}>
             {isPending ? "Đang tạo" : "Tạo job"}
           </button>
         </div>
