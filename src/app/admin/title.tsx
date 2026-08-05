@@ -8,6 +8,7 @@ const titles: Record<string, string> = {
   "/admin/videos": "Video management",
   "/admin/payments": "Payment management",
   "/admin/templates": "Template management",
+  "/admin/series": "Series management",
   "/admin/tts": "TTS providers",
   "/admin/ai": "AI providers",
   "/admin/settings": "System settings",

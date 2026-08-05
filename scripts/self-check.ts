@@ -24,7 +24,7 @@ import { writeAuditLog } from "../src/services/audit";
 import { getConfiguredDomains, resolveTenantDomain } from "../src/lib/domains";
 import { getSystemSetting, setSystemSetting } from "../src/services/system-settings";
 import { createResetToken, hashPassword, verifyPassword } from "../src/services/passwords";
-import { seriesInput } from "../src/lib/series-validation";
+import { adminSeriesInput, adminSeriesPatch, seriesInput } from "../src/lib/series-validation";
 import { videoLibraryQuery } from "../src/lib/video-library-validation";
 import { jobPreviewPatch } from "../src/lib/job-preview-validation";
 import { bestTimeInput, scheduledPostInput, scheduleSuggestionInput } from "../src/lib/scheduler-validation";
@@ -151,6 +151,17 @@ assert.equal(
   }).success,
   true
 );
+assert.equal(
+  adminSeriesInput.safeParse({
+    userEmail: "admin@example.com",
+    name: "Shopee deals",
+    niche: "Gia dung",
+    cadence: "daily",
+    platformTargets: ["tiktok"]
+  }).success,
+  true
+);
+assert.equal(adminSeriesPatch.safeParse({ isActive: false }).success, true);
 assert.equal(videoLibraryQuery.safeParse({ take: "20", status: "completed" }).success, true);
 assert.equal(videoLibraryQuery.safeParse({ take: "999" }).success, false);
 assert.equal(

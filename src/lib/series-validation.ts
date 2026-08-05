@@ -10,3 +10,11 @@ export const seriesInput = z.object({
   voice: z.string().trim().max(80).optional(),
   defaultCta: z.string().trim().max(160).optional()
 });
+
+export const adminSeriesInput = seriesInput.extend({
+  userEmail: z.string().trim().email().max(255)
+});
+
+export const adminSeriesPatch = seriesInput.partial().extend({
+  isActive: z.boolean().optional()
+});
