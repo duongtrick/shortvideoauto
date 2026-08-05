@@ -6,7 +6,8 @@ const titles: Record<string, string> = {
   "/admin/users": "User management",
   "/admin/jobs": "Job management",
   "/admin/payments": "Payment management",
-  "/admin/templates": "Template management"
+  "/admin/templates": "Template management",
+  "/admin/settings": "System settings"
 };
 
 export function AdminTitle() {

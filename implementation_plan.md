@@ -956,6 +956,7 @@ CTF5/
 - [ ] Module 7: TTS voice management (CRUD + test)
 - [ ] Module 8: AI provider management (CRUD + test)
 - [ ] Module 9: System settings (all configurable)
+  - [x] UI foundation: list/filter by group and upsert JSON/string/number/boolean settings
 - [ ] Module 10: Audit logs viewer
 - [ ] Module 11: Analytics dashboard + charts
 ```
