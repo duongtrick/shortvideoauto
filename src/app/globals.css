@@ -450,6 +450,19 @@ select {
   overflow-wrap: anywhere;
 }
 
+.admin-job-row {
+  display: grid;
+  gap: var(--space-3);
+  overflow-wrap: anywhere;
+}
+
+.admin-job-url {
+  display: grid;
+  gap: var(--space-2);
+  color: var(--muted);
+  font-size: 14px;
+}
+
 .admin-user-main,
 .admin-user-stats {
   display: flex;
@@ -606,6 +619,11 @@ select {
     align-items: center;
   }
 
+  .admin-job-row {
+    grid-template-columns: minmax(220px, 1fr) minmax(260px, 1.3fr);
+    align-items: center;
+  }
+
   .admin-user-actions {
     grid-column: 1 / -1;
     grid-template-columns: 160px minmax(120px, 1fr) auto auto;
@@ -633,6 +651,10 @@ select {
 
   .admin-user-row {
     grid-template-columns: minmax(260px, 1.2fr) minmax(220px, 0.8fr) minmax(440px, 1.4fr);
+  }
+
+  .admin-job-row {
+    grid-template-columns: minmax(260px, 1fr) minmax(320px, 1.2fr) minmax(420px, 1fr);
   }
 
   .admin-user-actions {
