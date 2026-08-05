@@ -271,7 +271,7 @@ Audit scope ngày 2026-08-06:
 #### Social Proof And Trend Tools
 
 - TikTok account estimator/calculator: followers, likes, engagement, estimated revenue.
-- Competitor/ad inspiration board: save public examples and annotate hook/CTA/template.
+- Competitor/ad inspiration board: save public examples and annotate hook/CTA/template. ✅ Foundation API stores URL, platform, hook, CTA, template, notes, and tags.
 - Public explore gallery for examples and templates, with moderation.
 - Niche trend tracker for affiliate categories.
 

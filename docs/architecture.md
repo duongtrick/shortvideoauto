@@ -57,6 +57,8 @@ Admin template API can list, create, update, and disable video templates with au
 
 Template marketplace API exposes active template previews with category, platform, tag, plan, thumbnail, and sample output filters from admin-managed template config.
 
+Inspiration board API lets users save public competitor examples with platform, hook, CTA, template key, notes, and tags for later script/template planning.
+
 ## Deliberate MVP Limits
 
 - No auto-post.

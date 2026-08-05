@@ -36,6 +36,8 @@ import { exportSrt, exportVtt } from "../src/services/captions";
 import { createVideoExportBundle } from "../src/services/video-export";
 import { templateMarketplaceQuery } from "../src/lib/template-marketplace-validation";
 import { createTemplatePreview, filterTemplatePreviews } from "../src/services/template-marketplace";
+import { inspirationInput } from "../src/lib/inspiration-validation";
+import { normalizeInspirationUrl, summarizeInspiration } from "../src/services/inspiration";
 
 assert.equal(parseProductUrl("https://shopee.vn/test?utm=1#frag").normalizedUrl, "https://shopee.vn/test?utm=1");
 assert.equal(parseProductUrl("https://shop.tiktok.com/view/product/1").host, "shop.tiktok.com");
@@ -137,6 +139,12 @@ const templatePreview = createTemplatePreview({
   config: { category: "ugc", platforms: ["tiktok"], tags: ["deal"], accent: "#f97316" }
 });
 assert.equal(filterTemplatePreviews([templatePreview], { platform: "tiktok", search: "deal", take: 10 }).length, 1);
+assert.equal(
+  inspirationInput.safeParse({ sourceUrl: "https://www.tiktok.com/@shop/video/1", platform: "tiktok" }).success,
+  true
+);
+assert.equal(normalizeInspirationUrl("https://www.tiktok.com/@shop/video/1#comments"), "https://www.tiktok.com/@shop/video/1");
+assert.equal(summarizeInspiration({ hook: "Dung mua neu chua xem", cta: null, tags: [] }).hasActionablePattern, true);
 assert.equal(
   createVideoExportBundle({
     id: "video_1",
