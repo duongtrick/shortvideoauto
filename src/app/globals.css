@@ -481,6 +481,24 @@ textarea {
   overflow-wrap: anywhere;
 }
 
+  .admin-audit-row {
+  display: grid;
+  gap: var(--space-3);
+  overflow-wrap: anywhere;
+}
+
+.admin-code {
+  max-width: 100%;
+  margin: 0;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+  background: var(--surface-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 .admin-wide,
 .admin-template-config {
   min-width: 0;
@@ -668,6 +686,11 @@ textarea {
     align-items: start;
   }
 
+.admin-audit-row {
+    grid-template-columns: minmax(220px, 1fr) minmax(220px, 1fr);
+    align-items: start;
+  }
+
   .admin-template-config {
     grid-column: 1 / -1;
   }
@@ -711,6 +734,10 @@ textarea {
 
   .admin-template-row {
     grid-template-columns: minmax(180px, 0.6fr) minmax(220px, 0.7fr) minmax(360px, 1.2fr) minmax(300px, 0.8fr);
+  }
+
+  .admin-audit-row {
+    grid-template-columns: minmax(240px, 0.9fr) minmax(220px, 0.7fr) minmax(360px, 1.2fr);
   }
 
   .admin-template-config {

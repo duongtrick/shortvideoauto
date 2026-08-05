@@ -958,6 +958,7 @@ CTF5/
 - [ ] Module 9: System settings (all configurable)
   - [x] UI foundation: list/filter by group and upsert JSON/string/number/boolean settings
 - [ ] Module 10: Audit logs viewer
+  - [x] UI foundation: action/entity filters, actor/entity metadata, JSON meta viewer
 - [ ] Module 11: Analytics dashboard + charts
 ```
 
