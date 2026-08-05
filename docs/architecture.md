@@ -39,6 +39,8 @@ Middleware resolves tenant domain from host and exposes tenant headers for futur
 
 Schema includes admin-managed VideoTemplate, TTSProvider, AIProvider, and SystemSetting models.
 
+Admin settings API reads by group and upserts validated setting values with audit logging.
+
 ## Deliberate MVP Limits
 
 - No auto-post.
