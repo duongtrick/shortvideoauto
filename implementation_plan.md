@@ -925,7 +925,7 @@ CTF5/
 - [ ] Social scheduler calendar and manual publish checklist
 - [ ] Mobile bottom nav, sticky CTA, safe-area support, pull-to-refresh job list
 - [ ] Tablet split-view dashboard and side-by-side script/video preview
-- [ ] Desktop shortcuts, hover/tooltips, multi-column layouts
+- [x] Desktop shortcuts foundation: Ctrl+N create job focus, Ctrl+K job search, hover states, multi-column dashboard layout
 - [ ] Billing: bank transfer + QR + auto confirm
 - [x] Settings foundation: account page notification preferences UI with email toggles, digest mode, quiet hours
 - [x] Notification center foundation: dashboard list/mark-read UI, preferences UI, quiet hours, and digest sending for render done, render failed, billing, account security

@@ -30,9 +30,11 @@ async function loadJobs(): Promise<JobRow[]> {
 export function CreateJobForm() {
   const [url, setUrl] = useState("");
   const [jobs, setJobs] = useState<JobRow[]>([]);
+  const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
   const [isPending, startTransition] = useTransition();
   const inputRef = useRef<HTMLInputElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     let active = true;
@@ -60,6 +62,10 @@ export function CreateJobForm() {
         event.preventDefault();
         inputRef.current?.focus();
       }
+      if (event.ctrlKey && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        searchRef.current?.focus();
+      }
     }
 
     window.addEventListener("keydown", onKeyDown);
@@ -84,6 +90,14 @@ export function CreateJobForm() {
       setMessage("Đã đưa video vào hàng đợi render.");
     });
   }
+
+  const filteredJobs = jobs.filter((job) => {
+    const query = search.trim().toLowerCase();
+    if (!query) return true;
+    return [job.id, job.status, job.sourceUrl, job.productSource?.title, job.productSource?.price]
+      .filter(Boolean)
+      .some((value) => String(value).toLowerCase().includes(query));
+  });
 
   return (
     <>
@@ -116,13 +130,24 @@ export function CreateJobForm() {
         {message ? <p className="muted">{message}</p> : null}
       </form>
       <div className="panel status-list" aria-label="Job render gần đây">
-        {jobs.length === 0 ? (
+        <div className="input-row">
+          <input
+            ref={searchRef}
+            type="search"
+            placeholder="Tim job, status, san pham"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            aria-label="Tim job"
+          />
+          <span className="badge">Ctrl+K</span>
+        </div>
+        {filteredJobs.length === 0 ? (
           <div className="status-item">
             <span>Chưa có job</span>
             <span className="badge">empty</span>
           </div>
         ) : (
-          jobs.map((job) => (
+          filteredJobs.map((job) => (
             <div className="status-item" key={job.id}>
               <div>
                 <strong>
