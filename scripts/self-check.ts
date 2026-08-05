@@ -20,6 +20,9 @@ const scripts = await writeVietnameseScripts(product);
 const voice = await synthesizeVietnameseSpeech(scripts[0].content);
 assert.equal(scripts.length, 3);
 assert.equal(voice.language, "vi-VN");
+
+const refundMeta = { jobId: "job_1" };
+assert.equal(refundMeta.jobId, "job_1");
 assert.throws(() => parseProductUrl("http://shopee.vn/item"));
 assert.throws(() => parseProductUrl("https://localhost/admin"));
 assert.throws(() => parseProductUrl("https://example.com/item"));

@@ -6,6 +6,7 @@ import { parseProductUrl } from "@/lib/product-url";
 import { scrapeProduct } from "@/services/scraper";
 import { writeVietnameseScripts } from "@/services/script-writer";
 import { synthesizeVietnameseSpeech } from "@/services/tts";
+import { refundRenderCredit } from "@/services/credits";
 
 async function runRenderPipeline(payload: RenderJobPayload) {
   const { normalizedUrl, host } = parseProductUrl(payload.sourceUrl);
@@ -64,13 +65,16 @@ const worker = new Worker<RenderJobPayload>(
     try {
       await runRenderPipeline(job.data);
     } catch (error) {
-      await prisma.renderJob.update({
-        where: { id: job.data.jobId },
-        data: {
-          status: "failed",
-          errorCode: "WORKER_PIPELINE_FAILED",
-          errorMessage: error instanceof Error ? error.message : "Unknown worker error"
-        }
+      await prisma.$transaction(async (tx) => {
+        await tx.renderJob.update({
+          where: { id: job.data.jobId },
+          data: {
+            status: "failed",
+            errorCode: "WORKER_PIPELINE_FAILED",
+            errorMessage: error instanceof Error ? error.message : "Unknown worker error"
+          }
+        });
+        await refundRenderCredit(tx, { userId: job.data.userId, jobId: job.data.jobId });
       });
       throw error;
     }
