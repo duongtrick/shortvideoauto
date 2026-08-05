@@ -134,12 +134,26 @@ async function postEmailWebhook(input: { to: string; subject: string; bodyText: 
 async function shouldSendEmail(userId: string, event: EmailEvent) {
   const prefs = await prisma.notificationPreference.findUnique({ where: { userId } });
   if (!prefs) return true;
+  if (prefs.digestMode && !isSecurityEmailEvent(event)) return false;
+  if (isWithinQuietHours(new Date().getHours(), prefs.quietHoursStart, prefs.quietHoursEnd) && !isSecurityEmailEvent(event)) {
+    return false;
+  }
   if (event === "render.completed") return prefs.emailRenderDone;
   if (event === "render.failed") return prefs.emailRenderFail;
   if (event === "billing.payment_confirmed") return prefs.emailBilling;
   if (event === "auth.welcome" || event === "auth.password_reset") return prefs.emailSecurity;
   if (event === "render.queue_stalled") return prefs.emailRenderFail;
   return true;
+}
+
+export function isSecurityEmailEvent(event: EmailEvent) {
+  return event === "auth.password_reset" || event === "admin.test";
+}
+
+export function isWithinQuietHours(hour: number, start: number | null, end: number | null) {
+  if (start === null || end === null || start === end) return false;
+  if (start < end) return hour >= start && hour < end;
+  return hour >= start || hour < end;
 }
 
 export async function createEmailDelivery(input: {

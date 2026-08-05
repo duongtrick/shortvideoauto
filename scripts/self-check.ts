@@ -52,6 +52,8 @@ import {
   renderPasswordResetEmail,
   renderQueuedTooLongEmail,
   renderWelcomeEmail,
+  isSecurityEmailEvent,
+  isWithinQuietHours,
   retryEmailDelivery
 } from "../src/services/notifications";
 
@@ -180,6 +182,9 @@ assert.equal(emailTemplateTestInput.safeParse({ key: "render.completed", toEmail
 assert.equal(emailTemplateKeys.includes("auth.password_reset"), true);
 assert.match(defaultEmailTemplate("billing.payment_confirmed").bodyText, /Credit da cong/);
 assert.equal(queuedJobAlertInput.safeParse({ olderThanMinutes: 30, take: 10 }).success, true);
+assert.equal(isWithinQuietHours(23, 22, 7), true);
+assert.equal(isWithinQuietHours(12, 22, 7), false);
+assert.equal(isSecurityEmailEvent("auth.password_reset"), true);
 assert.match(
   renderQueuedTooLongEmail({
     appUrl: "https://shortvideoauto.local",
