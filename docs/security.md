@@ -12,6 +12,7 @@
 - Store credit changes in append-only ledger.
 - Protect admin routes with role check.
 - Add rate limit per user/IP before public launch.
+- Current MVP has in-memory API rate limit. Move it to Redis before multi-instance deploy.
 
 ## Threat Model
 

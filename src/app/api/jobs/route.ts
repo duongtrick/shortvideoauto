@@ -2,11 +2,18 @@ import { NextResponse } from "next/server";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { createRenderQueue } from "@/lib/queue";
+import { checkRateLimit } from "@/lib/rate-limit";
 import { createJobInput, parseProductUrl } from "@/lib/product-url";
 
 const demoUserEmail = "demo@shortvideoauto.local";
 
 export async function POST(request: Request) {
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
+  const rateLimit = checkRateLimit(`create-job:${ip}`, 10, 60_000);
+  if (!rateLimit.allowed) {
+    return NextResponse.json({ error: "Too many render requests." }, { status: 429 });
+  }
+
   const contentType = request.headers.get("content-type") ?? "";
   const body = contentType.includes("application/json")
     ? await request.json().catch(() => null)
