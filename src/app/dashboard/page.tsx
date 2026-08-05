@@ -6,6 +6,7 @@ import { CreateJobForm } from "./create-job-form";
 import { SignOutButton } from "./session-actions";
 import { NotificationCenter } from "./notification-center";
 import { VideoLibrary } from "./video-library";
+import { ScheduleCalendar } from "./schedule-calendar";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -38,6 +39,7 @@ export default async function DashboardPage() {
           <div className="dashboard-side">
             <NotificationCenter />
             <VideoLibrary />
+            <ScheduleCalendar />
           </div>
         </div>
       </section>

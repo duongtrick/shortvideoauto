@@ -225,6 +225,13 @@ p {
   gap: var(--space-4);
 }
 
+.calendar-day {
+  display: grid;
+  gap: var(--space-2);
+  padding-block: var(--space-3);
+  border-block-end: 1px solid var(--border);
+}
+
 .card {
   padding: 18px;
 }

@@ -922,7 +922,7 @@ CTF5/
 - [ ] Video library filters: platform, status, template, source, series, date, language
 - [x] Preview/edit foundation before render/post reuse: script, title, images, price, selected script, CTA, voice, music, caption preset
 - [ ] Series wizard: topic, niche, cadence, template, voice, platform targets
-- [ ] Social scheduler calendar and manual publish checklist
+- [x] Social scheduler calendar foundation and manual publish checklist
 - [ ] Mobile bottom nav, sticky CTA, safe-area support, pull-to-refresh job list
 - [ ] Tablet split-view dashboard and side-by-side script/video preview
 - [x] Desktop shortcuts foundation: Ctrl+N create job focus, Ctrl+K job search, hover states, multi-column dashboard layout
