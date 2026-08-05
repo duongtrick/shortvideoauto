@@ -41,7 +41,7 @@ Schema includes admin-managed VideoTemplate, TTSProvider, AIProvider, and System
 
 Video library API filters user videos by render status, source host, series, template, language, and date range. It returns signed download URLs.
 
-Schedule API stores per-platform planned posts with caption, hashtags, scheduled time, and manual publish checklist for platforms without approved posting APIs.
+Schedule API stores per-platform planned posts with caption, hashtags, scheduled time, and manual publish checklist for platforms without approved posting APIs. Schedule suggestion API creates platform-specific title, caption, hashtags, CTA, and affiliate disclosure from video product/script metadata.
 
 TikTok calculator estimates engagement, post value range, and affiliate potential from user-supplied metrics.
 

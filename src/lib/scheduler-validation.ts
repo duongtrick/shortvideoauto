@@ -16,3 +16,9 @@ export const scheduleQuery = z.object({
   dateTo: z.string().datetime().optional(),
   take: z.coerce.number().int().min(1).max(100).default(50)
 });
+
+export const scheduleSuggestionInput = z.object({
+  videoId: z.string().min(1),
+  platform: scheduledPostInput.shape.platform,
+  tone: z.enum(["deal", "review", "problem_solution"]).default("deal")
+});

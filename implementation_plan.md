@@ -233,7 +233,7 @@ Audit scope ngày 2026-08-06:
 - Calendar view for scheduled videos across TikTok, YouTube Shorts, Instagram Reels, Facebook, X/Twitter, LinkedIn, Pinterest.
 - Bulk scheduling from video library.
 - Per-platform caption/title/hashtag fields.
-- AI caption/hashtag suggestions per platform.
+- AI/rule-based caption and hashtag suggestions per platform. ✅ Foundation API suggests title, caption, hashtags, CTA, and affiliate disclosure from video metadata.
 - Best-time recommendation based on historical performance.
 - Manual publish checklist for platforms without API approval.
 

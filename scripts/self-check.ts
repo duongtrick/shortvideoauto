@@ -25,8 +25,8 @@ import { getSystemSetting, setSystemSetting } from "../src/services/system-setti
 import { createResetToken, hashPassword, verifyPassword } from "../src/services/passwords";
 import { seriesInput } from "../src/lib/series-validation";
 import { videoLibraryQuery } from "../src/lib/video-library-validation";
-import { scheduledPostInput } from "../src/lib/scheduler-validation";
-import { createManualPublishChecklist } from "../src/services/scheduler";
+import { scheduledPostInput, scheduleSuggestionInput } from "../src/lib/scheduler-validation";
+import { createManualPublishChecklist, suggestScheduleCopy } from "../src/services/scheduler";
 import { appendAffiliateDisclosure, checkAffiliateContentPolicy } from "../src/services/content-policy";
 import { tiktokCalculatorInput } from "../src/lib/tiktok-calculator-validation";
 import { estimateTikTokAccount } from "../src/services/tiktok-calculator";
@@ -143,6 +143,17 @@ assert.equal(
   true
 );
 assert.equal(createManualPublishChecklist("tiktok").steps.length > 3, true);
+assert.equal(scheduleSuggestionInput.safeParse({ videoId: "video_1", platform: "tiktok", tone: "deal" }).success, true);
+assert.match(
+  suggestScheduleCopy({
+    platform: "tiktok",
+    tone: "deal",
+    productTitle: "Noi com mini",
+    price: "199k",
+    script: "Review nhanh"
+  }).caption,
+  /lien ket tiep thi/
+);
 assert.equal(checkAffiliateContentPolicy("bao hanh loi nhuan moi ngay").allowed, false);
 assert.match(appendAffiliateDisclosure("Review san pham"), /lien ket tiep thi/);
 assert.equal(tiktokCalculatorInput.safeParse({ username: "@shop", followers: 1000, likes: 5000 }).success, true);
