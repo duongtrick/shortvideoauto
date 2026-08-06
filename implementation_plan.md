@@ -927,6 +927,7 @@ CTF5/
   - [x] Foundation: email verification token/link/page, transactional email event, credentials login blocked until `emailVerified`
   - [x] Foundation: resend email verification endpoint/page without account enumeration
   - [x] Foundation: password changed security email after account password update
+  - [x] Smoke: Playwright user-flow covers register, forgot password, resend verification, reset password, login failure, and anonymous dashboard redirect without runtime crash
 - [x] Dashboard + create + jobs + video library foundation
 - [ ] Video library filters: platform, status, template, source, series, date, language
   - [x] Foundation: dashboard library filters status, source host, template, language, date range
@@ -990,6 +991,7 @@ CTF5/
 ```
 - [ ] 100% coverage — see testing plan below
   - [x] Foundation: route smoke script covers public, auth, dashboard, account, admin routes; DB-backed read-only API routes run with `ROUTE_SMOKE_INCLUDE_DB=true`
+  - [x] Foundation: user-flow smoke script covers auth forms and anonymous protected-page redirect
 ```
 
 ### Phase 7 — Staging + Production (Day 29-32)

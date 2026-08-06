@@ -10,6 +10,7 @@
     "worker": "tsx src/worker/index.ts",
     "self-check": "tsx scripts/self-check.ts",
     "route-smoke": "tsx scripts/route-smoke.ts",
+    "user-flow-smoke": "tsx scripts/user-flow-smoke.ts",
     "responsive-check": "tsx scripts/responsive-check.ts",
     "local": "powershell -ExecutionPolicy Bypass -File scripts/run-local.ps1",
     "prisma:generate": "prisma generate",

@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 
 type Mode = "login" | "register" | "forgot" | "reset" | "resend";
+type AuthResponse = { error?: string; resetUrl?: string; verifyUrl?: string };
 
 export function AuthForm({ mode }: { mode: Mode }) {
   const router = useRouter();
@@ -56,7 +57,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
         headers: { "content-type": "application/json" },
         body: JSON.stringify(body)
       });
-      const data = (await response.json()) as { error?: string; resetUrl?: string; verifyUrl?: string };
+      const data = await readAuthResponse(response);
       if (!response.ok) {
         setMessage(data.error ?? "Không xử lý được yêu cầu.");
         return;
@@ -127,4 +128,10 @@ export function AuthForm({ mode }: { mode: Mode }) {
       {message ? <p className="muted">{message}</p> : null}
     </form>
   );
+}
+
+async function readAuthResponse(response: Response): Promise<AuthResponse> {
+  const contentType = response.headers.get("content-type") ?? "";
+  if (!contentType.includes("application/json")) return {};
+  return response.json().catch(() => ({}));
 }
