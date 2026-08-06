@@ -47,6 +47,7 @@ Repo: `duongtrick/shortvideoauto`
 
 - Auth pages exist: login, register, forgot password, reset password, Google sign-in button.
 - Dashboard foundation exists: create job, job list/search shortcuts, notification center, video library, schedule calendar, series wizard.
+- Dashboard video library filter UI exists for status, source host, template, language, and date range.
 - Account settings/billing/notification preferences exist.
 - Account referral panel exists with referral link, copy action, commission summary, and recent commission list.
 - SEO landing/sample pages, sitemap, robots exist.

@@ -409,6 +409,17 @@ textarea {
   line-height: 1.5;
 }
 
+.library-filters {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+
+.library-filters label {
+  display: grid;
+  gap: var(--space-2);
+}
+
 .admin-shell {
   min-height: 100svh;
   display: grid;
@@ -638,6 +649,10 @@ textarea {
     align-items: start;
   }
 
+  .library-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .admin-shell {
     grid-template-columns: 240px minmax(0, 1fr);
     padding-block-end: 0;
@@ -753,6 +768,10 @@ textarea {
 
 @media (min-width: 1280px) {
   .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .library-filters {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 

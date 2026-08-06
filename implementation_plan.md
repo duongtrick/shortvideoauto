@@ -923,6 +923,7 @@ CTF5/
 - [ ] Auth flow (register → verify → login)
 - [x] Dashboard + create + jobs + video library foundation
 - [ ] Video library filters: platform, status, template, source, series, date, language
+  - [x] Foundation: dashboard library filters status, source host, template, language, date range
 - [x] Preview/edit foundation before render/post reuse: script, title, images, price, selected script, CTA, voice, music, caption preset
 - [x] Series wizard foundation: name/niche, cadence, template, voice, default CTA, TikTok target
 - [x] Social scheduler calendar foundation and manual publish checklist
