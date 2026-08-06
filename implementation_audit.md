@@ -9,8 +9,12 @@ Repo: `duongtrick/shortvideoauto`
 - Existing local demo server responds `200` on `/` and `/dashboard`.
 - `docker compose config` could not run because Docker CLI is not installed on this machine.
 - Last feature checkpoints passed:
+  - `npm.cmd run route-smoke`
   - `npm.cmd run self-check`
+  - `npm.cmd run responsive-check`
   - `npm.cmd run build`
+- Route smoke checkpoint added for public/auth/dashboard/account/admin routes; DB-backed read-only API routes are opt-in with `ROUTE_SMOKE_INCLUDE_DB=true`.
+- Auth form inputs now enforce 16px font size inside auth CSS to prevent iOS zoom and satisfy responsive smoke at 320px.
 
 ## Done Or Foundation Implemented
 
@@ -117,6 +121,7 @@ Repo: `duongtrick/shortvideoauto`
 ### Testing
 
 - Current checks are smoke/self-check/build level.
+- Route smoke test exists for public routes, auth pages, protected pages, admin routes, with optional read-only API route availability when local DB services run.
 - Plan target says about 230 tests; current repo does not have full unit/integration/E2E suite.
 - Playwright browser binary was missing earlier, so visual responsive screenshots were not fully verified.
 - Real DB-backed integration tests require `DATABASE_URL` and local services.

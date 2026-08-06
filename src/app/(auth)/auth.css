@@ -45,6 +45,13 @@
   gap: 12px;
 }
 
+.auth-form input,
+.auth-form select,
+.auth-form textarea {
+  min-height: 44px;
+  font-size: 16px;
+}
+
 .auth-link-row {
   display: flex;
   justify-content: space-between;

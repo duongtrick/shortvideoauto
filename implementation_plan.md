@@ -978,7 +978,8 @@ CTF5/
 
 ### Phase 6 — Testing (Day 24-28) 🧪
 ```
-100% coverage — see testing plan below
+- [ ] 100% coverage — see testing plan below
+  - [x] Foundation: route smoke script covers public, auth, dashboard, account, admin routes; DB-backed read-only API routes run with `ROUTE_SMOKE_INCLUDE_DB=true`
 ```
 
 ### Phase 7 — Staging + Production (Day 29-32)

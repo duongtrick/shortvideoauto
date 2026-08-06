@@ -1,0 +1,55 @@
+import assert from "node:assert/strict";
+
+const baseUrl = process.env.ROUTE_SMOKE_URL ?? "http://localhost:3000";
+const includeDbRoutes = process.env.ROUTE_SMOKE_INCLUDE_DB === "true";
+
+type RouteCase = {
+  path: string;
+  statuses: number[];
+  mustInclude?: string;
+};
+
+const publicCases: RouteCase[] = [
+  { path: "/", statuses: [200], mustInclude: "ShortVideoAuto" },
+  { path: "/login", statuses: [200], mustInclude: "Dang nhap" },
+  { path: "/register", statuses: [200], mustInclude: "Dang ky" },
+  { path: "/forgot-password", statuses: [200], mustInclude: "Quen mat khau" },
+  { path: "/reset-password", statuses: [200], mustInclude: "Doi mat khau" },
+  { path: "/robots.txt", statuses: [200], mustInclude: "User-Agent" },
+  { path: "/sitemap.xml", statuses: [200], mustInclude: "<urlset" },
+  { path: "/dashboard", statuses: [200, 302, 307] },
+  { path: "/account", statuses: [200, 302, 307] },
+  { path: "/admin", statuses: [200, 302, 307, 401, 403] },
+  { path: "/admin/users", statuses: [200, 302, 307, 401, 403] }
+];
+
+const dbCases: RouteCase[] = [
+  { path: "/api/jobs", statuses: [200, 302, 307, 401, 403] },
+  { path: "/api/videos", statuses: [200, 302, 307, 401, 403] },
+  { path: "/api/notifications", statuses: [200, 302, 307, 401, 403] },
+  { path: "/api/admin/health", statuses: [200, 302, 307, 401, 403] },
+  { path: "/api/admin/stats", statuses: [200, 302, 307, 401, 403] }
+];
+
+const cases = includeDbRoutes ? [...publicCases, ...dbCases] : publicCases;
+
+for (const route of cases) {
+  const response = await fetch(`${baseUrl}${route.path}`, { redirect: "manual" });
+  assert.equal(
+    route.statuses.includes(response.status),
+    true,
+    `${route.path} returned ${response.status}, expected ${route.statuses.join(", ")}`
+  );
+
+  const contentType = response.headers.get("content-type") ?? "";
+  if (response.status === 200 && contentType.includes("text")) {
+    const body = await response.text();
+    assert.equal(body.includes("Internal Server Error"), false, `${route.path} rendered 500 text`);
+    assert.equal(body.includes("Application error"), false, `${route.path} rendered app error`);
+    if (route.mustInclude) {
+      assert.equal(body.includes(route.mustInclude), true, `${route.path} missing ${route.mustInclude}`);
+    }
+  }
+}
+
+console.log(`route-smoke passed (${includeDbRoutes ? "public + db" : "public routes"})`);
