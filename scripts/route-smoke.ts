@@ -32,7 +32,11 @@ const publicCases: RouteCase[] = [
   { path: "/admin/payments", statuses: [302, 307], locationIncludes: "/login" },
   { path: "/admin/templates", statuses: [302, 307], locationIncludes: "/login" },
   { path: "/admin/audit-logs", statuses: [302, 307], locationIncludes: "/login" },
-  { path: "/admin/analytics", statuses: [302, 307], locationIncludes: "/login" }
+  { path: "/admin/analytics", statuses: [302, 307], locationIncludes: "/login" },
+  { path: "/api/admin/health", statuses: [401] },
+  { path: "/api/admin/users", statuses: [401] },
+  { path: "/api/admin/payments", statuses: [401] },
+  { path: "/api/admin/audit-logs", statuses: [401] }
 ];
 
 const dbCases: RouteCase[] = [

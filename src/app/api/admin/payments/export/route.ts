@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { csvHeaders, formatCsv } from "@/services/csv";
-import { requireAdmin } from "@/services/auth";
+import { adminAuthStatus, requireAdmin } from "@/services/auth";
 
 export async function GET(request: Request) {
   try {
     await requireAdmin();
-  } catch {
-    return NextResponse.json({ error: "Admin access required." }, { status: 403 });
+  } catch (error) {
+    return NextResponse.json({ error: "Admin access required." }, { status: adminAuthStatus(error) });
   }
 
   const url = new URL(request.url);

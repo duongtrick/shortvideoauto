@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { requireAdmin } from "@/services/auth";
+import { adminAuthStatus, requireAdmin } from "@/services/auth";
 import { retryEmailDelivery } from "@/services/notifications";
 
 type RouteContext = {
@@ -9,8 +9,8 @@ type RouteContext = {
 export async function POST(_: Request, context: RouteContext) {
   try {
     await requireAdmin();
-  } catch {
-    return NextResponse.json({ error: "Admin access required." }, { status: 403 });
+  } catch (error) {
+    return NextResponse.json({ error: "Admin access required." }, { status: adminAuthStatus(error) });
   }
 
   const { deliveryId } = await context.params;

@@ -27,6 +27,7 @@ import { writeAuditLog } from "../src/services/audit";
 import { getConfiguredDomains, resolveTenantDomain } from "../src/lib/domains";
 import { getSystemSetting, setSystemSetting } from "../src/services/system-settings";
 import { createResetToken, hashPassword, verifyPassword } from "../src/services/passwords";
+import { adminAuthStatus, AuthAccessError } from "../src/services/auth";
 import { adminSeriesInput, adminSeriesPatch, seriesInput } from "../src/lib/series-validation";
 import { videoLibraryQuery } from "../src/lib/video-library-validation";
 import { jobPreviewPatch } from "../src/lib/job-preview-validation";
@@ -151,6 +152,8 @@ const passwordHash = hashPassword("password123");
 assert.equal(verifyPassword("password123", passwordHash), true);
 assert.equal(verifyPassword("wrongpass", passwordHash), false);
 assert.equal(createResetToken().token.length > 40, true);
+assert.equal(adminAuthStatus(new AuthAccessError("unauthenticated")), 401);
+assert.equal(adminAuthStatus(new AuthAccessError("forbidden")), 403);
 assert.equal(
   seriesInput.safeParse({
     name: "Shopee deals",

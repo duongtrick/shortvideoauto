@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { adminUpdateUserInput } from "@/lib/admin-user-validation";
-import { requireAdmin } from "@/services/auth";
+import { adminAuthStatus, requireAdmin } from "@/services/auth";
 import { writeAuditLog } from "@/services/audit";
 import { hashPassword } from "@/services/passwords";
 
@@ -14,8 +14,8 @@ export async function PATCH(request: Request, context: RouteContext) {
   let admin;
   try {
     admin = await requireAdmin();
-  } catch {
-    return NextResponse.json({ error: "Admin access required." }, { status: 403 });
+  } catch (error) {
+    return NextResponse.json({ error: "Admin access required." }, { status: adminAuthStatus(error) });
   }
 
   const parsed = adminUpdateUserInput.safeParse(await request.json().catch(() => null));
@@ -61,8 +61,8 @@ export async function DELETE(_: Request, context: RouteContext) {
   let admin;
   try {
     admin = await requireAdmin();
-  } catch {
-    return NextResponse.json({ error: "Admin access required." }, { status: 403 });
+  } catch (error) {
+    return NextResponse.json({ error: "Admin access required." }, { status: adminAuthStatus(error) });
   }
 
   if (admin.id === userId) {

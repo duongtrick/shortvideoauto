@@ -10,6 +10,10 @@ export class AuthAccessError extends Error {
   }
 }
 
+export function adminAuthStatus(error: unknown) {
+  return error instanceof AuthAccessError && error.code === "unauthenticated" ? 401 : 403;
+}
+
 function assertActiveUser<T extends { role: string }>(user: T) {
   if (blockedRoles.has(user.role)) {
     throw new Error("Account disabled.");

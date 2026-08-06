@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createRenderQueue } from "@/lib/queue";
-import { requireAdmin } from "@/services/auth";
+import { adminAuthStatus, requireAdmin } from "@/services/auth";
 import { writeAuditLog } from "@/services/audit";
 
 type RouteContext = {
@@ -13,8 +13,8 @@ export async function POST(_: Request, context: RouteContext) {
   let admin;
   try {
     admin = await requireAdmin();
-  } catch {
-    return NextResponse.json({ error: "Admin access required." }, { status: 403 });
+  } catch (error) {
+    return NextResponse.json({ error: "Admin access required." }, { status: adminAuthStatus(error) });
   }
 
   const job = await prisma.renderJob.findUnique({ where: { id: jobId } });

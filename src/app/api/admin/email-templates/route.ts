@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { emailTemplatePatch, emailTemplateTestInput } from "@/lib/email-template-validation";
-import { requireAdmin } from "@/services/auth";
+import { adminAuthStatus, requireAdmin } from "@/services/auth";
 import { writeAuditLog } from "@/services/audit";
 import { createEmailDelivery } from "@/services/notifications";
 import { getEmailTemplate, listEmailTemplates, saveEmailTemplate } from "@/services/email-templates";
@@ -9,8 +9,8 @@ import { getEmailTemplate, listEmailTemplates, saveEmailTemplate } from "@/servi
 export async function GET() {
   try {
     await requireAdmin();
-  } catch {
-    return NextResponse.json({ error: "Admin access required." }, { status: 403 });
+  } catch (error) {
+    return NextResponse.json({ error: "Admin access required." }, { status: adminAuthStatus(error) });
   }
 
   const templates = await listEmailTemplates(prisma);
@@ -21,8 +21,8 @@ export async function PATCH(request: Request) {
   let admin;
   try {
     admin = await requireAdmin();
-  } catch {
-    return NextResponse.json({ error: "Admin access required." }, { status: 403 });
+  } catch (error) {
+    return NextResponse.json({ error: "Admin access required." }, { status: adminAuthStatus(error) });
   }
 
   const parsed = emailTemplatePatch.safeParse(await request.json().catch(() => null));
@@ -40,8 +40,12 @@ export async function PATCH(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const admin = await requireAdmin().catch(() => null);
-  if (!admin) return NextResponse.json({ error: "Admin access required." }, { status: 403 });
+  let admin;
+  try {
+    admin = await requireAdmin();
+  } catch (error) {
+    return NextResponse.json({ error: "Admin access required." }, { status: adminAuthStatus(error) });
+  }
 
   const parsed = emailTemplateTestInput.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: "Invalid email template test." }, { status: 400 });

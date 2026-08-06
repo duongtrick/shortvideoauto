@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/services/auth";
+import { adminAuthStatus, requireAdmin } from "@/services/auth";
 import { setSystemSetting } from "@/services/system-settings";
 import { writeAuditLog } from "@/services/audit";
 
@@ -15,8 +15,8 @@ const settingInput = z.object({
 export async function GET(request: Request) {
   try {
     await requireAdmin();
-  } catch {
-    return NextResponse.json({ error: "Admin access required." }, { status: 403 });
+  } catch (error) {
+    return NextResponse.json({ error: "Admin access required." }, { status: adminAuthStatus(error) });
   }
 
   const url = new URL(request.url);
@@ -33,8 +33,8 @@ export async function PATCH(request: Request) {
   let admin;
   try {
     admin = await requireAdmin();
-  } catch {
-    return NextResponse.json({ error: "Admin access required." }, { status: 403 });
+  } catch (error) {
+    return NextResponse.json({ error: "Admin access required." }, { status: adminAuthStatus(error) });
   }
 
   const parsed = settingInput.safeParse(await request.json().catch(() => null));

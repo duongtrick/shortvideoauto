@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { adminCreditAdjustmentInput } from "@/lib/admin-user-validation";
-import { requireAdmin } from "@/services/auth";
+import { adminAuthStatus, requireAdmin } from "@/services/auth";
 import { writeAuditLog } from "@/services/audit";
 
 type RouteContext = {
@@ -13,8 +13,8 @@ export async function PATCH(request: Request, context: RouteContext) {
   let admin;
   try {
     admin = await requireAdmin();
-  } catch {
-    return NextResponse.json({ error: "Admin access required." }, { status: 403 });
+  } catch (error) {
+    return NextResponse.json({ error: "Admin access required." }, { status: adminAuthStatus(error) });
   }
 
   const parsed = adminCreditAdjustmentInput.safeParse(await request.json().catch(() => null));

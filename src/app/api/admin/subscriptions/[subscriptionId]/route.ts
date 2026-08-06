@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { adminSubscriptionPatch } from "@/lib/admin-subscription-validation";
-import { requireAdmin } from "@/services/auth";
+import { adminAuthStatus, requireAdmin } from "@/services/auth";
 import { writeAuditLog } from "@/services/audit";
 
 type RouteContext = {
@@ -13,8 +13,8 @@ export async function PATCH(request: Request, context: RouteContext) {
   let admin;
   try {
     admin = await requireAdmin();
-  } catch {
-    return NextResponse.json({ error: "Admin access required." }, { status: 403 });
+  } catch (error) {
+    return NextResponse.json({ error: "Admin access required." }, { status: adminAuthStatus(error) });
   }
 
   const parsed = adminSubscriptionPatch.safeParse(await request.json().catch(() => null));
@@ -49,8 +49,8 @@ export async function DELETE(_: Request, context: RouteContext) {
   let admin;
   try {
     admin = await requireAdmin();
-  } catch {
-    return NextResponse.json({ error: "Admin access required." }, { status: 403 });
+  } catch (error) {
+    return NextResponse.json({ error: "Admin access required." }, { status: adminAuthStatus(error) });
   }
 
   const subscription = await prisma.subscription.update({
