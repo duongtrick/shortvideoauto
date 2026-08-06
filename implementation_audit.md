@@ -54,6 +54,7 @@ Repo: `duongtrick/shortvideoauto`
 ### Phase 5
 
 - Admin shell exists with role guard, sidebar, mobile bottom nav.
+- Admin plan now ticks shell/table foundation lines without claiming full advanced admin scope.
 - Admin users API/UI foundation exists.
 - Admin jobs API/UI foundation exists.
 - Admin videos API/UI foundation exists.

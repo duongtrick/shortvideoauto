@@ -940,8 +940,11 @@ CTF5/
 ### Phase 5 — Admin Panel (Day 19-23) ⭐
 ```
 - [ ] Admin layout: sidebar, breadcrumbs, role guard
+  - [x] Foundation: server-side admin role guard, sticky sidebar, dynamic page title, admin routes
 - [ ] Responsive admin shell: mobile bottom sheet nav, tablet collapsible sidebar, desktop persistent sidebar
+  - [x] Foundation: mobile bottom nav, tablet/desktop sidebar, safe-area spacing, responsive grids
 - [ ] Admin tables: card layout mobile, horizontal scroll fallback, table desktop
+  - [x] Foundation: admin rows render as stacked mobile cards and multi-column desktop grids
 - [ ] Module 1: User management (full CRUD)
   - [x] API foundation: list/create/update/soft-delete/credit-adjust/ban endpoints, audit logs, validation
   - [x] UI foundation: responsive admin shell, search/filter list, create user, role, ban, soft delete, credit adjust
