@@ -5,7 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 
-type Mode = "login" | "register" | "forgot" | "reset";
+type Mode = "login" | "register" | "forgot" | "reset" | "resend";
 
 export function AuthForm({ mode }: { mode: Mode }) {
   const router = useRouter();
@@ -39,7 +39,9 @@ export function AuthForm({ mode }: { mode: Mode }) {
           ? "/api/auth/register"
           : mode === "forgot"
             ? "/api/auth/forgot-password"
-            : "/api/auth/reset-password";
+            : mode === "resend"
+              ? "/api/auth/resend-verification"
+              : "/api/auth/reset-password";
 
       const body =
         mode === "reset"
@@ -68,6 +70,10 @@ export function AuthForm({ mode }: { mode: Mode }) {
         setMessage(data.resetUrl ? `Link đặt lại mật khẩu: ${data.resetUrl}` : "Kiểm tra email để đặt lại mật khẩu.");
         return;
       }
+      if (mode === "resend") {
+        setMessage(data.verifyUrl ? `Link xác minh: ${data.verifyUrl}` : "Nếu tài khoản cần xác minh, hệ thống đã gửi email mới.");
+        return;
+      }
       setMessage("Đã đổi mật khẩu. Đăng nhập lại.");
       router.push("/login");
     });
@@ -87,7 +93,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
           <input id="email" name="email" type="email" autoComplete="email" required />
         </>
       )}
-      {mode === "forgot" ? null : (
+      {mode === "forgot" || mode === "resend" ? null : (
         <>
           <label htmlFor="password">Mật khẩu</label>
           <input
@@ -109,7 +115,9 @@ export function AuthForm({ mode }: { mode: Mode }) {
               ? "Đăng ký"
               : mode === "forgot"
                 ? "Gửi link"
-                : "Đổi mật khẩu"}
+                : mode === "resend"
+                  ? "Gửi lại link"
+                  : "Đổi mật khẩu"}
       </button>
       {mode === "login" ? (
         <button className="button" type="button" onClick={() => signIn("google", { callbackUrl })}>

@@ -5,20 +5,18 @@ import { AuthForm } from "../auth-form";
 import { AuthShell } from "../auth-shell";
 
 export const metadata: Metadata = {
-  title: "Đăng nhập",
+  title: "Gửi lại xác minh email",
   robots: { index: false, follow: false }
 };
 
-export default function LoginPage() {
+export default function ResendVerificationPage() {
   return (
-    <AuthShell title="Đăng nhập" description="Vào dashboard để tạo và tải video affiliate." active="login">
+    <AuthShell title="Gửi lại xác minh email" description="Nhập email để nhận link xác minh mới.">
       <Suspense fallback={<p className="muted">Đang tải form...</p>}>
-        <AuthForm mode="login" />
+        <AuthForm mode="resend" />
       </Suspense>
       <div className="auth-link-row">
-        <Link href="/forgot-password">Quên mật khẩu</Link>
-        <Link href="/resend-verification">Gửi lại xác minh</Link>
-        <Link href="/register">Tạo tài khoản</Link>
+        <Link href="/login">Quay lại đăng nhập</Link>
       </div>
     </AuthShell>
   );

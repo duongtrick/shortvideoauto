@@ -16,6 +16,7 @@ const publicCases: RouteCase[] = [
   { path: "/register", statuses: [200], mustInclude: "Đăng ký" },
   { path: "/forgot-password", statuses: [200], mustInclude: "Quên mật khẩu" },
   { path: "/reset-password", statuses: [200], mustInclude: "Đổi mật khẩu" },
+  { path: "/resend-verification", statuses: [200], mustInclude: "Gửi lại xác minh email" },
   { path: "/verify-email?token=bad", statuses: [200], mustInclude: "Xác minh email" },
   { path: "/robots.txt", statuses: [200], mustInclude: "User-Agent" },
   { path: "/sitemap.xml", statuses: [200], mustInclude: "<urlset" },
