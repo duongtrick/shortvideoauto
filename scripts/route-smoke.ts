@@ -20,6 +20,8 @@ const publicCases: RouteCase[] = [
   { path: "/verify-email?token=bad", statuses: [200], mustInclude: "Xác minh email" },
   { path: "/robots.txt", statuses: [200], mustInclude: "User-Agent" },
   { path: "/sitemap.xml", statuses: [200], mustInclude: "<urlset" },
+  { path: "/features", statuses: [200], mustInclude: "Tính năng tạo video affiliate" },
+  { path: "/pricing", statuses: [200], mustInclude: "Bảng giá ShortVideoAuto" },
   { path: "/tao-video-affiliate-tu-dong", statuses: [200], mustInclude: "ShortVideoAuto" },
   { path: "/tao-video-shopee-affiliate", statuses: [200], mustInclude: "ShortVideoAuto" },
   { path: "/ai-tao-video-tiktok-ban-hang", statuses: [200], mustInclude: "ShortVideoAuto" },

@@ -941,6 +941,7 @@ CTF5/
 - [x] Settings foundation: account page notification preferences UI with email toggles, digest mode, quiet hours
 - [x] Notification center foundation: dashboard list/mark-read UI, preferences UI, quiet hours, and digest sending for render done, render failed, billing, account security
 - [ ] Landing, pricing, features (SEO)
+  - [x] Foundation: public home, features, pricing, sample, keyword pages in sitemap and smoke tests
 - [ ] Multi-domain middleware
 - [ ] Affiliate referral dashboard for this SaaS
   - [x] Foundation: account referral link panel, copy action, pending/paid commission summary, recent commissions

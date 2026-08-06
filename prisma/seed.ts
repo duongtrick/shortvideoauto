@@ -6,11 +6,12 @@ const prisma = new PrismaClient();
 async function main() {
   await prisma.user.upsert({
     where: { email: "demo@shortvideoauto.local" },
-    update: {},
+    update: { emailVerified: new Date() },
     create: {
       email: "demo@shortvideoauto.local",
       name: "Demo User",
       passwordHash: hashPassword("password123"),
+      emailVerified: new Date(),
       role: "user"
     }
   });
@@ -57,11 +58,12 @@ async function main() {
 
   await prisma.user.upsert({
     where: { email: "admin@shortvideoauto.local" },
-    update: { role: "admin" },
+    update: { role: "admin", emailVerified: new Date() },
     create: {
       email: "admin@shortvideoauto.local",
       name: "Demo Admin",
       passwordHash: hashPassword("password123"),
+      emailVerified: new Date(),
       role: "admin"
     }
   });

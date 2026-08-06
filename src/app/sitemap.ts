@@ -13,6 +13,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/samples/demo`,
       lastModified: new Date()
     },
+    {
+      url: `${baseUrl}/features`,
+      lastModified: new Date()
+    },
+    {
+      url: `${baseUrl}/pricing`,
+      lastModified: new Date()
+    },
     ...keywordPages.map((page) => ({
       url: `${baseUrl}/${page.slug}`,
       lastModified: new Date()

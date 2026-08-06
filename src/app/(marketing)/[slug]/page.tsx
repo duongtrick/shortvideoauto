@@ -52,8 +52,10 @@ export default async function KeywordPage({ params }: PageProps) {
           ShortVideoAuto
         </Link>
         <nav className="nav" aria-label="Chính">
-          <Link href="/dashboard">Dashboard</Link>
+          <Link href="/features">Tính năng</Link>
+          <Link href="/pricing">Bảng giá</Link>
           <Link href="/samples/demo">Mẫu video</Link>
+          <Link href="/login">Đăng nhập</Link>
         </nav>
       </header>
       <section className="page hero">
@@ -63,7 +65,7 @@ export default async function KeywordPage({ params }: PageProps) {
           <p className="lead">{page.description}</p>
           <div className="actions">
             <Link className="button primary" href="/dashboard">
-              Tạo video
+              Dùng thử
             </Link>
             <Link className="button" href="/">
               Xem tổng quan
