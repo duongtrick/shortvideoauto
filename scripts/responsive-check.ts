@@ -1,11 +1,20 @@
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
 import { chromium } from "playwright";
 
-const baseUrl = process.env.RESPONSIVE_CHECK_URL ?? "http://localhost:3001";
+const baseUrl = process.env.RESPONSIVE_CHECK_URL ?? "http://localhost:3000";
 const path = process.env.RESPONSIVE_CHECK_PATH ?? "/dashboard";
-const widths = [320, 375, 428, 768, 1024, 1280, 1920];
+const widths = [320, 375, 428, 768, 1024, 1280, 1920, 2560];
+const executablePath =
+  process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH ??
+  [
+    "C:/Program Files/Google/Chrome/Application/chrome.exe",
+    "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe",
+    "C:/Program Files/Microsoft/Edge/Application/msedge.exe",
+    "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe"
+  ].find((candidate) => existsSync(candidate));
 
-const browser = await chromium.launch({ headless: true });
+const browser = await chromium.launch({ headless: true, executablePath });
 
 try {
   for (const width of widths) {

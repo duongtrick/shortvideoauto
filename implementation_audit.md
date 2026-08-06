@@ -90,7 +90,8 @@ Repo: `duongtrick/shortvideoauto`
 
 ### Frontend
 
-- Responsive foundation exists, but full device matrix QA is not done for 320, 375, 428, 768, 1024, 1280, 1920, 2560.
+- Responsive smoke script now checks 320, 375, 428, 768, 1024, 1280, 1920, 2560px with installed Chrome/Edge fallback.
+- Full manual/device QA is still not done for real iPhone, Android, iPad, laptop, ultra-wide.
 - Pull-to-refresh job list is not implemented.
 - Tablet side-by-side script/video preview is not complete.
 - Pricing/features pages exist only as SEO/content foundation, not full SaaS pricing funnel.
@@ -126,6 +127,6 @@ Repo: `duongtrick/shortvideoauto`
 
 1. Run Prisma migrate/seed against local DB.
 2. Add DB-backed API smoke tests for admin/auth/billing.
-3. Add Playwright responsive checks once browser binaries are installed.
+3. Expand responsive checks to authenticated admin pages and orientation/touch cases.
 4. Complete real R2/S3 object upload/download redirect flow.
 5. Replace scraper foundation with hardened marketplace selectors and retry policy.

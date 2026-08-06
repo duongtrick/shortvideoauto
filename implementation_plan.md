@@ -919,6 +919,7 @@ CTF5/
 ```
 - [ ] Design system (TasteSkill enforced)
 - [ ] Responsive/adaptive design system: 320, 375, 428, 768, 1024, 1280, 1920, 2560px
+  - [x] Responsive smoke check script covers 320, 375, 428, 768, 1024, 1280, 1920, 2560px and can use installed Chrome/Edge
 - [ ] Auth flow (register → verify → login)
 - [x] Dashboard + create + jobs + video library foundation
 - [ ] Video library filters: platform, status, template, source, series, date, language
