@@ -1,5 +1,6 @@
 "use client";
 
+import { useToastState } from "@/app/toast-provider";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
 type SettingValue = string | number | boolean | Record<string, unknown>;
@@ -32,7 +33,7 @@ function formatSettingValue(value: SettingValue) {
 export function AdminSettingsClient() {
   const [settings, setSettings] = useState<SettingRow[]>([]);
   const [group, setGroup] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useToastState("");
   const [loading, setLoading] = useState(true);
 
   const query = useMemo(() => {

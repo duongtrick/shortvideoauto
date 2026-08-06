@@ -1,5 +1,6 @@
 "use client";
 
+import { useToastState } from "@/app/toast-provider";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
 type PaymentRow = {
@@ -24,7 +25,7 @@ const statuses = ["pending", "paid", "refunded"];
 export function AdminPaymentsClient() {
   const [payments, setPayments] = useState<PaymentRow[]>([]);
   const [status, setStatus] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useToastState("");
   const [loading, setLoading] = useState(true);
 
   const query = useMemo(() => {

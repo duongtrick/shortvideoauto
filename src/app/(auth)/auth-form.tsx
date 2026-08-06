@@ -1,5 +1,6 @@
 "use client";
 
+import { useToastState } from "@/app/toast-provider";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
@@ -9,7 +10,7 @@ type Mode = "login" | "register" | "forgot" | "reset";
 export function AuthForm({ mode }: { mode: Mode }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useToastState("");
   const [isPending, startTransition] = useTransition();
   const callbackUrl = (() => {
     const value = searchParams.get("callbackUrl");

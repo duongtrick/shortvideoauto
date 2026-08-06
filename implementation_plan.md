@@ -919,6 +919,7 @@ CTF5/
 ### Phase 4 — Frontend User Side (Day 13-18)
 ```
 - [ ] Design system (TasteSkill enforced)
+  - [x] Foundation: global accessible toast system for form, dashboard, account, and admin feedback messages
 - [ ] Responsive/adaptive design system: 320, 375, 428, 768, 1024, 1280, 1920, 2560px
   - [x] Responsive smoke check script covers 320, 375, 428, 768, 1024, 1280, 1920, 2560px and can use installed Chrome/Edge
 - [ ] Auth flow (register → verify → login)

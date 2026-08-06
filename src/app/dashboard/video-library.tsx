@@ -1,5 +1,6 @@
 "use client";
 
+import { useToastState } from "@/app/toast-provider";
 import { useEffect, useState } from "react";
 
 type VideoRow = {
@@ -47,7 +48,7 @@ async function loadVideos(filters: VideoFilters) {
 
 export function VideoLibrary() {
   const [videos, setVideos] = useState<VideoRow[]>([]);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useToastState("");
   const [scheduledVideoId, setScheduledVideoId] = useState("");
   const [filters, setFilters] = useState<VideoFilters>(defaultFilters);
 

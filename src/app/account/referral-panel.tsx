@@ -1,5 +1,6 @@
 "use client";
 
+import { useToastState } from "@/app/toast-provider";
 import { useEffect, useState } from "react";
 
 type ReferralData = {
@@ -10,7 +11,7 @@ type ReferralData = {
 
 export function ReferralPanel() {
   const [data, setData] = useState<ReferralData | null>(null);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useToastState("");
 
   useEffect(() => {
     let active = true;

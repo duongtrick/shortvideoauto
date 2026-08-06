@@ -1,5 +1,6 @@
 "use client";
 
+import { useToastState } from "@/app/toast-provider";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
 type SubscriptionRow = {
@@ -23,7 +24,7 @@ export function AdminSubscriptionsClient() {
   const [subscriptions, setSubscriptions] = useState<SubscriptionRow[]>([]);
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useToastState("");
   const [loading, setLoading] = useState(true);
 
   const query = useMemo(() => {

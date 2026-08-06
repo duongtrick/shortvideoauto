@@ -1,5 +1,6 @@
 "use client";
 
+import { useToastState } from "@/app/toast-provider";
 import { useEffect, useState, useTransition } from "react";
 
 type NotificationRow = {
@@ -20,7 +21,7 @@ async function loadNotifications() {
 
 export function NotificationCenter() {
   const [notifications, setNotifications] = useState<NotificationRow[]>([]);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useToastState("");
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {

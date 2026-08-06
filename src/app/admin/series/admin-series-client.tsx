@@ -1,5 +1,6 @@
 "use client";
 
+import { useToastState } from "@/app/toast-provider";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
 type SeriesRow = {
@@ -28,7 +29,7 @@ export function AdminSeriesClient() {
   const [series, setSeries] = useState<SeriesRow[]>([]);
   const [q, setQ] = useState("");
   const [isActive, setIsActive] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useToastState("");
   const [loading, setLoading] = useState(true);
 
   const query = useMemo(() => {

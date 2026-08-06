@@ -1,5 +1,6 @@
 "use client";
 
+import { useToastState } from "@/app/toast-provider";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
 type UserRow = {
@@ -25,7 +26,7 @@ export function AdminUsersClient() {
   const [total, setTotal] = useState(0);
   const [q, setQ] = useState("");
   const [role, setRole] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useToastState("");
   const [loading, setLoading] = useState(true);
 
   const query = useMemo(() => {

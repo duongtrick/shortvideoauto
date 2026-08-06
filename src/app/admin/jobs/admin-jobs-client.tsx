@@ -1,5 +1,6 @@
 "use client";
 
+import { useToastState } from "@/app/toast-provider";
 import { useEffect, useMemo, useState } from "react";
 
 type JobStatus = "queued" | "scraping" | "scripting" | "tts" | "rendering" | "uploading" | "completed" | "failed";
@@ -27,7 +28,7 @@ const statuses: JobStatus[] = ["queued", "scraping", "scripting", "tts", "render
 export function AdminJobsClient() {
   const [jobs, setJobs] = useState<JobRow[]>([]);
   const [status, setStatus] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useToastState("");
   const [loading, setLoading] = useState(true);
 
   const query = useMemo(() => {

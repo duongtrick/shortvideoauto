@@ -59,6 +59,7 @@ Repo: `duongtrick/shortvideoauto`
 - Account referral panel exists with referral link, copy action, commission summary, and recent commission list.
 - SEO landing/sample pages, sitemap, robots exist.
 - Responsive CSS foundation exists: mobile-first layout, bottom nav, safe area, dark mode, reduced motion, tablet/desktop grids.
+- Global toast foundation exists for auth, dashboard, account, and admin feedback messages, with accessible live region, dark mode support, and mobile safe-area placement.
 - Dashboard job list supports pull-to-refresh touch gesture on mobile.
 
 ### Phase 5

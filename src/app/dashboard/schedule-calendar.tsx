@@ -1,5 +1,6 @@
 "use client";
 
+import { useToastState } from "@/app/toast-provider";
 import { useEffect, useMemo, useState } from "react";
 
 type ScheduledPostRow = {
@@ -21,7 +22,7 @@ async function loadScheduledPosts() {
 
 export function ScheduleCalendar() {
   const [posts, setPosts] = useState<ScheduledPostRow[]>([]);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useToastState("");
 
   useEffect(() => {
     let active = true;

@@ -1,5 +1,6 @@
 "use client";
 
+import { useToastState } from "@/app/toast-provider";
 import { signOut } from "next-auth/react";
 import { useEffect, useState, useTransition } from "react";
 
@@ -42,12 +43,12 @@ const defaultPreferences: NotificationPreferences = {
 };
 
 export function AccountForm({ email }: { email: string }) {
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useToastState("");
   const [preferences, setPreferences] = useState<NotificationPreferences>(defaultPreferences);
   const [payments, setPayments] = useState<PaymentRow[]>([]);
   const [transfer, setTransfer] = useState<TransferInstruction | null>(null);
-  const [preferencesMessage, setPreferencesMessage] = useState("");
-  const [billingMessage, setBillingMessage] = useState("");
+  const [preferencesMessage, setPreferencesMessage] = useToastState("");
+  const [billingMessage, setBillingMessage] = useToastState("");
   const [isPending, startTransition] = useTransition();
   const [isSavingPreferences, startPreferencesTransition] = useTransition();
   const [isCreatingPayment, startPaymentTransition] = useTransition();

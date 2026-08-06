@@ -351,6 +351,49 @@ textarea {
   font-weight: 700;
 }
 
+.toast-region {
+  position: fixed;
+  inset-inline: var(--page-inline);
+  inset-block-end: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 12px);
+  z-index: 80;
+  display: grid;
+  justify-items: end;
+  gap: var(--space-2);
+  pointer-events: none;
+}
+
+.toast {
+  width: min(420px, 100%);
+  min-height: 48px;
+  display: grid;
+  grid-template-columns: 10px 1fr;
+  align-items: center;
+  gap: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  color: var(--text);
+  box-shadow: 0 16px 40px rgba(23, 32, 51, 0.14);
+  text-align: start;
+  pointer-events: auto;
+}
+
+.toast-dot {
+  inline-size: 10px;
+  block-size: 10px;
+  border-radius: 999px;
+  background: var(--primary);
+}
+
+.toast-success .toast-dot {
+  background: var(--success);
+}
+
+.toast-error .toast-dot {
+  background: var(--accent);
+}
+
 .sticky-mobile-cta {
   position: sticky;
   inset-block-end: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 12px);

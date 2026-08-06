@@ -1,5 +1,6 @@
 "use client";
 
+import { useToastState } from "@/app/toast-provider";
 import { FormEvent, useEffect, useState } from "react";
 
 type JobSummary = {
@@ -29,7 +30,7 @@ async function loadLatestJob() {
 
 export function JobPreviewPanel() {
   const [job, setJob] = useState<JobDetail | null>(null);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useToastState("");
 
   useEffect(() => {
     let active = true;

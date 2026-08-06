@@ -1,5 +1,6 @@
 "use client";
 
+import { useToastState } from "@/app/toast-provider";
 import { type TouchEvent, useEffect, useRef, useState, useTransition } from "react";
 
 type JobRow = {
@@ -28,7 +29,7 @@ export function CreateJobForm() {
   const [url, setUrl] = useState("");
   const [jobs, setJobs] = useState<JobRow[]>([]);
   const [search, setSearch] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useToastState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
   const [isPending, startTransition] = useTransition();

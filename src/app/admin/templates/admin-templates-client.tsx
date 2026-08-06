@@ -1,5 +1,6 @@
 "use client";
 
+import { useToastState } from "@/app/toast-provider";
 import { FormEvent, useEffect, useState } from "react";
 
 type TemplateRow = {
@@ -23,7 +24,7 @@ function parseConfig(value: FormDataEntryValue | null) {
 
 export function AdminTemplatesClient() {
   const [templates, setTemplates] = useState<TemplateRow[]>([]);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useToastState("");
   const [loading, setLoading] = useState(true);
 
   async function loadTemplates() {

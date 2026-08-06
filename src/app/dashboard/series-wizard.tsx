@@ -1,5 +1,6 @@
 "use client";
 
+import { useToastState } from "@/app/toast-provider";
 import { useEffect, useState, useTransition } from "react";
 
 type SeriesRow = {
@@ -22,7 +23,7 @@ async function loadSeries() {
 
 export function SeriesWizard() {
   const [series, setSeries] = useState<SeriesRow[]>([]);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useToastState("");
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
