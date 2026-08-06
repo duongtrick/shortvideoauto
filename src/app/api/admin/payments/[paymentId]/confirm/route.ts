@@ -38,6 +38,16 @@ export async function POST(request: Request, context: RouteContext) {
         meta: { paymentId: payment.id, bankTxnId, manual: true }
       }
     });
+    const subscription = await tx.subscription.findUnique({ where: { providerId: payment.code } });
+    if (subscription?.status === "pending") {
+      const durationDays = Number(subscription.provider.split(":")[2] ?? 30);
+      const currentPeriodEnd = new Date();
+      currentPeriodEnd.setDate(currentPeriodEnd.getDate() + (Number.isFinite(durationDays) ? durationDays : 30));
+      await tx.subscription.update({
+        where: { id: subscription.id },
+        data: { status: "active", currentPeriodEnd }
+      });
+    }
     await writeAuditLog(tx, {
       userId: admin.id,
       action: "payment.manual_confirm",

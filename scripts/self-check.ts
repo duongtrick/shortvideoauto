@@ -138,6 +138,8 @@ assert.equal(csvHeaders("users.csv")["content-type"], "text/csv; charset=utf-8")
 assert.equal(typeof logger.info, "function");
 assert.match(createPaymentCode(), /^CTF5\d{6}$/);
 assert.equal(createBankPaymentInput.safeParse({ amount: 100000, credits: 100 }).success, true);
+assert.equal(createBankPaymentInput.safeParse({ planKey: "creator_monthly" }).success, true);
+assert.equal(createBankPaymentInput.safeParse({ amount: 100000 }).success, false);
 assert.match(createBankTransferInstruction({ code: "CTF5123456", amount: 100000, credits: 100 }).content, /CTF5123456/);
 assert.equal(findPaymentCode("Nap tien CTF5123456 cam on"), "CTF5123456");
 assert.equal(

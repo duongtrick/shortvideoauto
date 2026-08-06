@@ -30,6 +30,15 @@ type CreditPack = {
   description: string;
 };
 
+type SubscriptionPlan = {
+  key: string;
+  name: string;
+  price: number;
+  durationDays: number;
+  credits: number;
+  description: string;
+};
+
 type TransferInstruction = {
   bankName: string;
   accountNumber: string;
@@ -55,6 +64,7 @@ export function AccountForm({ email }: { email: string }) {
   const [preferences, setPreferences] = useState<NotificationPreferences>(defaultPreferences);
   const [payments, setPayments] = useState<PaymentRow[]>([]);
   const [creditPacks, setCreditPacks] = useState<CreditPack[]>([]);
+  const [subscriptionPlans, setSubscriptionPlans] = useState<SubscriptionPlan[]>([]);
   const [transfer, setTransfer] = useState<TransferInstruction | null>(null);
   const [preferencesMessage, setPreferencesMessage] = useToastState("");
   const [billingMessage, setBillingMessage] = useToastState("");
@@ -83,11 +93,13 @@ export function AccountForm({ email }: { email: string }) {
     let active = true;
     fetch("/api/pricing")
       .then((response) => response.json())
-      .then((data: { creditPacks?: CreditPack[] }) => {
+      .then((data: { creditPacks?: CreditPack[]; subscriptionPlans?: SubscriptionPlan[] }) => {
         if (active) setCreditPacks(data.creditPacks ?? []);
+        if (active) setSubscriptionPlans(data.subscriptionPlans ?? []);
       })
       .catch(() => {
         if (active) setCreditPacks([]);
+        if (active) setSubscriptionPlans([]);
       });
 
     return () => {
@@ -145,13 +157,13 @@ export function AccountForm({ email }: { email: string }) {
     });
   }
 
-  function createPayment(amount: number, credits: number) {
+  function createPayment(input: { amount: number; credits: number } | { planKey: string }) {
     setBillingMessage("");
     startPaymentTransition(async () => {
       const response = await fetch("/api/billing/payments", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ amount, credits })
+        body: JSON.stringify(input)
       });
       const data = (await response.json()) as { error?: string; payment?: PaymentRow; transfer?: TransferInstruction };
       if (!response.ok || !data.payment || !data.transfer) {
@@ -275,9 +287,23 @@ export function AccountForm({ email }: { email: string }) {
               type="button"
               disabled={isCreatingPayment}
               key={pack.key}
-              onClick={() => createPayment(pack.amount, pack.credits)}
+              onClick={() => createPayment({ amount: pack.amount, credits: pack.credits })}
             >
               {pack.name}
+            </button>
+          ))}
+        </div>
+        <h3>Gói theo thời gian</h3>
+        <div className="billing-actions">
+          {subscriptionPlans.map((plan, index) => (
+            <button
+              className={index === 0 ? "button primary" : "button"}
+              type="button"
+              disabled={isCreatingPayment}
+              key={plan.key}
+              onClick={() => createPayment({ planKey: plan.key })}
+            >
+              {plan.name}: {plan.credits} lượt / {plan.durationDays} ngày
             </button>
           ))}
         </div>

@@ -35,6 +35,10 @@ export async function POST(_: Request, context: RouteContext) {
         }
       });
     }
+    await tx.subscription.updateMany({
+      where: { providerId: payment.code },
+      data: { status: "canceled", currentPeriodEnd: new Date() }
+    });
     await writeAuditLog(tx, {
       userId: admin.id,
       action: "payment.refund",
