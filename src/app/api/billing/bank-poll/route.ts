@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { matchBankTransaction, type BankTransaction } from "@/services/bank-payments";
 import { writeAuditLog } from "@/services/audit";
 import { safeNotifyPaymentConfirmed } from "@/services/notifications";
+import { activatePendingSubscriptionForPayment } from "@/services/subscriptions";
 
 export async function POST(request: Request) {
   const token = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
@@ -39,6 +40,10 @@ export async function POST(request: Request) {
           reason: "bank_payment",
           meta: { paymentId: payment.id, bankTxnId: transaction.id }
         }
+      });
+      await activatePendingSubscriptionForPayment(tx, {
+        paymentCode: payment.code,
+        now: new Date(transaction.happenedAt ?? Date.now())
       });
       await writeAuditLog(tx, {
         userId: payment.userId,
