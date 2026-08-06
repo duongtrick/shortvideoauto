@@ -48,6 +48,7 @@ Repo: `duongtrick/shortvideoauto`
 - Auth pages exist: login, register, forgot password, reset password, Google sign-in button.
 - Dashboard foundation exists: create job, job list/search shortcuts, notification center, video library, schedule calendar, series wizard.
 - Account settings/billing/notification preferences exist.
+- Account referral panel exists with referral link, copy action, commission summary, and recent commission list.
 - SEO landing/sample pages, sitemap, robots exist.
 - Responsive CSS foundation exists: mobile-first layout, bottom nav, safe area, dark mode, reduced motion, tablet/desktop grids.
 
@@ -96,7 +97,7 @@ Repo: `duongtrick/shortvideoauto`
 - Pull-to-refresh job list is not implemented.
 - Tablet side-by-side script/video preview is not complete.
 - Pricing/features pages exist only as SEO/content foundation, not full SaaS pricing funnel.
-- Affiliate referral dashboard is foundation/API-level, not complete UI.
+- Affiliate referral dashboard is foundation-level UI; payout settings and admin payout operations are not complete.
 
 ### Admin
 

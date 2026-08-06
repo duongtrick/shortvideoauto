@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { auth } from "../../../auth";
 import { getCurrentUser } from "@/services/auth";
 import { AccountForm } from "./account-form";
+import { ReferralPanel } from "./referral-panel";
 
 export const metadata: Metadata = {
   title: "Tai khoan",
@@ -28,6 +29,9 @@ export default async function AccountPage() {
         <h1>Quan ly tai khoan</h1>
         <p className="lead">Doi mat khau, xem email dang nhap va dang xuat.</p>
         <AccountForm email={user.email} />
+        <div className="account-stack">
+          <ReferralPanel />
+        </div>
       </section>
     </main>
   );

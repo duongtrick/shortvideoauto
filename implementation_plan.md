@@ -935,6 +935,7 @@ CTF5/
 - [ ] Landing, pricing, features (SEO)
 - [ ] Multi-domain middleware
 - [ ] Affiliate referral dashboard for this SaaS
+  - [x] Foundation: account referral link panel, copy action, pending/paid commission summary, recent commissions
 ```
 
 ### Phase 5 — Admin Panel (Day 19-23) ⭐
