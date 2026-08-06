@@ -950,6 +950,7 @@ CTF5/
   - [x] Foundation: mobile bottom nav, tablet/desktop sidebar, safe-area spacing, responsive grids
 - [ ] Admin tables: card layout mobile, horizontal scroll fallback, table desktop
   - [x] Foundation: admin rows render as stacked mobile cards and multi-column desktop grids
+- [x] Admin CSV export foundation: users, payments, audit logs export read-only CSV with escaped cells
 - [ ] Module 1: User management (full CRUD)
   - [x] API foundation: list/create/update/soft-delete/credit-adjust/ban endpoints, audit logs, validation
   - [x] UI foundation: responsive admin shell, search/filter list, create user, role, ban, soft delete, credit adjust
