@@ -53,6 +53,9 @@ export function AdminAuditLogsClient() {
             Entity
             <input value={entity} onChange={(event) => setEntity(event.target.value)} placeholder="Payment" />
           </label>
+          <a className="button" href={`/api/admin/audit-logs/export?${query}`}>
+            Export CSV
+          </a>
           <p className="muted">{loading ? "Loading..." : `${logs.length} logs`}</p>
         </div>
       </section>

@@ -159,6 +159,9 @@ export function AdminUsersClient() {
               ))}
             </select>
           </label>
+          <a className="button" href={`/api/admin/users/export?${query}`}>
+            Export CSV
+          </a>
           <p className="muted">{loading ? "Loading..." : `${total} users`}</p>
         </div>
         {message ? <p className="badge">{message}</p> : null}

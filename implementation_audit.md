@@ -77,7 +77,7 @@ Repo: `duongtrick/shortvideoauto`
 - Admin settings API/UI foundation exists.
 - Admin audit logs API/UI foundation exists.
 - Admin analytics API/UI foundation exists.
-- Admin CSV export foundation exists for users, payments, and audit logs.
+- Admin CSV export foundation exists for users, payments, and audit logs, with filtered UI export links.
 
 ## Not 100% Done
 
@@ -113,7 +113,7 @@ Repo: `duongtrick/shortvideoauto`
 ### Admin
 
 - Admin modules are CRUD/foundation level, not full enterprise scope from plan:
-  - CSV export is foundation-level only: users, payments, audit logs read-only exports exist; no UI export buttons yet
+  - CSV export is foundation-level only: users, payments, audit logs read-only filtered exports exist
   - no bulk actions
   - no advanced sorting
   - no full charting library

@@ -82,6 +82,9 @@ export function AdminPaymentsClient() {
               ))}
             </select>
           </label>
+          <a className="button" href={`/api/admin/payments/export?${query}`}>
+            Export CSV
+          </a>
           <p className="muted">{loading ? "Loading..." : `${payments.length} payments`}</p>
         </div>
         {message ? <p className="badge">{message}</p> : null}
