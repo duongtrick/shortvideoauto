@@ -923,6 +923,7 @@ CTF5/
 - [ ] Responsive/adaptive design system: 320, 375, 428, 768, 1024, 1280, 1920, 2560px
   - [x] Responsive smoke check script covers 320, 375, 428, 768, 1024, 1280, 1920, 2560px and can use installed Chrome/Edge
 - [ ] Auth flow (register → verify → login)
+  - [x] Foundation: email verification token/link/page, transactional email event, credentials login blocked until `emailVerified`
 - [x] Dashboard + create + jobs + video library foundation
 - [ ] Video library filters: platform, status, template, source, series, date, language
   - [x] Foundation: dashboard library filters status, source host, template, language, date range

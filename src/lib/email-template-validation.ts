@@ -5,6 +5,7 @@ export const emailTemplateKey = z.enum([
   "render.failed",
   "billing.payment_confirmed",
   "auth.welcome",
+  "auth.email_verification",
   "auth.password_reset"
 ]);
 

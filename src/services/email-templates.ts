@@ -3,6 +3,7 @@ import { getSystemSetting, setSystemSetting } from "@/services/system-settings";
 import {
   renderJobCompletedEmail,
   renderJobFailedEmail,
+  renderEmailVerificationEmail,
   renderPasswordResetEmail,
   renderPaymentConfirmedEmail,
   renderWelcomeEmail,
@@ -22,6 +23,7 @@ export const emailTemplateKeys: EmailEvent[] = [
   "render.failed",
   "billing.payment_confirmed",
   "auth.welcome",
+  "auth.email_verification",
   "auth.password_reset"
 ];
 
@@ -57,6 +59,13 @@ export function defaultEmailTemplate(key: EmailEvent): EmailTemplate {
       appUrl: "https://shortvideoauto.local",
       name: "Demo User",
       email: "demo@shortvideoauto.local"
+    });
+  }
+  if (key === "auth.email_verification") {
+    return renderEmailVerificationEmail({
+      appUrl: "https://shortvideoauto.local",
+      verifyUrl: "https://shortvideoauto.local/verify-email?token=sample",
+      expiresHours: 24
     });
   }
 

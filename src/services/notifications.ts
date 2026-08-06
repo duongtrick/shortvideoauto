@@ -12,6 +12,7 @@ export type EmailEvent =
   | "render.completed"
   | "render.failed"
   | "billing.payment_confirmed"
+  | "auth.email_verification"
   | "auth.welcome"
   | "auth.password_reset"
   | "render.queue_stalled"
@@ -88,6 +89,18 @@ export function renderWelcomeEmail(input: { appUrl: string; name: string | null;
   };
 }
 
+export function renderEmailVerificationEmail(input: { appUrl: string; verifyUrl: string; expiresHours: number }): EmailTemplate {
+  return {
+    subject: "Xac minh email ShortVideoAuto",
+    bodyText: [
+      "Ban vua tao tai khoan ShortVideoAuto.",
+      `Xac minh email: ${input.verifyUrl}`,
+      `Link het han sau ${input.expiresHours} gio.`,
+      `Neu khong phai ban, bo qua email nay: ${input.appUrl}/login`
+    ].join("\n")
+  };
+}
+
 export function renderPasswordResetEmail(input: { appUrl: string; resetUrl: string; expiresMinutes: number }): EmailTemplate {
   return {
     subject: "Dat lai mat khau ShortVideoAuto",
@@ -157,13 +170,15 @@ async function getEmailDeliveryStatus(userId: string, event: EmailEvent) {
   if (event === "render.completed") return prefs.emailRenderDone ? "pending" : "suppressed";
   if (event === "render.failed") return prefs.emailRenderFail ? "pending" : "suppressed";
   if (event === "billing.payment_confirmed") return prefs.emailBilling ? "pending" : "suppressed";
-  if (event === "auth.welcome" || event === "auth.password_reset") return prefs.emailSecurity ? "pending" : "suppressed";
+  if (event === "auth.welcome" || event === "auth.password_reset" || event === "auth.email_verification") {
+    return prefs.emailSecurity ? "pending" : "suppressed";
+  }
   if (event === "render.queue_stalled") return prefs.emailRenderFail ? "pending" : "suppressed";
   return "pending";
 }
 
 export function isSecurityEmailEvent(event: EmailEvent) {
-  return event === "auth.password_reset" || event === "notification.digest" || event === "admin.test";
+  return event === "auth.password_reset" || event === "auth.email_verification" || event === "notification.digest" || event === "admin.test";
 }
 
 export function isWithinQuietHours(hour: number, start: number | null, end: number | null) {
@@ -336,6 +351,19 @@ export async function notifyWelcome(input: { userId: string }) {
   await createEmailDelivery({ userId: user.id, event: "auth.welcome", toEmail: user.email, template });
 }
 
+export async function notifyEmailVerificationRequested(input: { userId: string; verifyUrl: string; expiresHours: number }) {
+  const user = await prisma.user.findUnique({ where: { id: input.userId } });
+  if (!user) return;
+
+  const template = renderEmailVerificationEmail({
+    appUrl: env.APP_URL,
+    verifyUrl: input.verifyUrl,
+    expiresHours: input.expiresHours
+  });
+
+  await createEmailDelivery({ userId: user.id, event: "auth.email_verification", toEmail: user.email, template });
+}
+
 export async function notifyPasswordResetRequested(input: { userId: string; resetUrl: string; expiresMinutes: number }) {
   const user = await prisma.user.findUnique({ where: { id: input.userId } });
   if (!user) return;
@@ -429,6 +457,14 @@ export async function safeNotifyWelcome(input: { userId: string }) {
     await notifyWelcome(input);
   } catch (error) {
     logger.error("welcome_notification_failed", { userId: input.userId, error });
+  }
+}
+
+export async function safeNotifyEmailVerificationRequested(input: { userId: string; verifyUrl: string; expiresHours: number }) {
+  try {
+    await notifyEmailVerificationRequested(input);
+  } catch (error) {
+    logger.error("email_verification_notification_failed", { userId: input.userId, error });
   }
 }
 

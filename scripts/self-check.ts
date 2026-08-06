@@ -27,6 +27,7 @@ import { writeAuditLog } from "../src/services/audit";
 import { getConfiguredDomains, resolveTenantDomain } from "../src/lib/domains";
 import { getSystemSetting, setSystemSetting } from "../src/services/system-settings";
 import { createResetToken, hashPassword, verifyPassword } from "../src/services/passwords";
+import { createEmailVerificationUrl, verifyEmailVerificationToken } from "../src/services/email-verification";
 import { adminAuthStatus, AuthAccessError } from "../src/services/auth";
 import { adminSeriesInput, adminSeriesPatch, seriesInput } from "../src/lib/series-validation";
 import { videoLibraryQuery } from "../src/lib/video-library-validation";
@@ -75,6 +76,7 @@ import {
   renderPasswordResetEmail,
   renderQueuedTooLongEmail,
   renderNotificationDigestEmail,
+  renderEmailVerificationEmail,
   renderWelcomeEmail,
   isSecurityEmailEvent,
   isWithinQuietHours,
@@ -152,6 +154,11 @@ const passwordHash = hashPassword("password123");
 assert.equal(verifyPassword("password123", passwordHash), true);
 assert.equal(verifyPassword("wrongpass", passwordHash), false);
 assert.equal(createResetToken().token.length > 40, true);
+const verifyUrl = new URL(createEmailVerificationUrl("USER@EXAMPLE.COM", new Date("2026-01-01T00:00:00.000Z").getTime()));
+const verifyToken = verifyUrl.searchParams.get("token") ?? "";
+assert.equal(verifyEmailVerificationToken(verifyToken, new Date("2026-01-01T00:00:00.000Z").getTime()), "user@example.com");
+assert.equal(verifyEmailVerificationToken(`${verifyToken}bad`, new Date("2026-01-01T00:00:00.000Z").getTime()), null);
+assert.equal(verifyEmailVerificationToken(verifyToken, new Date("2026-01-03T00:00:00.000Z").getTime()), null);
 assert.equal(adminAuthStatus(new AuthAccessError("unauthenticated")), 401);
 assert.equal(adminAuthStatus(new AuthAccessError("forbidden")), 403);
 assert.equal(
@@ -274,6 +281,8 @@ assert.equal(emailWebhookInput.safeParse({ status: "opened" }).success, false);
 assert.equal(emailTemplatePatch.safeParse({ key: "auth.welcome", subject: "Hello", bodyText: "Welcome body text" }).success, true);
 assert.equal(emailTemplateTestInput.safeParse({ key: "render.completed", toEmail: "admin@example.com" }).success, true);
 assert.equal(emailTemplateKeys.includes("auth.password_reset"), true);
+assert.equal(emailTemplateKeys.includes("auth.email_verification"), true);
+assert.equal(emailTemplatePatch.safeParse({ key: "auth.email_verification", subject: "Verify", bodyText: "Verify account link" }).success, true);
 assert.match(defaultEmailTemplate("billing.payment_confirmed").bodyText, /Credit da cong/);
 assert.equal(queuedJobAlertInput.safeParse({ olderThanMinutes: 30, take: 10 }).success, true);
 assert.equal(adminUsersQuery.safeParse({ q: "demo", role: "user", take: "20", skip: "0" }).success, true);
@@ -299,6 +308,7 @@ assert.equal(adminSubscriptionPatch.safeParse({ status: "canceled", currentPerio
 assert.equal(isWithinQuietHours(23, 22, 7), true);
 assert.equal(isWithinQuietHours(12, 22, 7), false);
 assert.equal(isSecurityEmailEvent("auth.password_reset"), true);
+assert.equal(isSecurityEmailEvent("auth.email_verification"), true);
 assert.match(
   renderNotificationDigestEmail({
     appUrl: "https://shortvideoauto.local",
@@ -353,6 +363,14 @@ assert.match(
     email: "demo@example.com"
   }).bodyText,
   /Tao video dau tien/
+);
+assert.match(
+  renderEmailVerificationEmail({
+    appUrl: "https://shortvideoauto.local",
+    verifyUrl: "https://shortvideoauto.local/verify-email?token=secret",
+    expiresHours: 24
+  }).bodyText,
+  /Link het han/
 );
 assert.match(
   renderPasswordResetEmail({

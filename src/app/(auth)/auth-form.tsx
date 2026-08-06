@@ -54,13 +54,13 @@ export function AuthForm({ mode }: { mode: Mode }) {
         headers: { "content-type": "application/json" },
         body: JSON.stringify(body)
       });
-      const data = (await response.json()) as { error?: string; resetUrl?: string };
+      const data = (await response.json()) as { error?: string; resetUrl?: string; verifyUrl?: string };
       if (!response.ok) {
         setMessage(data.error ?? "Không xử lý được yêu cầu.");
         return;
       }
       if (mode === "register") {
-        setMessage("Đăng ký thành công. Đăng nhập để tiếp tục.");
+        setMessage(data.verifyUrl ? `Đăng ký thành công. Link xác minh: ${data.verifyUrl}` : "Đăng ký thành công. Kiểm tra email để xác minh.");
         router.push("/login");
         return;
       }
