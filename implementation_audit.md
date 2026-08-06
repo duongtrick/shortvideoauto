@@ -52,6 +52,7 @@ Repo: `duongtrick/shortvideoauto`
 ### Phase 4
 
 - Auth pages exist: login, register, forgot password, reset password, Google sign-in button.
+- Login page shows local-only demo credentials in development, with DB/seed requirement called out for testing.
 - Email verification foundation exists: register creates a 24h signed verify link, sends verification email event, `/verify-email` marks `emailVerified`, and credentials login blocks unverified users.
 - Resend verification foundation exists: `/resend-verification` and `/api/auth/resend-verification` send a new verify link for unverified users without revealing whether an email exists.
 - Password changed security email foundation exists after successful account password update.

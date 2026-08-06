@@ -15,6 +15,11 @@ export default function LoginPage() {
       <Suspense fallback={<p className="muted">Đang tải form...</p>}>
         <AuthForm mode="login" />
       </Suspense>
+      {process.env.NODE_ENV !== "production" ? (
+        <p className="muted">
+          Demo local: `demo@shortvideoauto.local` / `password123`. Cần PostgreSQL chạy và seed trước.
+        </p>
+      ) : null}
       <div className="auth-link-row">
         <Link href="/forgot-password">Quên mật khẩu</Link>
         <Link href="/resend-verification">Gửi lại xác minh</Link>
