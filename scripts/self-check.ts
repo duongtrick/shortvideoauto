@@ -8,7 +8,9 @@ import { writeVietnameseScripts } from "../src/services/script-writer";
 import { synthesizeVietnameseSpeech } from "../src/services/tts";
 import {
   createSignedDownloadUrl,
+  createPublicStorageUrl,
   createStorageKey,
+  isValidStorageKey,
   verifySignedDownloadUrl
 } from "../src/services/storage";
 import { verifyWebhookSignature } from "../src/services/billing";
@@ -108,6 +110,9 @@ assert.equal(refundMeta.jobId, "job_1");
 const key = createStorageKey({ userId: "user_1", jobId: "job_1", ext: "mp4" });
 const signedUrl = new URL(createSignedDownloadUrl(key));
 assert.equal(key, "videos/user_1/job_1.mp4");
+assert.equal(isValidStorageKey(key), true);
+assert.equal(isValidStorageKey("../secret.txt"), false);
+assert.equal(createPublicStorageUrl(key, "https://cdn.example.com/bucket")?.endsWith("/bucket/videos/user_1/job_1.mp4"), true);
 assert.equal(
   verifySignedDownloadUrl({
     key,

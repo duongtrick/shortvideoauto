@@ -893,6 +893,7 @@ CTF5/
 - [ ] AI provider chain (Gemini FREE → DeepSeek → GPT-4o-mini)
 - [ ] FPT.AI TTS + fallback chain
 - [ ] R2/MinIO upload service
+  - [x] Foundation: signed download URLs validate storage keys, use timing-safe signature checks, redirect to `STORAGE_PUBLIC_BASE_URL` when configured, and keep local JSON fallback
 - [x] Email provider foundation: webhook primary via `EMAIL_WEBHOOK_URL`, provider event webhook, transactional template renderer, admin template editor/test-send, delivery audit, retry endpoint
 - [x] Admin notification health stats: total, failed, pending/deferred/digest email deliveries
 - [x] Notification service foundation: render completed, render failed, queued too long, payment confirmed, welcome, password reset email + in-app events

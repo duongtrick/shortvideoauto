@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { verifySignedDownloadUrl } from "@/services/storage";
+import { createPublicStorageUrl, verifySignedDownloadUrl } from "@/services/storage";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -11,6 +11,11 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Invalid or expired download URL." }, { status: 403 });
   }
 
-  // ponytail: returns storage key only; replace with S3/R2 redirect once bucket credentials exist.
+  const publicUrl = createPublicStorageUrl(key);
+  if (publicUrl) {
+    return NextResponse.redirect(publicUrl);
+  }
+
+  // ponytail: local dev has no object gateway; add S3/R2 SDK presign when private buckets replace public/CDN storage.
   return NextResponse.json({ storageKey: key });
 }

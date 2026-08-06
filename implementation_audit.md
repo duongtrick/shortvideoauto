@@ -91,6 +91,7 @@ Repo: `duongtrick/shortvideoauto`
 - BullMQ worker exists, but full multi-stage queue orchestration and operational retry/dead-letter handling are not complete.
 - FFmpeg execution is plan-level for some flows, not full production encode/compress pipeline everywhere.
 - R2/S3/MinIO upload is signed URL/storage-key foundation, not complete object upload/download redirect flow.
+- R2/S3/MinIO download foundation now validates storage keys, checks signatures timing-safely, and redirects to `STORAGE_PUBLIC_BASE_URL` when configured; real private-bucket presign/upload remains pending.
 - Real AI/TTS provider calls are partial; fallback paths avoid blocking demo without keys.
 
 ### Video Pipeline
