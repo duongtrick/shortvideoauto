@@ -7,6 +7,7 @@ type RouteCase = {
   path: string;
   statuses: number[];
   mustInclude?: string;
+  locationIncludes?: string;
 };
 
 const publicCases: RouteCase[] = [
@@ -17,10 +18,21 @@ const publicCases: RouteCase[] = [
   { path: "/reset-password", statuses: [200], mustInclude: "Đổi mật khẩu" },
   { path: "/robots.txt", statuses: [200], mustInclude: "User-Agent" },
   { path: "/sitemap.xml", statuses: [200], mustInclude: "<urlset" },
+  { path: "/tao-video-affiliate-tu-dong", statuses: [200], mustInclude: "ShortVideoAuto" },
+  { path: "/tao-video-shopee-affiliate", statuses: [200], mustInclude: "ShortVideoAuto" },
+  { path: "/ai-tao-video-tiktok-ban-hang", statuses: [200], mustInclude: "ShortVideoAuto" },
+  { path: "/tool-lam-video-affiliate", statuses: [200], mustInclude: "ShortVideoAuto" },
   { path: "/dashboard", statuses: [200, 302, 307] },
   { path: "/account", statuses: [200, 302, 307] },
-  { path: "/admin", statuses: [200, 302, 307, 401, 403] },
-  { path: "/admin/users", statuses: [200, 302, 307, 401, 403] }
+  { path: "/samples/demo", statuses: [200] },
+  { path: "/admin", statuses: [302, 307], locationIncludes: "/login" },
+  { path: "/admin/users", statuses: [302, 307], locationIncludes: "/login" },
+  { path: "/admin/jobs", statuses: [302, 307], locationIncludes: "/login" },
+  { path: "/admin/videos", statuses: [302, 307], locationIncludes: "/login" },
+  { path: "/admin/payments", statuses: [302, 307], locationIncludes: "/login" },
+  { path: "/admin/templates", statuses: [302, 307], locationIncludes: "/login" },
+  { path: "/admin/audit-logs", statuses: [302, 307], locationIncludes: "/login" },
+  { path: "/admin/analytics", statuses: [302, 307], locationIncludes: "/login" }
 ];
 
 const dbCases: RouteCase[] = [
@@ -49,6 +61,11 @@ for (const route of cases) {
     if (route.mustInclude) {
       assert.equal(body.includes(route.mustInclude), true, `${route.path} missing ${route.mustInclude}`);
     }
+  }
+
+  if (route.locationIncludes) {
+    const location = response.headers.get("location") ?? "";
+    assert.equal(location.includes(route.locationIncludes), true, `${route.path} redirect missing ${route.locationIncludes}`);
   }
 }
 

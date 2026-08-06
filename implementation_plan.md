@@ -946,6 +946,7 @@ CTF5/
 ```
 - [ ] Admin layout: sidebar, breadcrumbs, role guard
   - [x] Foundation: server-side admin role guard, sticky sidebar, dynamic page title, admin routes
+  - [x] Hardened: admin pages require DB role `admin` and redirect unauthenticated/non-admin users to `/login?callbackUrl=/admin`
 - [ ] Responsive admin shell: mobile bottom sheet nav, tablet collapsible sidebar, desktop persistent sidebar
   - [x] Foundation: mobile bottom nav, tablet/desktop sidebar, safe-area spacing, responsive grids
 - [ ] Admin tables: card layout mobile, horizontal scroll fallback, table desktop

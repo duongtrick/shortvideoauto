@@ -11,6 +11,10 @@ export function AuthForm({ mode }: { mode: Mode }) {
   const searchParams = useSearchParams();
   const [message, setMessage] = useState("");
   const [isPending, startTransition] = useTransition();
+  const callbackUrl = (() => {
+    const value = searchParams.get("callbackUrl");
+    return value?.startsWith("/") && !value.startsWith("//") ? value : "/dashboard";
+  })();
 
   function submit(formData: FormData) {
     setMessage("");
@@ -25,7 +29,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
           setMessage("Email hoặc mật khẩu không đúng.");
           return;
         }
-        router.push("/dashboard");
+        router.push(callbackUrl);
         return;
       }
 
@@ -107,7 +111,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
                 : "Đổi mật khẩu"}
       </button>
       {mode === "login" ? (
-        <button className="button" type="button" onClick={() => signIn("google", { callbackUrl: "/dashboard" })}>
+        <button className="button" type="button" onClick={() => signIn("google", { callbackUrl })}>
           Đăng nhập Google
         </button>
       ) : null}

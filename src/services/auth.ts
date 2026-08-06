@@ -4,6 +4,12 @@ import { auth } from "../../auth";
 const demoUserEmail = "demo@shortvideoauto.local";
 const blockedRoles = new Set(["banned", "deleted"]);
 
+export class AuthAccessError extends Error {
+  constructor(public code: "unauthenticated" | "forbidden") {
+    super(code === "unauthenticated" ? "Authentication required." : "Access forbidden.");
+  }
+}
+
 function assertActiveUser<T extends { role: string }>(user: T) {
   if (blockedRoles.has(user.role)) {
     throw new Error("Account disabled.");
@@ -43,9 +49,18 @@ export async function requireCurrentUser() {
 }
 
 export async function requireAdmin() {
-  const user = await getCurrentUser();
+  const session = await auth();
+  if (!session?.user?.email) {
+    throw new AuthAccessError("unauthenticated");
+  }
+
+  const user = await prisma.user.findUnique({ where: { email: session.user.email } });
+  if (!user || blockedRoles.has(user.role)) {
+    throw new AuthAccessError("unauthenticated");
+  }
+
   if (user.role !== "admin") {
-    throw new Error("Admin access required.");
+    throw new AuthAccessError("forbidden");
   }
   return user;
 }

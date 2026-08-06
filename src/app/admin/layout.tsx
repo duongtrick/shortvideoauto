@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default async function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const admin = await requireAdmin().catch(() => null);
-  if (!admin) redirect("/dashboard");
+  if (!admin) redirect("/login?callbackUrl=/admin");
 
   return (
     <main className="admin-shell">

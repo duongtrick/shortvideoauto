@@ -64,6 +64,8 @@ Repo: `duongtrick/shortvideoauto`
 ### Phase 5
 
 - Admin shell exists with role guard, sidebar, mobile bottom nav.
+- Admin page guard now checks the database `User.role` directly through `requireAdmin()` and does not use local demo auth fallback.
+- Unauthenticated or non-admin admin page access redirects to `/login?callbackUrl=/admin`; login honors safe relative `callbackUrl`.
 - Admin plan now ticks shell/table foundation lines without claiming full advanced admin scope.
 - Admin users API/UI foundation exists.
 - Admin jobs API/UI foundation exists.
@@ -126,6 +128,7 @@ Repo: `duongtrick/shortvideoauto`
 
 - Current checks are smoke/self-check/build level.
 - Route smoke test exists for public routes, auth pages, protected pages, admin routes, with optional read-only API route availability when local DB services run.
+- Route smoke now covers marketing pages, sample page, and admin page redirects to login when no admin session exists.
 - Plan target says about 230 tests; current repo does not have full unit/integration/E2E suite.
 - Playwright browser binary was missing earlier, so visual responsive screenshots were not fully verified.
 - Real DB-backed integration tests require `DATABASE_URL` and local services.
