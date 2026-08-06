@@ -48,6 +48,7 @@ Repo: `duongtrick/shortvideoauto`
 - Auth pages exist: login, register, forgot password, reset password, Google sign-in button.
 - Dashboard foundation exists: create job, job list/search shortcuts, notification center, video library, schedule calendar, series wizard.
 - Dashboard video library filter UI exists for status, source host, template, language, and date range.
+- Dashboard preview workspace exists with script/product controls beside a 9:16 preview on tablet/desktop.
 - Account settings/billing/notification preferences exist.
 - Account referral panel exists with referral link, copy action, commission summary, and recent commission list.
 - SEO landing/sample pages, sitemap, robots exist.
@@ -97,7 +98,7 @@ Repo: `duongtrick/shortvideoauto`
 - Responsive smoke script now checks 320, 375, 428, 768, 1024, 1280, 1920, 2560px with installed Chrome/Edge fallback.
 - Full manual/device QA is still not done for real iPhone, Android, iPad, laptop, ultra-wide.
 - Full native mobile gesture QA is still pending on real devices.
-- Tablet side-by-side script/video preview is not complete.
+- Tablet side-by-side preview foundation exists; visual QA on real iPad remains pending.
 - Pricing/features pages exist only as SEO/content foundation, not full SaaS pricing funnel.
 - Affiliate referral dashboard is foundation-level UI; payout settings and admin payout operations are not complete.
 

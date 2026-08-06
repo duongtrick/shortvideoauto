@@ -8,6 +8,7 @@ import { NotificationCenter } from "./notification-center";
 import { VideoLibrary } from "./video-library";
 import { ScheduleCalendar } from "./schedule-calendar";
 import { SeriesWizard } from "./series-wizard";
+import { JobPreviewPanel } from "./job-preview-panel";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -38,6 +39,7 @@ export default async function DashboardPage() {
         <div className="dashboard-grid">
           <CreateJobForm />
           <div className="dashboard-side">
+            <JobPreviewPanel />
             <NotificationCenter />
             <VideoLibrary />
             <ScheduleCalendar />

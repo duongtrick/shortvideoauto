@@ -930,6 +930,7 @@ CTF5/
 - [ ] Mobile bottom nav, sticky CTA, safe-area support, pull-to-refresh job list
   - [x] Foundation: dashboard bottom nav, sticky create CTA, safe-area spacing, pull-to-refresh job list gesture
 - [ ] Tablet split-view dashboard and side-by-side script/video preview
+  - [x] Foundation: dashboard preview workspace shows script editor beside 9:16 preview on tablet/desktop
 - [x] Desktop shortcuts foundation: Ctrl+N create job focus, Ctrl+K job search, hover states, multi-column dashboard layout
 - [x] Billing foundation: user bank transfer payment create/list, QR payload text, auto confirm via bank poll
 - [x] Settings foundation: account page notification preferences UI with email toggles, digest mode, quiet hours
