@@ -22,6 +22,14 @@ type PaymentRow = {
   status: string;
 };
 
+type CreditPack = {
+  key: string;
+  name: string;
+  amount: number;
+  credits: number;
+  description: string;
+};
+
 type TransferInstruction = {
   bankName: string;
   accountNumber: string;
@@ -46,6 +54,7 @@ export function AccountForm({ email }: { email: string }) {
   const [message, setMessage] = useToastState("");
   const [preferences, setPreferences] = useState<NotificationPreferences>(defaultPreferences);
   const [payments, setPayments] = useState<PaymentRow[]>([]);
+  const [creditPacks, setCreditPacks] = useState<CreditPack[]>([]);
   const [transfer, setTransfer] = useState<TransferInstruction | null>(null);
   const [preferencesMessage, setPreferencesMessage] = useToastState("");
   const [billingMessage, setBillingMessage] = useToastState("");
@@ -63,6 +72,22 @@ export function AccountForm({ email }: { email: string }) {
       })
       .catch(() => {
         if (active) setPreferencesMessage("Chưa tải được cấu hình thông báo.");
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    fetch("/api/pricing")
+      .then((response) => response.json())
+      .then((data: { creditPacks?: CreditPack[] }) => {
+        if (active) setCreditPacks(data.creditPacks ?? []);
+      })
+      .catch(() => {
+        if (active) setCreditPacks([]);
       });
 
     return () => {
@@ -244,15 +269,17 @@ export function AccountForm({ email }: { email: string }) {
           <p className="muted">Chuyển khoản đúng nội dung để tự động cộng credit.</p>
         </div>
         <div className="billing-actions">
-          <button className="button primary" type="button" disabled={isCreatingPayment} onClick={() => createPayment(100000, 100)}>
-            100 credit
-          </button>
-          <button className="button" type="button" disabled={isCreatingPayment} onClick={() => createPayment(300000, 330)}>
-            330 credit
-          </button>
-          <button className="button" type="button" disabled={isCreatingPayment} onClick={() => createPayment(500000, 600)}>
-            600 credit
-          </button>
+          {creditPacks.map((pack, index) => (
+            <button
+              className={index === 0 ? "button primary" : "button"}
+              type="button"
+              disabled={isCreatingPayment}
+              key={pack.key}
+              onClick={() => createPayment(pack.amount, pack.credits)}
+            >
+              {pack.name}
+            </button>
+          ))}
         </div>
         {transfer ? (
           <div className="payment-box">

@@ -50,6 +50,7 @@ Demo auth:
 
 - User: `demo@shortvideoauto.local` / `password123`
 - Admin: `admin@shortvideoauto.local` / `password123`
+- Pricing config: admin can edit `pricing.config` in group `billing` from System Settings.
 
 Worker:
 

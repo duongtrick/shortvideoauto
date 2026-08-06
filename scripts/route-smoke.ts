@@ -40,7 +40,8 @@ const publicCases: RouteCase[] = [
   { path: "/api/admin/health", statuses: [401] },
   { path: "/api/admin/users", statuses: [401] },
   { path: "/api/admin/payments", statuses: [401] },
-  { path: "/api/admin/audit-logs", statuses: [401] }
+  { path: "/api/admin/audit-logs", statuses: [401] },
+  { path: "/api/pricing", statuses: [200], mustInclude: "creditPacks" }
 ];
 
 const dbCases: RouteCase[] = [

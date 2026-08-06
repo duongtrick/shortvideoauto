@@ -26,6 +26,8 @@ import { getAdminStats } from "../src/services/admin-stats";
 import { writeAuditLog } from "../src/services/audit";
 import { getConfiguredDomains, resolveTenantDomain } from "../src/lib/domains";
 import { getSystemSetting, setSystemSetting } from "../src/services/system-settings";
+import { defaultPricingConfig, formatVnd } from "../src/services/pricing";
+import { pricingConfigSchema } from "../src/lib/pricing-validation";
 import { createResetToken, hashPassword, verifyPassword } from "../src/services/passwords";
 import { createEmailVerificationUrl, verifyEmailVerificationToken } from "../src/services/email-verification";
 import { adminAuthStatus, AuthAccessError } from "../src/services/auth";
@@ -151,6 +153,8 @@ assert.deepEqual(getConfiguredDomains("a.test:Brand A")[0], { host: "a.test", br
 assert.equal(resolveTenantDomain("a.test:3000", [{ host: "a.test", brand: "A" }]).brand, "A");
 assert.equal(typeof getSystemSetting, "function");
 assert.equal(typeof setSystemSetting, "function");
+assert.equal(pricingConfigSchema.safeParse(defaultPricingConfig).success, true);
+assert.equal(formatVnd(199000), "199.000đ");
 const passwordHash = hashPassword("password123");
 assert.equal(verifyPassword("password123", passwordHash), true);
 assert.equal(verifyPassword("wrongpass", passwordHash), false);

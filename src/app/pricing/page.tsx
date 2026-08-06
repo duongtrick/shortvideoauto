@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { prisma } from "@/lib/prisma";
+import { formatVnd, getPricingConfig } from "@/services/pricing";
 
 export const metadata: Metadata = {
   title: "Bảng giá ShortVideoAuto",
@@ -7,13 +9,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/pricing" }
 };
 
-const plans = [
-  { name: "Dùng thử", price: "0đ", text: "Tạo thử video mẫu, kiểm tra workflow và chất lượng template." },
-  { name: "Creator", price: "Theo credit", text: "Phù hợp affiliate cá nhân cần tạo video Shopee/TikTok Shop hằng ngày." },
-  { name: "Team", price: "Liên hệ", text: "Dành cho đội vận hành nhiều niche, nhiều template, nhiều tài khoản." }
-];
+export default async function PricingPage() {
+  const pricing = await getPricingConfig(prisma);
 
-export default function PricingPage() {
   return (
     <main className="shell">
       <header className="topbar">
@@ -28,14 +26,28 @@ export default function PricingPage() {
       <section className="page">
         <p className="eyebrow">Pricing</p>
         <h1>Bảng giá ShortVideoAuto</h1>
-        <p className="lead">Public pricing giúp khách hiểu chi phí trước khi tạo tài khoản. Thanh toán production bám credit và subscription trong dashboard.</p>
+        <p className="lead">Khách có thể mua theo lượt hoặc mua theo gói có thời gian và số lượt. Admin chỉnh toàn bộ trong System Settings.</p>
+        <h2>Mua theo lượt</h2>
         <div className="grid">
-          {plans.map((plan) => (
-            <article className="card" key={plan.name}>
-              <strong>{plan.name}</strong>
-              <h2>{plan.price}</h2>
-              <p className="muted">{plan.text}</p>
+          {pricing.creditPacks.map((pack) => (
+            <article className="card" key={pack.key}>
+              <strong>{pack.name}</strong>
+              <h2>{formatVnd(pack.amount)}</h2>
+              <p className="muted">{pack.credits.toLocaleString("vi-VN")} lượt tạo video</p>
+              <p className="muted">{pack.description}</p>
               <Link className="button primary" href="/dashboard">Dùng thử</Link>
+            </article>
+          ))}
+        </div>
+        <h2>Gói theo thời gian</h2>
+        <div className="grid">
+          {pricing.subscriptionPlans.map((plan) => (
+            <article className="card" key={plan.key}>
+              <strong>{plan.name}</strong>
+              <h2>{formatVnd(plan.price)}</h2>
+              <p className="muted">{plan.credits.toLocaleString("vi-VN")} lượt / {plan.durationDays} ngày</p>
+              <p className="muted">{plan.description}</p>
+              <Link className="button primary" href="/dashboard">Chọn gói</Link>
             </article>
           ))}
         </div>

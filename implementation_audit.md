@@ -61,6 +61,7 @@ Repo: `duongtrick/shortvideoauto`
 - Dashboard video library filter UI exists for status, source host, template, language, and date range.
 - Dashboard preview workspace exists with script/product controls beside a 9:16 preview on tablet/desktop.
 - Account settings/billing/notification preferences exist.
+- Pricing foundation supports two modes: buy credit packs by lượt, or subscription-style plans with duration days and included lượt; config lives in admin-editable `pricing.config` system setting.
 - Account referral panel exists with referral link, copy action, commission summary, and recent commission list.
 - SEO landing/sample pages, sitemap, robots exist.
 - Public SEO foundation now includes home, features, pricing, sample, and keyword pages without login requirement; dashboard/account/admin remain protected/noindex.

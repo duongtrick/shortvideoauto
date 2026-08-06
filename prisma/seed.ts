@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { hashPassword } from "../src/services/passwords";
+import { defaultPricingConfig, pricingSettingGroup, pricingSettingKey } from "../src/services/pricing";
 
 const prisma = new PrismaClient();
 
@@ -53,6 +54,16 @@ async function main() {
       key: "site_name",
       value: "ShortVideoAuto",
       group: "general"
+    }
+  });
+
+  await prisma.systemSetting.upsert({
+    where: { key: pricingSettingKey },
+    update: { value: defaultPricingConfig, group: pricingSettingGroup },
+    create: {
+      key: pricingSettingKey,
+      value: defaultPricingConfig,
+      group: pricingSettingGroup
     }
   });
 
