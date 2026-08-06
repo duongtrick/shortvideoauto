@@ -11,6 +11,7 @@ export type EmailTemplate = {
 export type EmailEvent =
   | "render.completed"
   | "render.failed"
+  | "billing.payment_pending"
   | "billing.payment_confirmed"
   | "auth.email_verification"
   | "auth.welcome"
@@ -73,6 +74,23 @@ export function renderPaymentConfirmedEmail(input: {
       `So tien: ${input.amount} VND.`,
       `Credit da cong: ${input.credits}.`,
       `Xem billing: ${input.appUrl}/account`
+    ].join("\n")
+  };
+}
+
+export function renderPaymentPendingEmail(input: {
+  appUrl: string;
+  code: string;
+  amount: number;
+  credits: number;
+}): EmailTemplate {
+  return {
+    subject: `Cho thanh toan: ${input.code}`,
+    bodyText: [
+      `Lenh thanh toan ${input.code} da duoc tao.`,
+      `So tien: ${input.amount} VND.`,
+      `So luot/credit se cong sau xac nhan: ${input.credits}.`,
+      `Xem huong dan chuyen khoan: ${input.appUrl}/account`
     ].join("\n")
   };
 }
@@ -180,7 +198,9 @@ async function getEmailDeliveryStatus(userId: string, event: EmailEvent) {
   }
   if (event === "render.completed") return prefs.emailRenderDone ? "pending" : "suppressed";
   if (event === "render.failed") return prefs.emailRenderFail ? "pending" : "suppressed";
-  if (event === "billing.payment_confirmed") return prefs.emailBilling ? "pending" : "suppressed";
+  if (event === "billing.payment_pending" || event === "billing.payment_confirmed") {
+    return prefs.emailBilling ? "pending" : "suppressed";
+  }
   if (
     event === "auth.welcome" ||
     event === "auth.password_reset" ||
@@ -351,6 +371,37 @@ export async function notifyPaymentConfirmed(input: { paymentId: string }) {
   });
 }
 
+export async function notifyPaymentPending(input: { paymentId: string }) {
+  const payment = await prisma.payment.findUnique({
+    where: { id: input.paymentId },
+    include: { user: true }
+  });
+  if (!payment) return;
+
+  const template = renderPaymentPendingEmail({
+    appUrl: env.APP_URL,
+    code: payment.code,
+    amount: payment.amount,
+    credits: payment.credits
+  });
+
+  await prisma.inAppNotification.create({
+    data: {
+      userId: payment.userId,
+      event: "billing.payment_pending",
+      title: "Da tao lenh thanh toan",
+      body: `Chuyen khoan ${payment.amount} VND voi noi dung ${payment.code}.`,
+      actionUrl: "/account"
+    }
+  });
+  await createEmailDelivery({
+    userId: payment.userId,
+    event: "billing.payment_pending",
+    toEmail: payment.user.email,
+    template
+  });
+}
+
 export async function notifyWelcome(input: { userId: string }) {
   const user = await prisma.user.findUnique({ where: { id: input.userId } });
   if (!user) return;
@@ -479,6 +530,14 @@ export async function safeNotifyPaymentConfirmed(input: { paymentId: string }) {
     await notifyPaymentConfirmed(input);
   } catch (error) {
     logger.error("payment_confirmed_notification_failed", { paymentId: input.paymentId, error });
+  }
+}
+
+export async function safeNotifyPaymentPending(input: { paymentId: string }) {
+  try {
+    await notifyPaymentPending(input);
+  } catch (error) {
+    logger.error("payment_pending_notification_failed", { paymentId: input.paymentId, error });
   }
 }
 

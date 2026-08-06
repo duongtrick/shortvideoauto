@@ -75,6 +75,7 @@ import {
   renderJobCompletedEmail,
   renderJobFailedEmail,
   renderPaymentConfirmedEmail,
+  renderPaymentPendingEmail,
   renderPasswordChangedEmail,
   renderPasswordResetEmail,
   renderQueuedTooLongEmail,
@@ -290,8 +291,10 @@ assert.equal(emailTemplateTestInput.safeParse({ key: "render.completed", toEmail
 assert.equal(emailTemplateKeys.includes("auth.password_reset"), true);
 assert.equal(emailTemplateKeys.includes("auth.email_verification"), true);
 assert.equal(emailTemplateKeys.includes("auth.password_changed"), true);
+assert.equal(emailTemplateKeys.includes("billing.payment_pending"), true);
 assert.equal(emailTemplatePatch.safeParse({ key: "auth.email_verification", subject: "Verify", bodyText: "Verify account link" }).success, true);
 assert.equal(emailTemplatePatch.safeParse({ key: "auth.password_changed", subject: "Changed", bodyText: "Password changed body" }).success, true);
+assert.equal(emailTemplatePatch.safeParse({ key: "billing.payment_pending", subject: "Pending", bodyText: "Pending payment body" }).success, true);
 assert.match(defaultEmailTemplate("billing.payment_confirmed").bodyText, /Credit da cong/);
 assert.equal(queuedJobAlertInput.safeParse({ olderThanMinutes: 30, take: 10 }).success, true);
 assert.equal(adminUsersQuery.safeParse({ q: "demo", role: "user", take: "20", skip: "0" }).success, true);
@@ -356,6 +359,15 @@ assert.match(
     refundStatus: "refunded"
   }).bodyText,
   /Trang thai hoan credit/
+);
+assert.match(
+  renderPaymentPendingEmail({
+    appUrl: "https://shortvideoauto.local",
+    code: "CTF5123456",
+    amount: 100000,
+    credits: 100
+  }).bodyText,
+  /Cho thanh toan|Lenh thanh toan/
 );
 assert.match(
   renderPaymentConfirmedEmail({

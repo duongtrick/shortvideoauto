@@ -943,6 +943,7 @@ CTF5/
   - [x] Foundation: pricing supports credit packs and subscription-style plans from admin-editable `pricing.config`
   - [x] Foundation: billing payment creation accepts either credit pack amount/credits or subscription `planKey`; admin confirm activates pending subscription
   - [x] Foundation: account billing lists current/pending subscriptions beside payment history
+  - [x] Foundation: pending bank payment creates in-app/email notification and admin-editable `billing.payment_pending` template
 - [x] Settings foundation: account page notification preferences UI with email toggles, digest mode, quiet hours
 - [x] Notification center foundation: dashboard list/mark-read UI, preferences UI, quiet hours, and digest sending for render done, render failed, billing, account security
 - [ ] Landing, pricing, features (SEO)

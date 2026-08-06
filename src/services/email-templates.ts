@@ -3,6 +3,7 @@ import { getSystemSetting, setSystemSetting } from "@/services/system-settings";
 import {
   renderJobCompletedEmail,
   renderJobFailedEmail,
+  renderPaymentPendingEmail,
   renderEmailVerificationEmail,
   renderPasswordChangedEmail,
   renderPasswordResetEmail,
@@ -22,6 +23,7 @@ const settingPrefix = "email_template.";
 export const emailTemplateKeys: EmailEvent[] = [
   "render.completed",
   "render.failed",
+  "billing.payment_pending",
   "billing.payment_confirmed",
   "auth.welcome",
   "auth.email_verification",
@@ -50,6 +52,14 @@ export function defaultEmailTemplate(key: EmailEvent): EmailTemplate {
   }
   if (key === "billing.payment_confirmed") {
     return renderPaymentConfirmedEmail({
+      appUrl: "https://shortvideoauto.local",
+      code: "CTF5123456",
+      amount: 100000,
+      credits: 100
+    });
+  }
+  if (key === "billing.payment_pending") {
+    return renderPaymentPendingEmail({
       appUrl: "https://shortvideoauto.local",
       code: "CTF5123456",
       amount: 100000,

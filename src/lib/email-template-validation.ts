@@ -3,6 +3,7 @@ import { z } from "zod";
 export const emailTemplateKey = z.enum([
   "render.completed",
   "render.failed",
+  "billing.payment_pending",
   "billing.payment_confirmed",
   "auth.welcome",
   "auth.email_verification",

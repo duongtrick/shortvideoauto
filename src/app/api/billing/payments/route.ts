@@ -5,6 +5,7 @@ import { requireCurrentUser } from "@/services/auth";
 import { createBankTransferInstruction, createPaymentCode } from "@/services/bank-payments";
 import { writeAuditLog } from "@/services/audit";
 import { getPricingConfig } from "@/services/pricing";
+import { safeNotifyPaymentPending } from "@/services/notifications";
 
 export async function GET() {
   const user = await requireCurrentUser();
@@ -60,6 +61,7 @@ export async function POST(request: Request) {
     entity: "Payment",
     entityId: payment.id
   });
+  await safeNotifyPaymentPending({ paymentId: payment.id });
 
   return NextResponse.json(
     {
