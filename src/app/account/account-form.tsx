@@ -22,6 +22,14 @@ type PaymentRow = {
   status: string;
 };
 
+type SubscriptionRow = {
+  id: string;
+  provider: string;
+  status: string;
+  currentPeriodEnd: string | null;
+  createdAt: string;
+};
+
 type CreditPack = {
   key: string;
   name: string;
@@ -63,6 +71,7 @@ export function AccountForm({ email }: { email: string }) {
   const [message, setMessage] = useToastState("");
   const [preferences, setPreferences] = useState<NotificationPreferences>(defaultPreferences);
   const [payments, setPayments] = useState<PaymentRow[]>([]);
+  const [subscriptions, setSubscriptions] = useState<SubscriptionRow[]>([]);
   const [creditPacks, setCreditPacks] = useState<CreditPack[]>([]);
   const [subscriptionPlans, setSubscriptionPlans] = useState<SubscriptionPlan[]>([]);
   const [transfer, setTransfer] = useState<TransferInstruction | null>(null);
@@ -111,8 +120,9 @@ export function AccountForm({ email }: { email: string }) {
     let active = true;
     fetch("/api/billing/payments")
       .then((response) => response.json())
-      .then((data: { payments?: PaymentRow[] }) => {
+      .then((data: { payments?: PaymentRow[]; subscriptions?: SubscriptionRow[] }) => {
         if (active && data.payments) setPayments(data.payments);
+        if (active && data.subscriptions) setSubscriptions(data.subscriptions);
       })
       .catch(() => {
         if (active) setBillingMessage("Chưa tải được thanh toán.");
@@ -170,7 +180,20 @@ export function AccountForm({ email }: { email: string }) {
         setBillingMessage(data.error ?? "Không tạo được thanh toán.");
         return;
       }
-      setPayments((current) => [data.payment as PaymentRow, ...current].slice(0, 20));
+      const createdPayment = data.payment;
+      setPayments((current) => [createdPayment, ...current].slice(0, 20));
+      if ("planKey" in input) {
+        setSubscriptions((current) => [
+          {
+            id: createdPayment.id,
+            provider: `bank_transfer:${input.planKey}`,
+            status: "pending",
+            currentPeriodEnd: null,
+            createdAt: new Date().toISOString()
+          },
+          ...current
+        ].slice(0, 10));
+      }
       setTransfer(data.transfer);
       setBillingMessage("Đã tạo lệnh chuyển khoản.");
     });
@@ -328,8 +351,30 @@ export function AccountForm({ email }: { email: string }) {
             </div>
           ))}
         </div>
+        <h3>GÃ³i cá»§a báº¡n</h3>
+        <div className="status-list" aria-label="GÃ³i hiá»‡n táº¡i">
+          {subscriptions.length === 0 ? <p className="muted">ChÆ°a cÃ³ gÃ³i.</p> : null}
+          {subscriptions.slice(0, 5).map((subscription) => (
+            <div className="status-item" key={subscription.id}>
+              <div>
+                <strong>{formatPlanName(subscription.provider)}</strong>
+                <p className="muted">
+                  {subscription.currentPeriodEnd
+                    ? `Háº¿t háº¡n ${new Date(subscription.currentPeriodEnd).toLocaleDateString("vi-VN")}`
+                    : "Chá» xÃ¡c nháº­n thanh toÃ¡n"}
+                </p>
+              </div>
+              <span className="badge">{subscription.status}</span>
+            </div>
+          ))}
+        </div>
         {billingMessage ? <p className="muted">{billingMessage}</p> : null}
       </div>
     </div>
   );
+}
+
+function formatPlanName(provider: string) {
+  const parts = provider.split(":");
+  return parts[1] ? parts[1].replaceAll("_", " ") : provider;
 }

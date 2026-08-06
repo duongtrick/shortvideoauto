@@ -63,6 +63,7 @@ Repo: `duongtrick/shortvideoauto`
 - Account settings/billing/notification preferences exist.
 - Pricing foundation supports two modes: buy credit packs by lượt, or subscription-style plans with duration days and included lượt; config lives in admin-editable `pricing.config` system setting.
 - Billing purchase foundation now lets users create bank-transfer payments for either credit packs or subscription plans; admin payment confirmation activates pending plan subscriptions.
+- Account billing UI now displays pending/active subscriptions and period end beside payment history.
 - Account referral panel exists with referral link, copy action, commission summary, and recent commission list.
 - SEO landing/sample pages, sitemap, robots exist.
 - Public SEO foundation now includes home, features, pricing, sample, and keyword pages without login requirement; dashboard/account/admin remain protected/noindex.

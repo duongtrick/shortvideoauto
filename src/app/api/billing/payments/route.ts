@@ -8,13 +8,20 @@ import { getPricingConfig } from "@/services/pricing";
 
 export async function GET() {
   const user = await requireCurrentUser();
-  const payments = await prisma.payment.findMany({
-    where: { userId: user.id },
-    take: 20,
-    orderBy: { createdAt: "desc" }
-  });
+  const [payments, subscriptions] = await Promise.all([
+    prisma.payment.findMany({
+      where: { userId: user.id },
+      take: 20,
+      orderBy: { createdAt: "desc" }
+    }),
+    prisma.subscription.findMany({
+      where: { userId: user.id },
+      take: 10,
+      orderBy: { createdAt: "desc" }
+    })
+  ]);
 
-  return NextResponse.json({ payments });
+  return NextResponse.json({ payments, subscriptions });
 }
 
 export async function POST(request: Request) {
