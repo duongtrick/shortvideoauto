@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default async function AccountPage() {
   const session = await auth();
-  if (!session?.user?.email && process.env.ALLOW_DEMO_AUTH !== "true") redirect("/login");
+  if (!session?.user?.email) redirect("/login");
 
   const user = await getCurrentUser();
   return (

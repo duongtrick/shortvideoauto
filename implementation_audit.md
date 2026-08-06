@@ -62,6 +62,7 @@ Repo: `duongtrick/shortvideoauto`
 - Account referral panel exists with referral link, copy action, commission summary, and recent commission list.
 - SEO landing/sample pages, sitemap, robots exist.
 - Public SEO foundation now includes home, features, pricing, sample, and keyword pages without login requirement; dashboard/account/admin remain protected/noindex.
+- Dashboard and account pages redirect anonymous users to `/login` before DB-backed user loading, so local DB downtime no longer turns anonymous visits into `500`.
 - Responsive CSS foundation exists: mobile-first layout, bottom nav, safe area, dark mode, reduced motion, tablet/desktop grids.
 - Global toast foundation exists for auth, dashboard, account, and admin feedback messages, with accessible live region, dark mode support, and mobile safe-area placement.
 - Dashboard job list supports pull-to-refresh touch gesture on mobile.
@@ -93,6 +94,7 @@ Repo: `duongtrick/shortvideoauto`
 
 - Docker Compose for PostgreSQL, Redis, and MinIO now exists.
 - `.env.example` now includes local MinIO endpoint and credentials.
+- Windows local runner now validates required commands, copies/loads `.env`, starts Docker services, waits for PostgreSQL, then generates, migrates, seeds, and starts dev server.
 
 ### Core Services
 

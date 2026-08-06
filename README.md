@@ -44,6 +44,13 @@ One command on Windows:
 npm.cmd run local
 ```
 
+This copies `.env.example` to `.env`, loads local env vars, starts PostgreSQL/Redis/MinIO with Docker, waits for PostgreSQL, runs Prisma generate/migrate/seed, then starts Next.js.
+
+Demo auth:
+
+- User: `demo@shortvideoauto.local` / `password123`
+- Admin: `admin@shortvideoauto.local` / `password123`
+
 Worker:
 
 ```powershell

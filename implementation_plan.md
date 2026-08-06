@@ -881,6 +881,7 @@ CTF5/
 - [ ] TasteSkill output-skill install
 - [ ] SKILL.md customize cho Vietnamese SaaS brand
 - [ ] Docker Compose (PostgreSQL + Redis + MinIO)
+  - [x] Foundation: local compose plus Windows runner copies `.env`, loads env vars, checks Docker/npm, waits for PostgreSQL, migrates and seeds demo/admin users
 - [ ] Prisma schema (ALL models including admin) + migration
 - [ ] Seed: test user, admin user, default templates, default providers
 - [ ] packages/shared: types, Zod validators

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+const optionalUrl = z.preprocess((value) => (value === "" ? undefined : value), z.string().url().optional());
+
 const envSchema = z.object({
   DATABASE_URL: z
     .string()
@@ -7,10 +9,10 @@ const envSchema = z.object({
     .default("postgresql://postgres:postgres@localhost:5432/shortvideoauto"),
   REDIS_URL: z.string().default("redis://localhost:6379"),
   APP_URL: z.string().url().default("http://localhost:3000"),
-  EMAIL_WEBHOOK_URL: z.string().url().optional(),
+  EMAIL_WEBHOOK_URL: optionalUrl,
   EMAIL_EVENT_WEBHOOK_SECRET: z.string().optional(),
   EMAIL_FROM: z.string().email().default("no-reply@shortvideoauto.local"),
-  STORAGE_PUBLIC_BASE_URL: z.string().url().optional(),
+  STORAGE_PUBLIC_BASE_URL: optionalUrl,
   BANK_NAME: z.string().default(""),
   BANK_ACCOUNT_NUMBER: z.string().default(""),
   BANK_ACCOUNT_NAME: z.string().default("")
