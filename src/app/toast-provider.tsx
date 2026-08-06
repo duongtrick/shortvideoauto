@@ -25,7 +25,10 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       const detail = (event as CustomEvent<ToastEventDetail>).detail;
       if (!detail?.message) return;
       const id = Date.now() + Math.random();
-      setToasts((current) => [...current.slice(-3), { id, message: detail.message, tone: detail.tone ?? inferToastTone(detail.message) }]);
+      setToasts((current) => {
+        if (current.some((toast) => toast.message === detail.message)) return current;
+        return [...current.slice(-2), { id, message: detail.message, tone: detail.tone ?? inferToastTone(detail.message) }];
+      });
       window.setTimeout(() => {
         setToasts((current) => current.filter((toast) => toast.id !== id));
       }, 4200);
