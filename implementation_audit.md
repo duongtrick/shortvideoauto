@@ -52,6 +52,7 @@ Repo: `duongtrick/shortvideoauto`
 - Account referral panel exists with referral link, copy action, commission summary, and recent commission list.
 - SEO landing/sample pages, sitemap, robots exist.
 - Responsive CSS foundation exists: mobile-first layout, bottom nav, safe area, dark mode, reduced motion, tablet/desktop grids.
+- Dashboard job list supports pull-to-refresh touch gesture on mobile.
 
 ### Phase 5
 
@@ -95,7 +96,7 @@ Repo: `duongtrick/shortvideoauto`
 
 - Responsive smoke script now checks 320, 375, 428, 768, 1024, 1280, 1920, 2560px with installed Chrome/Edge fallback.
 - Full manual/device QA is still not done for real iPhone, Android, iPad, laptop, ultra-wide.
-- Pull-to-refresh job list is not implemented.
+- Full native mobile gesture QA is still pending on real devices.
 - Tablet side-by-side script/video preview is not complete.
 - Pricing/features pages exist only as SEO/content foundation, not full SaaS pricing funnel.
 - Affiliate referral dashboard is foundation-level UI; payout settings and admin payout operations are not complete.

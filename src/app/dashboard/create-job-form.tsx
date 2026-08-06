@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { type TouchEvent, useEffect, useState, useTransition } from "react";
 import { useRef } from "react";
 
 type JobRow = {
@@ -32,9 +32,23 @@ export function CreateJobForm() {
   const [jobs, setJobs] = useState<JobRow[]>([]);
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [touchStartY, setTouchStartY] = useState<number | null>(null);
   const [isPending, startTransition] = useTransition();
   const inputRef = useRef<HTMLInputElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+
+  async function refreshJobs() {
+    setIsRefreshing(true);
+    try {
+      setJobs(await loadJobs());
+      setMessage("");
+    } catch {
+      setMessage("Chua ket noi database hoac API.");
+    } finally {
+      setIsRefreshing(false);
+    }
+  }
 
   useEffect(() => {
     let active = true;
@@ -55,6 +69,19 @@ export function CreateJobForm() {
       window.clearInterval(timer);
     };
   }, []);
+
+  function handleTouchStart(event: TouchEvent<HTMLDivElement>) {
+    if (event.currentTarget.scrollTop === 0) {
+      setTouchStartY(event.touches[0]?.clientY ?? null);
+    }
+  }
+
+  function handleTouchEnd(event: TouchEvent<HTMLDivElement>) {
+    if (touchStartY === null) return;
+    const endY = event.changedTouches[0]?.clientY ?? touchStartY;
+    setTouchStartY(null);
+    if (endY - touchStartY > 72 && !isRefreshing) void refreshJobs();
+  }
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -129,7 +156,12 @@ export function CreateJobForm() {
         </div>
         {message ? <p className="muted">{message}</p> : null}
       </form>
-      <div className="panel status-list" aria-label="Job render gần đây">
+      <div
+        className="panel status-list"
+        aria-label="Job render gan day"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         <div className="input-row">
           <input
             ref={searchRef}
@@ -141,6 +173,12 @@ export function CreateJobForm() {
           />
           <span className="badge">Ctrl+K</span>
         </div>
+        {isRefreshing ? (
+          <div className="status-item">
+            <span>Dang lam moi job...</span>
+            <span className="badge">refresh</span>
+          </div>
+        ) : null}
         {filteredJobs.length === 0 ? (
           <div className="status-item">
             <span>Chưa có job</span>
