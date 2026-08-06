@@ -54,6 +54,7 @@ Repo: `duongtrick/shortvideoauto`
 - Auth pages exist: login, register, forgot password, reset password, Google sign-in button.
 - Email verification foundation exists: register creates a 24h signed verify link, sends verification email event, `/verify-email` marks `emailVerified`, and credentials login blocks unverified users.
 - Resend verification foundation exists: `/resend-verification` and `/api/auth/resend-verification` send a new verify link for unverified users without revealing whether an email exists.
+- Password changed security email foundation exists after successful account password update.
 - Dashboard foundation exists: create job, job list/search shortcuts, notification center, video library, schedule calendar, series wizard.
 - Dashboard video library filter UI exists for status, source host, template, language, and date range.
 - Dashboard preview workspace exists with script/product controls beside a 9:16 preview on tablet/desktop.

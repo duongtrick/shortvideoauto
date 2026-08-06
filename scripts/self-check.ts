@@ -73,6 +73,7 @@ import {
   renderJobCompletedEmail,
   renderJobFailedEmail,
   renderPaymentConfirmedEmail,
+  renderPasswordChangedEmail,
   renderPasswordResetEmail,
   renderQueuedTooLongEmail,
   renderNotificationDigestEmail,
@@ -282,7 +283,9 @@ assert.equal(emailTemplatePatch.safeParse({ key: "auth.welcome", subject: "Hello
 assert.equal(emailTemplateTestInput.safeParse({ key: "render.completed", toEmail: "admin@example.com" }).success, true);
 assert.equal(emailTemplateKeys.includes("auth.password_reset"), true);
 assert.equal(emailTemplateKeys.includes("auth.email_verification"), true);
+assert.equal(emailTemplateKeys.includes("auth.password_changed"), true);
 assert.equal(emailTemplatePatch.safeParse({ key: "auth.email_verification", subject: "Verify", bodyText: "Verify account link" }).success, true);
+assert.equal(emailTemplatePatch.safeParse({ key: "auth.password_changed", subject: "Changed", bodyText: "Password changed body" }).success, true);
 assert.match(defaultEmailTemplate("billing.payment_confirmed").bodyText, /Credit da cong/);
 assert.equal(queuedJobAlertInput.safeParse({ olderThanMinutes: 30, take: 10 }).success, true);
 assert.equal(adminUsersQuery.safeParse({ q: "demo", role: "user", take: "20", skip: "0" }).success, true);
@@ -309,6 +312,7 @@ assert.equal(isWithinQuietHours(23, 22, 7), true);
 assert.equal(isWithinQuietHours(12, 22, 7), false);
 assert.equal(isSecurityEmailEvent("auth.password_reset"), true);
 assert.equal(isSecurityEmailEvent("auth.email_verification"), true);
+assert.equal(isSecurityEmailEvent("auth.password_changed"), true);
 assert.match(
   renderNotificationDigestEmail({
     appUrl: "https://shortvideoauto.local",
@@ -379,6 +383,12 @@ assert.match(
     expiresMinutes: 30
   }).bodyText,
   /Link het han/
+);
+assert.match(
+  renderPasswordChangedEmail({
+    appUrl: "https://shortvideoauto.local"
+  }).bodyText,
+  /Mat khau/
 );
 assert.equal(
   createVideoExportBundle({

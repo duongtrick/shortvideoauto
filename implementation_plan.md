@@ -925,6 +925,7 @@ CTF5/
 - [ ] Auth flow (register → verify → login)
   - [x] Foundation: email verification token/link/page, transactional email event, credentials login blocked until `emailVerified`
   - [x] Foundation: resend email verification endpoint/page without account enumeration
+  - [x] Foundation: password changed security email after account password update
 - [x] Dashboard + create + jobs + video library foundation
 - [ ] Video library filters: platform, status, template, source, series, date, language
   - [x] Foundation: dashboard library filters status, source host, template, language, date range

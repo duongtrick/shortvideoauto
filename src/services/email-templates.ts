@@ -4,6 +4,7 @@ import {
   renderJobCompletedEmail,
   renderJobFailedEmail,
   renderEmailVerificationEmail,
+  renderPasswordChangedEmail,
   renderPasswordResetEmail,
   renderPaymentConfirmedEmail,
   renderWelcomeEmail,
@@ -24,7 +25,8 @@ export const emailTemplateKeys: EmailEvent[] = [
   "billing.payment_confirmed",
   "auth.welcome",
   "auth.email_verification",
-  "auth.password_reset"
+  "auth.password_reset",
+  "auth.password_changed"
 ];
 
 export function defaultEmailTemplate(key: EmailEvent): EmailTemplate {
@@ -66,6 +68,11 @@ export function defaultEmailTemplate(key: EmailEvent): EmailTemplate {
       appUrl: "https://shortvideoauto.local",
       verifyUrl: "https://shortvideoauto.local/verify-email?token=sample",
       expiresHours: 24
+    });
+  }
+  if (key === "auth.password_changed") {
+    return renderPasswordChangedEmail({
+      appUrl: "https://shortvideoauto.local"
     });
   }
 

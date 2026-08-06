@@ -4,6 +4,7 @@ import { changePasswordInput } from "@/lib/auth-validation";
 import { requireCurrentUser } from "@/services/auth";
 import { hashPassword, verifyPassword } from "@/services/passwords";
 import { writeAuditLog } from "@/services/audit";
+import { safeNotifyPasswordChanged } from "@/services/notifications";
 
 export async function POST(request: Request) {
   const parsed = changePasswordInput.safeParse(await request.json().catch(() => null));
@@ -25,6 +26,7 @@ export async function POST(request: Request) {
     entity: "User",
     entityId: user.id
   });
+  await safeNotifyPasswordChanged({ userId: user.id });
 
   return NextResponse.json({ ok: true });
 }

@@ -6,7 +6,8 @@ export const emailTemplateKey = z.enum([
   "billing.payment_confirmed",
   "auth.welcome",
   "auth.email_verification",
-  "auth.password_reset"
+  "auth.password_reset",
+  "auth.password_changed"
 ]);
 
 export const emailTemplatePatch = z.object({

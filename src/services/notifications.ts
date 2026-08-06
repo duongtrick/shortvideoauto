@@ -15,6 +15,7 @@ export type EmailEvent =
   | "auth.email_verification"
   | "auth.welcome"
   | "auth.password_reset"
+  | "auth.password_changed"
   | "render.queue_stalled"
   | "notification.digest"
   | "admin.test";
@@ -113,6 +114,16 @@ export function renderPasswordResetEmail(input: { appUrl: string; resetUrl: stri
   };
 }
 
+export function renderPasswordChangedEmail(input: { appUrl: string }): EmailTemplate {
+  return {
+    subject: "Mat khau ShortVideoAuto da duoc doi",
+    bodyText: [
+      "Mat khau tai khoan ShortVideoAuto cua ban vua duoc doi.",
+      `Neu khong phai ban, hay dat lai mat khau ngay: ${input.appUrl}/forgot-password`
+    ].join("\n")
+  };
+}
+
 export function renderQueuedTooLongEmail(input: { appUrl: string; jobId: string; queuedMinutes: number }): EmailTemplate {
   return {
     subject: `Job dang cho qua lau: ${input.jobId}`,
@@ -170,7 +181,12 @@ async function getEmailDeliveryStatus(userId: string, event: EmailEvent) {
   if (event === "render.completed") return prefs.emailRenderDone ? "pending" : "suppressed";
   if (event === "render.failed") return prefs.emailRenderFail ? "pending" : "suppressed";
   if (event === "billing.payment_confirmed") return prefs.emailBilling ? "pending" : "suppressed";
-  if (event === "auth.welcome" || event === "auth.password_reset" || event === "auth.email_verification") {
+  if (
+    event === "auth.welcome" ||
+    event === "auth.password_reset" ||
+    event === "auth.email_verification" ||
+    event === "auth.password_changed"
+  ) {
     return prefs.emailSecurity ? "pending" : "suppressed";
   }
   if (event === "render.queue_stalled") return prefs.emailRenderFail ? "pending" : "suppressed";
@@ -178,7 +194,13 @@ async function getEmailDeliveryStatus(userId: string, event: EmailEvent) {
 }
 
 export function isSecurityEmailEvent(event: EmailEvent) {
-  return event === "auth.password_reset" || event === "auth.email_verification" || event === "notification.digest" || event === "admin.test";
+  return (
+    event === "auth.password_reset" ||
+    event === "auth.email_verification" ||
+    event === "auth.password_changed" ||
+    event === "notification.digest" ||
+    event === "admin.test"
+  );
 }
 
 export function isWithinQuietHours(hour: number, start: number | null, end: number | null) {
@@ -377,6 +399,14 @@ export async function notifyPasswordResetRequested(input: { userId: string; rese
   await createEmailDelivery({ userId: user.id, event: "auth.password_reset", toEmail: user.email, template });
 }
 
+export async function notifyPasswordChanged(input: { userId: string }) {
+  const user = await prisma.user.findUnique({ where: { id: input.userId } });
+  if (!user) return;
+
+  const template = renderPasswordChangedEmail({ appUrl: env.APP_URL });
+  await createEmailDelivery({ userId: user.id, event: "auth.password_changed", toEmail: user.email, template });
+}
+
 export async function alertQueuedTooLongJobs(input: { olderThanMinutes: number; take?: number }) {
   const createdBefore = new Date(Date.now() - input.olderThanMinutes * 60 * 1000);
   const jobs = await prisma.renderJob.findMany({
@@ -473,6 +503,14 @@ export async function safeNotifyPasswordResetRequested(input: { userId: string; 
     await notifyPasswordResetRequested(input);
   } catch (error) {
     logger.error("password_reset_notification_failed", { userId: input.userId, error });
+  }
+}
+
+export async function safeNotifyPasswordChanged(input: { userId: string }) {
+  try {
+    await notifyPasswordChanged(input);
+  } catch (error) {
+    logger.error("password_changed_notification_failed", { userId: input.userId, error });
   }
 }
 
