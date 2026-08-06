@@ -7,6 +7,7 @@ Repo: `duongtrick/shortvideoauto`
 
 - Git branch `master` is clean and synced with `origin/master`.
 - Existing local demo server responds `200` on `/` and `/dashboard`.
+- `docker compose config` could not run because Docker CLI is not installed on this machine.
 - Last feature checkpoints passed:
   - `npm.cmd run self-check`
   - `npm.cmd run build`
@@ -70,8 +71,8 @@ Repo: `duongtrick/shortvideoauto`
 
 ### Local Infrastructure
 
-- Docker Compose for PostgreSQL, Redis, and MinIO is referenced by `scripts/run-local.ps1`, but no `docker-compose.yml` exists yet.
-- `.env.example` has storage values blank, so MinIO/R2 local upload flow is not turnkey.
+- Docker Compose for PostgreSQL, Redis, and MinIO now exists.
+- `.env.example` now includes local MinIO endpoint and credentials.
 
 ### Core Services
 
@@ -123,8 +124,8 @@ Repo: `duongtrick/shortvideoauto`
 
 ## Next Work Order
 
-1. Add Docker Compose local services so `npm run local` can actually start PostgreSQL, Redis, and MinIO.
-2. Add turnkey local env values for MinIO storage.
-3. Run Prisma migrate/seed against local DB.
-4. Add DB-backed API smoke tests for admin/auth/billing.
-5. Add Playwright responsive checks once browser binaries are installed.
+1. Run Prisma migrate/seed against local DB.
+2. Add DB-backed API smoke tests for admin/auth/billing.
+3. Add Playwright responsive checks once browser binaries are installed.
+4. Complete real R2/S3 object upload/download redirect flow.
+5. Replace scraper foundation with hardened marketplace selectors and retry policy.

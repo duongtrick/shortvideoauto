@@ -4,7 +4,7 @@ if (!(Test-Path .env)) {
   Copy-Item .env.example .env
 }
 
-docker compose up -d postgres redis minio
+docker compose up -d postgres redis minio minio-init
 npm.cmd run prisma:generate
 npm.cmd run prisma:migrate
 npm.cmd run prisma:seed
