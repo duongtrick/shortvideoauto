@@ -20,7 +20,7 @@ export function ReferralPanel() {
         if (active) setData(nextData);
       })
       .catch(() => {
-        if (active) setMessage("Chua tai duoc affiliate.");
+        if (active) setMessage("Chưa tải được affiliate.");
       });
     return () => {
       active = false;
@@ -30,7 +30,7 @@ export function ReferralPanel() {
   async function copyLink() {
     if (!data) return;
     await navigator.clipboard.writeText(data.referralLink);
-    setMessage("Da copy link gioi thieu.");
+    setMessage("Đã copy link giới thiệu.");
   }
 
   const totalPending = data?.commissions
@@ -44,7 +44,7 @@ export function ReferralPanel() {
     <div className="panel account-panel">
       <div>
         <h2>Affiliate SaaS</h2>
-        <p className="muted">Chia se ShortVideoAuto va theo doi hoa hong.</p>
+        <p className="muted">Chia sẻ ShortVideoAuto và theo dõi hoa hồng.</p>
       </div>
       {data ? (
         <>
@@ -56,10 +56,10 @@ export function ReferralPanel() {
             <button className="button primary" type="button" onClick={copyLink}>
               Copy link
             </button>
-            <span className="badge">Pending {totalPending.toLocaleString("vi-VN")} VND</span>
-            <span className="badge">Paid {totalPaid.toLocaleString("vi-VN")} VND</span>
+            <span className="badge">Chờ duyệt {totalPending.toLocaleString("vi-VN")} VND</span>
+            <span className="badge">Đã trả {totalPaid.toLocaleString("vi-VN")} VND</span>
           </div>
-          <div className="status-list" aria-label="Hoa hong gan day">
+          <div className="status-list" aria-label="Hoa hồng gần đây">
             {data.commissions.slice(0, 5).map((commission) => (
               <div className="status-item" key={commission.id}>
                 <div>
@@ -72,7 +72,7 @@ export function ReferralPanel() {
           </div>
         </>
       ) : (
-        <p className="muted">Dang tai affiliate...</p>
+        <p className="muted">Đang tải affiliate...</p>
       )}
       {message ? <p className="muted">{message}</p> : null}
     </div>

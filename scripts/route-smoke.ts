@@ -11,10 +11,10 @@ type RouteCase = {
 
 const publicCases: RouteCase[] = [
   { path: "/", statuses: [200], mustInclude: "ShortVideoAuto" },
-  { path: "/login", statuses: [200], mustInclude: "Dang nhap" },
-  { path: "/register", statuses: [200], mustInclude: "Dang ky" },
-  { path: "/forgot-password", statuses: [200], mustInclude: "Quen mat khau" },
-  { path: "/reset-password", statuses: [200], mustInclude: "Doi mat khau" },
+  { path: "/login", statuses: [200], mustInclude: "Đăng nhập" },
+  { path: "/register", statuses: [200], mustInclude: "Đăng ký" },
+  { path: "/forgot-password", statuses: [200], mustInclude: "Quên mật khẩu" },
+  { path: "/reset-password", statuses: [200], mustInclude: "Đổi mật khẩu" },
   { path: "/robots.txt", statuses: [200], mustInclude: "User-Agent" },
   { path: "/sitemap.xml", statuses: [200], mustInclude: "<urlset" },
   { path: "/dashboard", statuses: [200, 302, 307] },

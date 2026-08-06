@@ -15,6 +15,8 @@ Repo: `duongtrick/shortvideoauto`
   - `npm.cmd run build`
 - Route smoke checkpoint added for public/auth/dashboard/account/admin routes; DB-backed read-only API routes are opt-in with `ROUTE_SMOKE_INCLUDE_DB=true`.
 - Auth form inputs now enforce 16px font size inside auth CSS to prevent iOS zoom and satisfy responsive smoke at 320px.
+- Vietnamese UI copy restored on public landing, auth pages, dashboard panels, account page, referral panel, and route smoke assertions.
+- Local demo server on port `3000` was restarted after stale server returned `500`; `/login` now shows accented Vietnamese, loaded CSS, and loaded JS bundles.
 
 ## Done Or Foundation Implemented
 

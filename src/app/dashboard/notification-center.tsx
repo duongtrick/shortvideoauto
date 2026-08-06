@@ -13,7 +13,7 @@ type NotificationRow = {
 
 async function loadNotifications() {
   const response = await fetch("/api/notifications", { cache: "no-store" });
-  if (!response.ok) throw new Error("Khong tai duoc thong bao.");
+  if (!response.ok) throw new Error("Không tải được thông báo.");
   const data = (await response.json()) as { notifications: NotificationRow[] };
   return data.notifications;
 }
@@ -30,7 +30,7 @@ export function NotificationCenter() {
         if (active) setNotifications(rows.slice(0, 5));
       })
       .catch(() => {
-        if (active) setMessage("Chua tai duoc thong bao.");
+        if (active) setMessage("Chưa tải được thông báo.");
       });
 
     return () => {
@@ -42,7 +42,7 @@ export function NotificationCenter() {
     startTransition(async () => {
       const response = await fetch(`/api/notifications/${encodeURIComponent(id)}`, { method: "PATCH" });
       if (!response.ok) {
-        setMessage("Khong cap nhat duoc thong bao.");
+        setMessage("Không cập nhật được thông báo.");
         return;
       }
       setNotifications((current) =>
@@ -52,14 +52,14 @@ export function NotificationCenter() {
   }
 
   return (
-    <div className="panel status-list" aria-label="Thong bao gan day">
+    <div className="panel status-list" aria-label="Thông báo gần đây">
       <div className="status-item">
-        <strong>Thong bao</strong>
-        <span className="badge">{notifications.filter((item) => !item.readAt).length} moi</span>
+        <strong>Thông báo</strong>
+        <span className="badge">{notifications.filter((item) => !item.readAt).length} mới</span>
       </div>
       {notifications.length === 0 ? (
         <div className="status-item">
-          <span>Chua co thong bao</span>
+          <span>Chưa có thông báo</span>
           <span className="badge">empty</span>
         </div>
       ) : (
@@ -72,7 +72,7 @@ export function NotificationCenter() {
               <p className="muted">{notification.body}</p>
             </div>
             <button className="button" type="button" disabled={isPending || Boolean(notification.readAt)} onClick={() => markRead(notification.id)}>
-              {notification.readAt ? "Da doc" : "Danh dau"}
+              {notification.readAt ? "Đã đọc" : "Đánh dấu"}
             </button>
           </div>
         ))

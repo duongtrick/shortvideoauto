@@ -6,7 +6,7 @@ import { AccountForm } from "./account-form";
 import { ReferralPanel } from "./referral-panel";
 
 export const metadata: Metadata = {
-  title: "Tai khoan",
+  title: "Tài khoản",
   robots: { index: false, follow: false }
 };
 
@@ -26,8 +26,8 @@ export default async function AccountPage() {
         </a>
       </header>
       <section className="page">
-        <h1>Quan ly tai khoan</h1>
-        <p className="lead">Doi mat khau, xem email dang nhap va dang xuat.</p>
+        <h1>Quản lý tài khoản</h1>
+        <p className="lead">Đổi mật khẩu, xem email đăng nhập và đăng xuất.</p>
         <AccountForm email={user.email} />
         <div className="account-stack">
           <ReferralPanel />

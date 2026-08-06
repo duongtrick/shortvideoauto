@@ -14,7 +14,7 @@ type ScheduledPostRow = {
 
 async function loadScheduledPosts() {
   const response = await fetch("/api/schedule?take=20", { cache: "no-store" });
-  if (!response.ok) throw new Error("Khong tai duoc lich.");
+  if (!response.ok) throw new Error("Không tải được lịch.");
   const data = (await response.json()) as { posts: ScheduledPostRow[] };
   return data.posts;
 }
@@ -30,7 +30,7 @@ export function ScheduleCalendar() {
         if (active) setPosts(rows);
       })
       .catch(() => {
-        if (active) setMessage("Chua tai duoc lich dang.");
+        if (active) setMessage("Chưa tải được lịch đăng.");
       });
 
     return () => {
@@ -47,14 +47,14 @@ export function ScheduleCalendar() {
   }, [posts]);
 
   return (
-    <div className="panel status-list" aria-label="Lich dang video">
+    <div className="panel status-list" aria-label="Lịch đăng video">
       <div className="status-item">
-        <strong>Lich dang</strong>
+        <strong>Lịch đăng</strong>
         <span className="badge">{posts.length} post</span>
       </div>
       {Object.keys(grouped).length === 0 ? (
         <div className="status-item">
-          <span>Chua co lich dang</span>
+          <span>Chưa có lịch đăng</span>
           <span className="badge">empty</span>
         </div>
       ) : (

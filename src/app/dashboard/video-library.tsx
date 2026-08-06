@@ -40,7 +40,7 @@ async function loadVideos(filters: VideoFilters) {
   if (filters.dateTo) params.set("dateTo", new Date(filters.dateTo).toISOString());
 
   const response = await fetch(`/api/videos?${params}`, { cache: "no-store" });
-  if (!response.ok) throw new Error("Khong tai duoc video.");
+  if (!response.ok) throw new Error("Không tải được video.");
   const data = (await response.json()) as { videos: VideoRow[] };
   return data.videos;
 }
@@ -58,7 +58,7 @@ export function VideoLibrary() {
         if (active) setVideos(rows);
       })
       .catch(() => {
-        if (active) setMessage("Chua tai duoc thu vien video.");
+        if (active) setMessage("Chưa tải được thư viện video.");
       });
 
     return () => {
@@ -99,16 +99,16 @@ export function VideoLibrary() {
       })
     });
     setScheduledVideoId(response.ok ? video.id : "");
-    setMessage(response.ok ? "Da len lich TikTok draft." : "Khong len lich duoc.");
+    setMessage(response.ok ? "Đã lên lịch TikTok draft." : "Không lên lịch được.");
   }
 
   return (
-    <div className="panel status-list" aria-label="Thu vien video">
+    <div className="panel status-list" aria-label="Thư viện video">
       <div className="status-item">
-        <strong>Thu vien video</strong>
+        <strong>Thư viện video</strong>
         <span className="badge">{videos.length} video</span>
       </div>
-      <div className="library-filters" aria-label="Bo loc video">
+      <div className="library-filters" aria-label="Bộ lọc video">
         <label>
           Status
           <select value={filters.status} onChange={(event) => updateFilter("status", event.target.value)}>
@@ -120,7 +120,7 @@ export function VideoLibrary() {
           </select>
         </label>
         <label>
-          Source
+          Nguồn
           <input value={filters.sourceHost} onChange={(event) => updateFilter("sourceHost", event.target.value)} placeholder="shopee.vn" />
         </label>
         <label>
@@ -128,21 +128,21 @@ export function VideoLibrary() {
           <input value={filters.templateKey} onChange={(event) => updateFilter("templateKey", event.target.value)} placeholder="clean_minimal" />
         </label>
         <label>
-          Language
+          Ngôn ngữ
           <input value={filters.language} onChange={(event) => updateFilter("language", event.target.value)} placeholder="vi-VN" />
         </label>
         <label>
-          From
+          Từ ngày
           <input value={filters.dateFrom} onChange={(event) => updateFilter("dateFrom", event.target.value)} type="date" />
         </label>
         <label>
-          To
+          Đến ngày
           <input value={filters.dateTo} onChange={(event) => updateFilter("dateTo", event.target.value)} type="date" />
         </label>
       </div>
       {videos.length === 0 ? (
         <div className="status-item">
-          <span>Chua co video hoan tat</span>
+          <span>Chưa có video hoàn tất</span>
           <span className="badge">empty</span>
         </div>
       ) : (
@@ -153,10 +153,10 @@ export function VideoLibrary() {
               <p className="muted">{video.job?.productSource?.price ?? new Date(video.createdAt).toLocaleDateString("vi-VN")}</p>
             </div>
             <a className="button" href={video.downloadUrl}>
-              Tai MP4
+              Tải MP4
             </a>
             <button className="button" type="button" onClick={() => scheduleVideo(video)}>
-              {scheduledVideoId === video.id ? "Da len lich" : "Len lich"}
+              {scheduledVideoId === video.id ? "Đã lên lịch" : "Lên lịch"}
             </button>
           </div>
         ))

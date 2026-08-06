@@ -34,8 +34,8 @@ export default async function DashboardPage() {
         </div>
       </header>
       <section className="page">
-        <h1>Tao video affiliate</h1>
-        <p className="lead">Dan link Shopee hoac TikTok Shop. API tao job va dua vao BullMQ.</p>
+        <h1>Tạo video affiliate</h1>
+        <p className="lead">Dán link Shopee hoặc TikTok Shop. API tạo job và đưa vào BullMQ.</p>
         <div className="dashboard-grid">
           <CreateJobForm />
           <div className="dashboard-side">
@@ -48,9 +48,9 @@ export default async function DashboardPage() {
         </div>
       </section>
       <nav className="bottom-nav" aria-label="Dashboard mobile">
-        <a href="/dashboard">Tao job</a>
-        <a href="/samples/demo">Mau</a>
-        <a href="/account">Tai khoan</a>
+        <a href="/dashboard">Tạo job</a>
+        <a href="/samples/demo">Mẫu</a>
+        <a href="/account">Tài khoản</a>
       </nav>
     </main>
   );

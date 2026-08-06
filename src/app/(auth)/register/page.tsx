@@ -5,18 +5,18 @@ import { AuthForm } from "../auth-form";
 import { AuthShell } from "../auth-shell";
 
 export const metadata: Metadata = {
-  title: "Dang ky",
+  title: "Đăng ký",
   robots: { index: false, follow: false }
 };
 
 export default function RegisterPage() {
   return (
-    <AuthShell title="Dang ky" description="Tao tai khoan de quan ly credit, job va video da render." active="register">
-      <Suspense fallback={<p className="muted">Dang tai form...</p>}>
+    <AuthShell title="Đăng ký" description="Tạo tài khoản để quản lý credit, job và video đã render." active="register">
+      <Suspense fallback={<p className="muted">Đang tải form...</p>}>
         <AuthForm mode="register" />
       </Suspense>
       <div className="auth-link-row">
-        <Link href="/login">Da co tai khoan</Link>
+        <Link href="/login">Đã có tài khoản</Link>
       </div>
     </AuthShell>
   );

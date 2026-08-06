@@ -1,7 +1,6 @@
 "use client";
 
-import { type TouchEvent, useEffect, useState, useTransition } from "react";
-import { useRef } from "react";
+import { type TouchEvent, useEffect, useRef, useState, useTransition } from "react";
 
 type JobRow = {
   id: string;
@@ -20,9 +19,7 @@ function downloadPath(job: JobRow) {
 
 async function loadJobs(): Promise<JobRow[]> {
   const response = await fetch("/api/jobs", { cache: "no-store" });
-  if (!response.ok) {
-    throw new Error("Không tải được job.");
-  }
+  if (!response.ok) throw new Error("Không tải được job.");
   const data = (await response.json()) as { jobs: JobRow[] };
   return data.jobs;
 }
@@ -44,7 +41,7 @@ export function CreateJobForm() {
       setJobs(await loadJobs());
       setMessage("");
     } catch {
-      setMessage("Chua ket noi database hoac API.");
+      setMessage("Chưa kết nối database hoặc API.");
     } finally {
       setIsRefreshing(false);
     }
@@ -148,7 +145,7 @@ export function CreateJobForm() {
             required
             value={url}
             onChange={(event) => setUrl(event.target.value)}
-            onPaste={() => setMessage("Da dan link. Kiem tra nhanh roi tao job.")}
+            onPaste={() => setMessage("Đã dán link. Kiểm tra nhanh rồi tạo job.")}
           />
           <button className="button primary sticky-mobile-cta" type="submit" disabled={isPending}>
             {isPending ? "Đang tạo" : "Tạo job"}
@@ -158,7 +155,7 @@ export function CreateJobForm() {
       </form>
       <div
         className="panel status-list"
-        aria-label="Job render gan day"
+        aria-label="Job render gần đây"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -166,16 +163,16 @@ export function CreateJobForm() {
           <input
             ref={searchRef}
             type="search"
-            placeholder="Tim job, status, san pham"
+            placeholder="Tìm job, status, sản phẩm"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            aria-label="Tim job"
+            aria-label="Tìm job"
           />
           <span className="badge">Ctrl+K</span>
         </div>
         {isRefreshing ? (
           <div className="status-item">
-            <span>Dang lam moi job...</span>
+            <span>Đang làm mới job...</span>
             <span className="badge">refresh</span>
           </div>
         ) : null}

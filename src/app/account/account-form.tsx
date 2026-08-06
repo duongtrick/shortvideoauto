@@ -61,7 +61,7 @@ export function AccountForm({ email }: { email: string }) {
         if (active && data.preferences) setPreferences(data.preferences);
       })
       .catch(() => {
-        if (active) setPreferencesMessage("Chua tai duoc cau hinh thong bao.");
+        if (active) setPreferencesMessage("Chưa tải được cấu hình thông báo.");
       });
 
     return () => {
@@ -77,7 +77,7 @@ export function AccountForm({ email }: { email: string }) {
         if (active && data.payments) setPayments(data.payments);
       })
       .catch(() => {
-        if (active) setBillingMessage("Chua tai duoc thanh toan.");
+        if (active) setBillingMessage("Chưa tải được thanh toán.");
       });
 
     return () => {
@@ -97,7 +97,7 @@ export function AccountForm({ email }: { email: string }) {
         })
       });
       const data = (await response.json()) as { error?: string };
-      setMessage(response.ok ? "Da doi mat khau." : (data.error ?? "Khong doi duoc mat khau."));
+      setMessage(response.ok ? "Đã đổi mật khẩu." : (data.error ?? "Không đổi được mật khẩu."));
     });
   }
 
@@ -115,7 +115,7 @@ export function AccountForm({ email }: { email: string }) {
       });
       const data = (await response.json()) as { error?: string; preferences?: NotificationPreferences };
       if (data.preferences) setPreferences(data.preferences);
-      setPreferencesMessage(response.ok ? "Da luu thong bao." : (data.error ?? "Khong luu duoc thong bao."));
+      setPreferencesMessage(response.ok ? "Đã lưu thông báo." : (data.error ?? "Không lưu được thông báo."));
     });
   }
 
@@ -129,12 +129,12 @@ export function AccountForm({ email }: { email: string }) {
       });
       const data = (await response.json()) as { error?: string; payment?: PaymentRow; transfer?: TransferInstruction };
       if (!response.ok || !data.payment || !data.transfer) {
-        setBillingMessage(data.error ?? "Khong tao duoc thanh toan.");
+        setBillingMessage(data.error ?? "Không tạo được thanh toán.");
         return;
       }
       setPayments((current) => [data.payment as PaymentRow, ...current].slice(0, 20));
       setTransfer(data.transfer);
-      setBillingMessage("Da tao lenh chuyen khoan.");
+      setBillingMessage("Đã tạo lệnh chuyển khoản.");
     });
   }
 
@@ -142,28 +142,28 @@ export function AccountForm({ email }: { email: string }) {
     <div className="account-stack">
       <div className="panel account-panel">
         <div>
-          <h2>Tai khoan</h2>
+          <h2>Tài khoản</h2>
           <p className="muted">{email}</p>
         </div>
         <form className="form" action={changePassword}>
-          <label htmlFor="currentPassword">Mat khau hien tai</label>
+          <label htmlFor="currentPassword">Mật khẩu hiện tại</label>
           <input id="currentPassword" name="currentPassword" type="password" autoComplete="current-password" required />
-          <label htmlFor="newPassword">Mat khau moi</label>
+          <label htmlFor="newPassword">Mật khẩu mới</label>
           <input id="newPassword" name="newPassword" type="password" autoComplete="new-password" required minLength={8} />
           <button className="button primary" type="submit" disabled={isPending}>
-            {isPending ? "Dang luu" : "Doi mat khau"}
+            {isPending ? "Đang lưu" : "Đổi mật khẩu"}
           </button>
         </form>
         <button className="button" type="button" onClick={() => signOut({ callbackUrl: "/login" })}>
-          Dang xuat
+          Đăng xuất
         </button>
         {message ? <p className="muted">{message}</p> : null}
       </div>
 
       <div className="panel account-panel">
         <div>
-          <h2>Thong bao</h2>
-          <p className="muted">Cau hinh email va digest.</p>
+          <h2>Thông báo</h2>
+          <p className="muted">Cấu hình email và digest.</p>
         </div>
         <div className="toggle-list">
           <label className="toggle-row">
@@ -180,7 +180,7 @@ export function AccountForm({ email }: { email: string }) {
               checked={preferences.emailRenderFail}
               onChange={(event) => updatePreference("emailRenderFail", event.target.checked)}
             />
-            <span>Render loi hoac queue lau</span>
+            <span>Render lỗi hoặc queue lâu</span>
           </label>
           <label className="toggle-row">
             <input
@@ -188,7 +188,7 @@ export function AccountForm({ email }: { email: string }) {
               checked={preferences.emailBilling}
               onChange={(event) => updatePreference("emailBilling", event.target.checked)}
             />
-            <span>Thanh toan va credit</span>
+            <span>Thanh toán và credit</span>
           </label>
           <label className="toggle-row">
             <input
@@ -196,7 +196,7 @@ export function AccountForm({ email }: { email: string }) {
               checked={preferences.emailSecurity}
               onChange={(event) => updatePreference("emailSecurity", event.target.checked)}
             />
-            <span>Bao mat tai khoan</span>
+            <span>Bảo mật tài khoản</span>
           </label>
           <label className="toggle-row">
             <input
@@ -204,11 +204,11 @@ export function AccountForm({ email }: { email: string }) {
               checked={preferences.digestMode}
               onChange={(event) => updatePreference("digestMode", event.target.checked)}
             />
-            <span>Gom email thanh digest</span>
+            <span>Gom email thành digest</span>
           </label>
         </div>
         <div className="input-row">
-          <label htmlFor="quietHoursStart">Gio yen lang bat dau</label>
+          <label htmlFor="quietHoursStart">Giờ yên lặng bắt đầu</label>
           <input
             id="quietHoursStart"
             type="number"
@@ -220,7 +220,7 @@ export function AccountForm({ email }: { email: string }) {
               updatePreference("quietHoursStart", event.target.value === "" ? null : Number(event.target.value))
             }
           />
-          <label htmlFor="quietHoursEnd">Gio yen lang ket thuc</label>
+          <label htmlFor="quietHoursEnd">Giờ yên lặng kết thúc</label>
           <input
             id="quietHoursEnd"
             type="number"
@@ -232,15 +232,15 @@ export function AccountForm({ email }: { email: string }) {
           />
         </div>
         <button className="button primary" type="button" disabled={isSavingPreferences} onClick={savePreferences}>
-          {isSavingPreferences ? "Dang luu" : "Luu thong bao"}
+          {isSavingPreferences ? "Đang lưu" : "Lưu thông báo"}
         </button>
         {preferencesMessage ? <p className="muted">{preferencesMessage}</p> : null}
       </div>
 
       <div className="panel account-panel">
         <div>
-          <h2>Nap credit</h2>
-          <p className="muted">Chuyen khoan dung noi dung de auto cong credit.</p>
+          <h2>Nạp credit</h2>
+          <p className="muted">Chuyển khoản đúng nội dung để tự động cộng credit.</p>
         </div>
         <div className="billing-actions">
           <button className="button primary" type="button" disabled={isCreatingPayment} onClick={() => createPayment(100000, 100)}>
@@ -263,7 +263,7 @@ export function AccountForm({ email }: { email: string }) {
             <code>{transfer.qrPayload}</code>
           </div>
         ) : null}
-        <div className="status-list" aria-label="Thanh toan gan day">
+        <div className="status-list" aria-label="Thanh toán gần đây">
           {payments.slice(0, 5).map((payment) => (
             <div className="status-item" key={payment.id}>
               <div>

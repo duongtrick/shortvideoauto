@@ -15,7 +15,7 @@ type SeriesRow = {
 
 async function loadSeries() {
   const response = await fetch("/api/series", { cache: "no-store" });
-  if (!response.ok) throw new Error("Khong tai duoc series.");
+  if (!response.ok) throw new Error("Không tải được series.");
   const data = (await response.json()) as { series: SeriesRow[] };
   return data.series;
 }
@@ -32,7 +32,7 @@ export function SeriesWizard() {
         if (active) setSeries(rows);
       })
       .catch(() => {
-        if (active) setMessage("Chua tai duoc series.");
+        if (active) setMessage("Chưa tải được series.");
       });
 
     return () => {
@@ -58,11 +58,11 @@ export function SeriesWizard() {
       });
       const data = (await response.json()) as { error?: string; series?: SeriesRow };
       if (!response.ok || !data.series) {
-        setMessage(data.error ?? "Khong tao duoc series.");
+        setMessage(data.error ?? "Không tạo được series.");
         return;
       }
       setSeries((current) => [data.series as SeriesRow, ...current]);
-      setMessage("Da tao series.");
+      setMessage("Đã tạo series.");
     });
   }
 
@@ -81,24 +81,24 @@ export function SeriesWizard() {
   }
 
   return (
-    <div className="panel status-list" aria-label="Series noi dung">
+    <div className="panel status-list" aria-label="Series nội dung">
       <div className="status-item">
         <strong>Series</strong>
         <span className="badge">{series.length} series</span>
       </div>
       <form className="form compact-form" action={createSeries}>
-        <input name="name" placeholder="Ten series" required />
-        <input name="niche" placeholder="Niche: gia dung, me va be..." required />
+        <input name="name" placeholder="Tên series" required />
+        <input name="niche" placeholder="Niche: gia dụng, mẹ và bé..." required />
         <select name="cadence" defaultValue="daily">
-          <option value="three_per_week">3 video/tuan</option>
-          <option value="daily">Hang ngay</option>
-          <option value="twice_daily">2 video/ngay</option>
+          <option value="three_per_week">3 video/tuần</option>
+          <option value="daily">Hằng ngày</option>
+          <option value="twice_daily">2 video/ngày</option>
         </select>
         <input name="templateKey" placeholder="Template key" />
         <input name="voice" placeholder="Voice: banmai" />
-        <input name="defaultCta" placeholder="CTA mac dinh" />
+        <input name="defaultCta" placeholder="CTA mặc định" />
         <button className="button primary" type="submit" disabled={isPending}>
-          {isPending ? "Dang tao" : "Tao series"}
+          {isPending ? "Đang tạo" : "Tạo series"}
         </button>
       </form>
       {series.slice(0, 5).map((item) => (

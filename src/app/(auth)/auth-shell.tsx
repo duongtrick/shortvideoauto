@@ -26,10 +26,10 @@ export function AuthShell({
           {active ? (
             <nav className="auth-tabs" aria-label="Auth">
               <Link href="/login" aria-current={active === "login" ? "page" : undefined}>
-                Dang nhap
+                Đăng nhập
               </Link>
               <Link href="/register" aria-current={active === "register" ? "page" : undefined}>
-                Dang ky
+                Đăng ký
               </Link>
             </nav>
           ) : null}
@@ -37,8 +37,8 @@ export function AuthShell({
         </div>
       </section>
       <aside className="auth-side">
-        <h2>Tao video affiliate tieng Viet nhanh hon</h2>
-        <p className="lead">Tai khoan giu job, credit, video da render va lich su thanh toan ngan nap.</p>
+        <h2>Tạo video affiliate tiếng Việt nhanh hơn</h2>
+        <p className="lead">Tài khoản giữ job, credit, video đã render và lịch sử thanh toán ngăn nắp.</p>
       </aside>
     </main>
   );

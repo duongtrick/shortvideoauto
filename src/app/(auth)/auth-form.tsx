@@ -22,7 +22,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
           redirect: false
         });
         if (result?.error) {
-          setMessage("Email hoac mat khau khong dung.");
+          setMessage("Email hoặc mật khẩu không đúng.");
           return;
         }
         router.push("/dashboard");
@@ -51,19 +51,19 @@ export function AuthForm({ mode }: { mode: Mode }) {
       });
       const data = (await response.json()) as { error?: string; resetUrl?: string };
       if (!response.ok) {
-        setMessage(data.error ?? "Khong xu ly duoc yeu cau.");
+        setMessage(data.error ?? "Không xử lý được yêu cầu.");
         return;
       }
       if (mode === "register") {
-        setMessage("Dang ky thanh cong. Dang nhap de tiep tuc.");
+        setMessage("Đăng ký thành công. Đăng nhập để tiếp tục.");
         router.push("/login");
         return;
       }
       if (mode === "forgot") {
-        setMessage(data.resetUrl ? `Link dat lai mat khau: ${data.resetUrl}` : "Kiem tra email de dat lai mat khau.");
+        setMessage(data.resetUrl ? `Link đặt lại mật khẩu: ${data.resetUrl}` : "Kiểm tra email để đặt lại mật khẩu.");
         return;
       }
-      setMessage("Da doi mat khau. Dang nhap lai.");
+      setMessage("Đã đổi mật khẩu. Đăng nhập lại.");
       router.push("/login");
     });
   }
@@ -72,7 +72,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
     <form action={submit} className="auth-form">
       {mode === "register" ? (
         <>
-          <label htmlFor="name">Ten hien thi</label>
+          <label htmlFor="name">Tên hiển thị</label>
           <input id="name" name="name" autoComplete="name" required minLength={2} />
         </>
       ) : null}
@@ -84,7 +84,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
       )}
       {mode === "forgot" ? null : (
         <>
-          <label htmlFor="password">Mat khau</label>
+          <label htmlFor="password">Mật khẩu</label>
           <input
             id="password"
             name="password"
@@ -97,18 +97,18 @@ export function AuthForm({ mode }: { mode: Mode }) {
       )}
       <button className="button primary" type="submit" disabled={isPending}>
         {isPending
-          ? "Dang xu ly"
+          ? "Đang xử lý"
           : mode === "login"
-            ? "Dang nhap"
+            ? "Đăng nhập"
             : mode === "register"
-              ? "Dang ky"
+              ? "Đăng ký"
               : mode === "forgot"
-                ? "Gui link"
-                : "Doi mat khau"}
+                ? "Gửi link"
+                : "Đổi mật khẩu"}
       </button>
       {mode === "login" ? (
         <button className="button" type="button" onClick={() => signIn("google", { callbackUrl: "/dashboard" })}>
-          Dang nhap Google
+          Đăng nhập Google
         </button>
       ) : null}
       {message ? <p className="muted">{message}</p> : null}

@@ -38,7 +38,7 @@ export function JobPreviewPanel() {
         if (active) setJob(nextJob);
       })
       .catch(() => {
-        if (active) setMessage("Chua co preview job.");
+        if (active) setMessage("Chưa có preview job.");
       });
     return () => {
       active = false;
@@ -67,26 +67,26 @@ export function JobPreviewPanel() {
     });
     const data = (await response.json().catch(() => ({}))) as { job?: JobDetail };
     if (data.job) setJob(data.job);
-    setMessage(response.ok ? "Da luu preview." : "Khong luu duoc preview.");
+    setMessage(response.ok ? "Đã lưu preview." : "Không lưu được preview.");
   }
 
   const selectedScript = job?.scriptVariants.find((script) => script.id === (job.selectedScriptId ?? job.scriptVariants[0]?.id));
 
   return (
-    <section className="panel preview-workspace" aria-label="Preview truoc render">
+    <section className="panel preview-workspace" aria-label="Preview trước render">
       <div>
-        <h2>Preview truoc render</h2>
-        <p className="muted">{job?.sourceUrl ?? "Chon job moi nhat de sua script va xem khung 9:16."}</p>
+        <h2>Preview trước render</h2>
+        <p className="muted">{job?.sourceUrl ?? "Chọn job mới nhất để sửa script và xem khung 9:16."}</p>
       </div>
       {job ? (
         <div className="preview-split">
           <form className="form compact-form" onSubmit={savePreview}>
             <label>
-              Ten san pham
+              Tên sản phẩm
               <input name="productTitle" defaultValue={job.productSource?.title ?? ""} required />
             </label>
             <label>
-              Gia
+              Giá
               <input name="price" defaultValue={job.productSource?.price ?? ""} />
             </label>
             <label>
@@ -97,9 +97,9 @@ export function JobPreviewPanel() {
                 ))}
               </select>
             </label>
-            <textarea name="scriptContent" defaultValue={selectedScript?.content ?? "Review nhanh san pham nay trong 30 giay."} />
+            <textarea name="scriptContent" defaultValue={selectedScript?.content ?? "Review nhanh sản phẩm này trong 30 giây."} />
             <div className="input-row">
-              <input name="cta" placeholder="CTA" defaultValue="Bam xem deal" />
+              <input name="cta" placeholder="CTA" defaultValue="Bấm xem deal" />
               <input name="voice" placeholder="voice" defaultValue="banmai" />
             </div>
             <div className="input-row">
@@ -112,18 +112,18 @@ export function JobPreviewPanel() {
               <option value="story_subtle">story_subtle</option>
               <option value="karaoke_highlight">karaoke_highlight</option>
             </select>
-            <button className="button primary" type="submit">Luu preview</button>
+            <button className="button primary" type="submit">Lưu preview</button>
           </form>
           <div className="preview panel">
             <div className="video-frame">{job.productSource?.title ?? "Video preview"}</div>
             <div>
-              <p className="price">{job.productSource?.price ?? "Gia deal"}</p>
+              <p className="price">{job.productSource?.price ?? "Giá deal"}</p>
               <p className="muted">{selectedScript?.angle ?? "review nhanh"}</p>
             </div>
           </div>
         </div>
       ) : (
-        <p className="muted">Tao job truoc de co preview.</p>
+        <p className="muted">Tạo job trước để có preview.</p>
       )}
       {message ? <p className="muted">{message}</p> : null}
     </section>

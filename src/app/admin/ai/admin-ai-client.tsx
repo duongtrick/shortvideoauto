@@ -92,7 +92,7 @@ export function AdminAiClient() {
     const response = await fetch(`/api/admin/ai/${provider.id}/test`, {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ text: "Viet hook video affiliate cho san pham gia dung." })
+      body: JSON.stringify({ text: "Viết hook video affiliate cho sản phẩm gia dụng." })
     });
     setMessage(response.ok ? "AI test contract OK." : "AI test failed.");
   }
